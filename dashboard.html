@@ -118,6 +118,21 @@ footer{text-align:center;padding:12px 0;font-size:10px;color:var(--text2);border
 </style>
 </head>
 <body>
+<div id="authGate" style="position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center">
+<div style="text-align:center;max-width:320px;padding:24px">
+<div style="font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px"><span style="color:var(--blue)">Flight Deck</span> Mission Control</div>
+<div style="font-size:12px;color:var(--text2);margin-bottom:16px">Enter password to view the dashboard</div>
+<input type="password" id="authPw" placeholder="Password" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:6px;font-size:14px;font-family:inherit;background:var(--surface);color:var(--text);text-align:center" autofocus>
+<div id="authErr" style="color:var(--red);font-size:11px;margin-top:8px;min-height:16px"></div>
+<button onclick="checkAuth()" style="margin-top:8px;padding:8px 24px;background:var(--blue);color:#fff;border:none;border-radius:6px;font-size:13px;cursor:pointer;font-family:inherit">Enter</button>
+</div>
+</div>
+<script>
+function checkAuth(){var p=document.getElementById('authPw').value;if(p==='flightdeck'){document.getElementById('authGate').remove();document.getElementById('dashWrap').style.display='';try{sessionStorage.setItem('fd_auth','1')}catch(e){}}else{document.getElementById('authErr').textContent='Incorrect password';document.getElementById('authPw').value='';document.getElementById('authPw').focus()}}
+document.addEventListener('DOMContentLoaded',function(){try{if(sessionStorage.getItem('fd_auth')==='1'){document.getElementById('authGate').remove();document.getElementById('dashWrap').style.display=''}}catch(e){}});
+document.getElementById('authPw').addEventListener('keydown',function(e){if(e.key==='Enter')checkAuth()});
+</script>
+<div id="dashWrap" style="display:none">
 <div class="wrap">
 <div class="hdr"><h1><span>Flight Deck</span> Mission Control</h1><div class="hdr-right"><div class="pulse"></div><span id="rptDate"></span></div></div>
 <div class="fbar"><span class="flbl">Filter:</span><select id="fRep"><option value="">All Reps</option></select><select id="fProd"><option value="">All Products</option></select><select id="fDate"><option value="">Full Month</option><option value="3">Last 3d</option><option value="5">Last 5d</option><option value="week">This Week</option></select><span class="flbl" style="margin-left:8px">Compare:</span><select id="fCmp"><option value="prevweek">vs Prev Week</option><option value="start">vs Start of Data</option><option value="custom">Custom Dates</option></select><div class="cmp-dates" id="cmpDates"><input type="date" id="cmpFrom" title="Compare from"><span style="font-size:10px;color:var(--text2)">to</span><input type="date" id="cmpTo" title="Compare to"></div><button class="fbtn" id="fClear" style="display:none">Clear</button></div>
@@ -547,5 +562,6 @@ function renderPN(){
 init();
 
 </script>
+</div><!-- /dashWrap -->
 </body>
 </html>
