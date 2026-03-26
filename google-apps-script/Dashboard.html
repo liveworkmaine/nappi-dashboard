@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Deck Brewing - Distribution Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --navy: #1a2332;
+  --dark-blue: #243447;
+  --steel: #2c3e50;
+  --gold: #d4a736;
+  --light-gold: #f0d78c;
+  --white: #f8f9fa;
+  --light-gray: #e9ecef;
+  --green: #27ae60;
+  --yellow: #f39c12;
+  --orange: #e67e22;
+  --red: #e74c3c;
+  --blue: #3498db;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--navy); color: var(--white); }
+
+/* Login overlay */
+.login-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: var(--navy); z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+}
+.login-box {
+  background: var(--dark-blue); padding: 40px; border-radius: 12px;
+  border: 2px solid var(--gold); text-align: center; min-width: 320px;
+}
+.login-box h2 { color: var(--gold); margin-bottom: 5px; letter-spacing: 2px; font-size: 22px; }
+.login-box .subtitle { color: #adb5bd; font-size: 14px; margin-bottom: 25px; }
+.login-box input[type="password"] {
+  width: 100%; padding: 12px 16px; border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.2); background: var(--steel);
+  color: var(--white); font-size: 15px; margin-bottom: 12px;
+}
+.login-box input::placeholder { color: #6c757d; }
+.login-box button {
+  width: 100%; padding: 12px; border: none; border-radius: 6px;
+  background: var(--gold); color: var(--navy); font-size: 16px;
+  font-weight: 700; cursor: pointer; letter-spacing: 0.5px;
+}
+.login-box button:hover { background: var(--light-gold); }
+.login-error { color: var(--red); font-size: 13px; margin-top: 10px; display: none; }
+.main-content { display: none; }
+.main-content.visible { display: block; }
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--dark-blue) 100%);
+  border-bottom: 3px solid var(--gold);
+  padding: 20px 30px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.header h1 { font-size: 24px; color: var(--gold); letter-spacing: 1px; }
+.header h1 span { color: var(--white); font-weight: 300; }
+.header-right { text-align: right; }
+.header-right .last-updated { font-size: 12px; color: #6c757d; margin-bottom: 2px; }
+.header-right .data-through { font-size: 16px; color: var(--gold); font-weight: 600; }
+.header-right .sub-info { font-size: 12px; color: #adb5bd; }
+
+/* Date range bar */
+.range-bar {
+  background: var(--dark-blue);
+  padding: 10px 30px;
+  display: flex; align-items: center; gap: 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.range-bar .label { color: #adb5bd; font-size: 13px; margin-right: 8px; }
+.range-btn {
+  background: var(--steel); color: #adb5bd; border: 1px solid rgba(255,255,255,0.1);
+  padding: 5px 14px; border-radius: 16px; font-size: 13px; cursor: pointer;
+  transition: all 0.2s;
+}
+.range-btn:hover { border-color: var(--gold); color: var(--white); }
+.range-btn.active { background: var(--gold); color: var(--navy); border-color: var(--gold); font-weight: 600; }
+.range-bar .spacer { flex: 1; }
+.range-bar .live-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--green);
+  display: inline-block; margin-right: 6px; animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.range-bar .live-label { font-size: 12px; color: var(--green); }
+
+/* Main grid */
+.dashboard { padding: 20px 30px; }
+
+/* KPI Cards Row */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px; margin-bottom: 25px;
+}
+.kpi-card {
+  background: var(--dark-blue);
+  border-radius: 8px; padding: 18px;
+  border-left: 4px solid var(--gold);
+  position: relative;
+}
+.kpi-card .label { font-size: 12px; color: #adb5bd; text-transform: uppercase; letter-spacing: 1px; }
+.kpi-card .value { font-size: 32px; font-weight: 700; color: var(--white); margin: 5px 0; }
+.kpi-card .sub { font-size: 12px; color: #6c757d; }
+.kpi-card .delta { font-size: 13px; position: absolute; top: 18px; right: 18px; }
+.delta.up { color: var(--green); }
+.delta.down { color: var(--red); }
+.delta.flat { color: #6c757d; }
+
+/* Activity Feed */
+.feed { margin-bottom: 25px; }
+.feed-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 14px; border-radius: 6px; margin-bottom: 6px;
+  background: var(--dark-blue); border-left: 3px solid var(--steel);
+}
+.feed-item.latest { border-left-color: var(--gold); }
+.feed-date {
+  font-size: 12px; color: var(--gold); font-weight: 600;
+  min-width: 50px; padding-top: 2px;
+}
+.feed-body { font-size: 13px; color: #ccc; line-height: 1.5; }
+.feed-body strong { color: var(--white); }
+.feed-body .num { color: var(--gold); font-weight: 600; }
+
+/* Sections */
+.section { margin-bottom: 30px; }
+.section-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;
+}
+.section-header h2 { font-size: 18px; color: var(--gold); font-weight: 600; }
+.section-header .badge {
+  background: var(--steel); color: #adb5bd; padding: 3px 10px;
+  border-radius: 12px; font-size: 12px;
+}
+
+/* Inventory Table */
+.inv-table { width: 100%; border-collapse: collapse; }
+.inv-table th {
+  background: var(--steel); color: var(--gold); padding: 10px 12px;
+  text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.inv-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+.inv-table tr:hover { background: rgba(255,255,255,0.03); }
+.status-badge {
+  padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase;
+}
+.status-CRITICAL { background: var(--red); color: white; }
+.status-ORDER_NOW { background: var(--orange); color: white; }
+.status-PLAN_PRODUCTION { background: var(--yellow); color: #333; }
+.status-OK { background: var(--green); color: white; }
+
+/* Progress bar for DOI */
+.doi-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.doi-fill { height: 100%; border-radius: 3px; }
+
+/* Charts row */
+.charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
+.chart-card { background: var(--dark-blue); border-radius: 8px; padding: 20px; }
+.chart-card h3 { font-size: 14px; color: var(--gold); margin-bottom: 12px; }
+.chart-card canvas { max-height: 280px; }
+
+/* Salesman table */
+.sm-table { width: 100%; border-collapse: collapse; }
+.sm-table th { background: var(--steel); color: var(--gold); padding: 8px 12px; text-align: left; font-size: 12px; text-transform: uppercase; }
+.sm-table td { padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+.sm-table tr:hover { background: rgba(255,255,255,0.03); }
+
+/* Account table with search */
+.search-bar { display: flex; gap: 10px; margin-bottom: 12px; }
+.search-bar input {
+  flex: 1; background: var(--steel); border: 1px solid rgba(255,255,255,0.2);
+  color: var(--white); padding: 8px 14px; border-radius: 4px; font-size: 14px;
+}
+.search-bar input::placeholder { color: #6c757d; }
+.search-bar select {
+  background: var(--steel); color: var(--white); border: 1px solid rgba(255,255,255,0.2);
+  padding: 8px 12px; border-radius: 4px; font-size: 14px; cursor: pointer;
+}
+.acct-table { width: 100%; border-collapse: collapse; }
+.acct-table th { background: var(--steel); color: var(--gold); padding: 8px 10px; text-align: left; font-size: 11px; text-transform: uppercase; cursor: pointer; }
+.acct-table th:hover { color: var(--white); }
+.acct-table td { padding: 7px 10px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; }
+.acct-table tr:hover { background: rgba(255,255,255,0.03); }
+.premise-on { color: var(--gold); }
+.premise-off { color: var(--blue); }
+
+/* Alerts panel */
+.alerts {
+  background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3);
+  border-radius: 8px; padding: 15px 20px; margin-bottom: 25px;
+}
+.alerts h3 { color: var(--red); font-size: 14px; margin-bottom: 10px; }
+.alert-item { padding: 6px 0; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 8px; }
+.alert-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.alert-dot.critical { background: var(--red); }
+.alert-dot.warning { background: var(--orange); }
+
+/* City distribution */
+.city-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+.city-chip {
+  background: var(--steel); padding: 8px 12px; border-radius: 6px;
+  display: flex; justify-content: space-between; font-size: 13px;
+}
+.city-chip .count { color: var(--gold); font-weight: 600; }
+
+/* Production timeline */
+.prod-row { display: flex; align-items: center; margin-bottom: 10px; }
+.prod-label { width: 180px; font-size: 13px; color: var(--white); flex-shrink: 0; }
+.prod-label small { color: #6c757d; display: block; font-size: 11px; }
+.prod-bar-container { flex: 1; position: relative; height: 32px; background: rgba(255,255,255,0.04); border-radius: 4px; overflow: visible; }
+.prod-bar-fill { position: absolute; top: 0; left: 0; height: 100%; border-radius: 4px; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; font-size: 11px; font-weight: 600; color: white; white-space: nowrap; }
+.prod-marker { position: absolute; top: -4px; height: calc(100% + 8px); width: 3px; border-radius: 2px; }
+.prod-marker-label { position: absolute; top: -18px; font-size: 10px; white-space: nowrap; transform: translateX(-50%); }
+.timeline-legend { display: flex; gap: 20px; margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); }
+.timeline-legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #adb5bd; }
+.timeline-legend-swatch { width: 14px; height: 14px; border-radius: 3px; }
+.timeline-scale { display: flex; justify-content: space-between; font-size: 11px; color: #6c757d; margin-bottom: 6px; padding-left: 180px; }
+
+/* Sparkline cards */
+.spark-card { background: var(--dark-blue); border-radius: 8px; padding: 14px 16px; }
+.spark-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.spark-header .name { font-size: 14px; font-weight: 600; color: var(--white); }
+.spark-header .total { font-size: 20px; font-weight: 700; color: var(--gold); }
+.spark-header .sub { font-size: 11px; color: #6c757d; }
+.spark-bar-row { display: flex; gap: 2px; align-items: flex-end; height: 40px; }
+.spark-bar { flex: 1; background: rgba(212,167,54,0.5); border-radius: 2px 2px 0 0; min-width: 3px; transition: background 0.2s; }
+.spark-bar:hover { background: var(--gold); }
+
+/* Inventory sparkline */
+.inv-spark { display: flex; align-items: flex-end; gap: 1px; height: 24px; min-width: 60px; }
+.inv-spark-bar { flex: 1; min-width: 4px; border-radius: 1px 1px 0 0; }
+
+@media (max-width: 768px) {
+  .charts-row { grid-template-columns: 1fr; }
+  .kpi-row { grid-template-columns: 1fr 1fr; }
+  .header { flex-direction: column; gap: 10px; }
+  .range-bar { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<!-- Login Overlay -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <h2>FLIGHT DECK BREWING</h2>
+    <div class="subtitle">Distribution Dashboard</div>
+    <input type="password" id="loginPassword" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button onclick="doLogin()">Sign In</button>
+    <div class="login-error" id="loginError">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- Main Content (hidden until login) -->
+<div class="main-content" id="mainContent">
+
+<div class="header">
+  <h1>FLIGHT DECK BREWING <span>| Distribution Dashboard</span></h1>
+  <div class="header-right">
+    <div class="last-updated" id="lastUpdated">Loading...</div>
+    <div class="data-through" id="headerDate">Loading...</div>
+    <div class="sub-info">Nappi Distributors - Southern Maine</div>
+  </div>
+</div>
+
+<div class="range-bar">
+  <span class="label">Trend range:</span>
+  <button class="range-btn" data-range="7" onclick="setRange(7)">7 Days</button>
+  <button class="range-btn active" data-range="30" onclick="setRange(30)">30 Days</button>
+  <button class="range-btn" data-range="mtd" onclick="setRange('mtd')">MTD</button>
+  <button class="range-btn" data-range="all" onclick="setRange('all')">All</button>
+  <span class="spacer"></span>
+  <span class="live-dot"></span>
+  <span class="live-label">Auto-updates daily at 9 AM</span>
+</div>
+
+<div class="dashboard">
+  <div id="alertsPanel"></div>
+  <div class="kpi-row" id="kpiRow"></div>
+
+  <!-- Activity Feed -->
+  <div class="section feed">
+    <div class="section-header">
+      <h2>Recent Activity</h2>
+      <span class="badge" id="feedBadge">daily highlights</span>
+    </div>
+    <div id="activityFeed"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2>Inventory & Sell-Through by SKU</h2>
+      <span class="badge">Current snapshot - actual units (CE-adjusted)</span>
+    </div>
+    <table class="inv-table" id="invTable">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Format</th>
+          <th>MTD Sold</th>
+          <th>On Hand</th>
+          <th>Daily Rate</th>
+          <th>Days of Inventory</th>
+          <th>7-Day Trend</th>
+          <th>Status</th>
+          <th># Accounts</th>
+        </tr>
+      </thead>
+      <tbody id="invBody"></tbody>
+    </table>
+  </div>
+
+  <div class="charts-row" style="grid-template-columns: 1fr 1fr;">
+    <div class="chart-card">
+      <h3>MTD Sales by Beer (Cases)</h3>
+      <canvas id="salesChart" style="max-height: 320px;"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Channel Mix - Cans vs. Kegs</h3>
+      <canvas id="formatChart" style="max-height: 320px;"></canvas>
+    </div>
+  </div>
+
+  <div class="section" style="margin-bottom: 25px;">
+    <div class="section-header">
+      <h2>Inventory Runway</h2>
+      <span class="badge">Days until empty at current sell rate</span>
+    </div>
+    <div class="chart-card" style="background: var(--dark-blue); border-radius: 8px; padding: 20px;">
+      <canvas id="inventoryChart" style="max-height: 340px;"></canvas>
+    </div>
+  </div>
+
+  <div class="section" style="margin-bottom: 25px;">
+    <div class="section-header">
+      <h2>Production Planning Timeline</h2>
+      <span class="badge">Projected runout vs. brew lead time</span>
+    </div>
+    <div id="prodTimeline" class="chart-card" style="background: var(--dark-blue); border-radius: 8px; padding: 20px;"></div>
+  </div>
+
+  <div class="section" style="margin-bottom: 25px;">
+    <div class="section-header">
+      <h2>Sales Volume Trend</h2>
+      <span class="badge" id="trendBadge">All dates</span>
+    </div>
+    <div class="chart-card" style="background: var(--dark-blue); border-radius: 8px; padding: 20px;">
+      <canvas id="trendChart" style="max-height: 300px;"></canvas>
+    </div>
+    <div id="sparkContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-top: 15px;"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2>Sales Team Performance</h2>
+      <span class="badge" id="smBadge">MTD</span>
+    </div>
+    <table class="sm-table" id="smTable">
+      <thead><tr><th>Salesman</th><th>Accounts</th><th>Latest Day Cases</th><th>MTD Cases</th><th>Avg/Account</th></tr></thead>
+      <tbody id="smBody"></tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2>Market Coverage by City</h2>
+      <span class="badge" id="cityBadge">accounts</span>
+    </div>
+    <div class="city-grid" id="cityGrid"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2>Account Detail</h2>
+      <span class="badge" id="acctBadge">accounts</span>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="acctSearch" placeholder="Search accounts by name, city, or product..." oninput="renderAccounts()">
+      <select id="premiseFilter" onchange="renderAccounts()">
+        <option value="all">All Premises</option>
+        <option value="on_premise">On-Premise</option>
+        <option value="off_premise">Off-Premise</option>
+      </select>
+      <select id="productFilter" onchange="renderAccounts()">
+        <option value="all">All Products</option>
+      </select>
+      <select id="dateFilter" onchange="renderAccounts()">
+        <option value="latest">Latest Day</option>
+      </select>
+    </div>
+    <table class="acct-table" id="acctTable">
+      <thead><tr>
+        <th onclick="sortAccounts('name')">Account</th>
+        <th onclick="sortAccounts('city')">City</th>
+        <th onclick="sortAccounts('premise_type')">Type</th>
+        <th onclick="sortAccounts('product_name')">Product</th>
+        <th onclick="sortAccounts('actual_daily')">Today</th>
+        <th onclick="sortAccounts('actual_mtd')">MTD</th>
+        <th onclick="sortAccounts('salesman')">Salesman</th>
+        <th onclick="sortAccounts('_date')">Report Date</th>
+      </tr></thead>
+      <tbody id="acctBody"></tbody>
+    </table>
+  </div>
+</div>
+
+</div><!-- end main-content -->
+
+<script>
+
+/* ===== LOGIN ===== */
+function doLogin() {
+  var pw = document.getElementById('loginPassword').value;
+  var errEl = document.getElementById('loginError');
+  errEl.style.display = 'none';
+  google.script.run
+    .withSuccessHandler(function(ok) {
+      if (ok) {
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('mainContent').classList.add('visible');
+        loadData();
+      } else {
+        errEl.style.display = 'block';
+      }
+    })
+    .withFailureHandler(function() {
+      errEl.textContent = 'Error checking password.';
+      errEl.style.display = 'block';
+    })
+    .checkPassword(pw);
+}
+
+/* ===== GLOBALS ===== */
+let DATA = {};
+let allDates = [];
+let latestDate = '';
+let prevDate = '';
+let activeRange = 30;
+let currentSort = { field: 'name', dir: 1 };
+let salesChart = null, inventoryChart = null, trendChart = null, formatChart = null;
+
+/* ===== DATA LOADING ===== */
+function loadData() {
+  document.getElementById('headerDate').textContent = 'Loading data...';
+  google.script.run
+    .withSuccessHandler(function(result) {
+      DATA = result;
+      allDates = Object.keys(DATA).sort();
+      latestDate = allDates[allDates.length - 1] || '';
+      prevDate = allDates.length > 1 ? allDates[allDates.length - 2] : '';
+      init();
+    })
+    .withFailureHandler(function(err) {
+      document.getElementById('headerDate').textContent = 'Error loading data';
+      console.error('Failed to load data:', err);
+    })
+    .getData();
+}
+
+/* ===== INIT ===== */
+function init() {
+  // Populate product filter
+  var pf = document.getElementById('productFilter');
+  var products = new Set();
+  allDates.forEach(function(d) {
+    (DATA[d].sales_comp.products || []).forEach(function(p) { products.add(p.product_name); });
+  });
+  Array.from(products).sort().forEach(function(p) {
+    var opt = document.createElement('option');
+    opt.value = p; opt.textContent = p;
+    pf.appendChild(opt);
+  });
+
+  // Populate date filter for accounts
+  var df = document.getElementById('dateFilter');
+  allDates.slice().reverse().forEach(function(d) {
+    var opt = document.createElement('option');
+    opt.value = d; opt.textContent = formatDate(d);
+    df.appendChild(opt);
+  });
+
+  renderAll();
+}
+
+/* ===== DATE RANGE ===== */
+function setRange(r) {
+  activeRange = r;
+  document.querySelectorAll('.range-btn').forEach(function(b) {
+    b.classList.toggle('active', b.getAttribute('data-range') === String(r));
+  });
+  renderTrendChart();
+}
+
+function getDatesInRange() {
+  if (activeRange === 'all') return allDates;
+  if (activeRange === 'mtd') {
+    var month = latestDate.substring(0, 7);
+    return allDates.filter(function(d) { return d.substring(0, 7) === month; });
+  }
+  var cutoff = allDates.length - activeRange;
+  if (cutoff < 0) cutoff = 0;
+  return allDates.slice(cutoff);
+}
+
+/* ===== FORMATTING HELPERS ===== */
+function formatDate(dateStr) {
+  var dt = new Date(dateStr + 'T12:00:00');
+  return dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+}
+
+function formatDateShort(dateStr) {
+  var dt = new Date(dateStr + 'T12:00:00');
+  return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function delta(cur, prev, suffix) {
+  suffix = suffix || '';
+  if (prev === null || prev === undefined) return '';
+  var diff = cur - prev;
+  if (diff === 0) return '<span class="delta flat">-</span>';
+  var cls = diff > 0 ? 'up' : 'down';
+  var sign = diff > 0 ? '+' : '';
+  return '<span class="delta ' + cls + '">' + sign + (typeof diff === 'number' && diff % 1 !== 0 ? diff.toFixed(1) : diff) + suffix + '</span>';
+}
+
+/* ===== RENDER ALL ===== */
+function renderAll() {
+  var d = DATA[latestDate];
+  if (!d) return;
+  var prev = prevDate ? DATA[prevDate] : null;
+
+  // Header
+  document.getElementById('headerDate').textContent = formatDate(latestDate);
+  document.getElementById('lastUpdated').textContent = 'Last updated: ' + formatDate(latestDate) + ' (daily at 9 AM ET)';
+
+  renderAlerts(d);
+  renderKPIs(d, prev);
+  renderActivityFeed();
+  renderInventory(d);
+  renderCharts(d);
+  renderTrendChart();
+  renderProdTimeline(d);
+  renderSalesmen(d);
+  renderCities(d);
+  renderAccounts();
+}
+
+/* ===== ALERTS ===== */
+function renderAlerts(d) {
+  var panel = document.getElementById('alertsPanel');
+  var critical = d.sales_comp.products.filter(function(p) { return p.inventory_status === 'CRITICAL'; });
+  var orderNow = d.sales_comp.products.filter(function(p) { return p.inventory_status === 'ORDER_NOW'; });
+
+  if (critical.length === 0 && orderNow.length === 0) { panel.innerHTML = ''; return; }
+
+  var html = '<div class="alerts"><h3>Production Alerts - as of ' + formatDate(latestDate) + '</h3>';
+  critical.forEach(function(p) {
+    html += '<div class="alert-item"><span class="alert-dot critical"></span>';
+    html += '<strong>CRITICAL:</strong> ' + p.product_name + ' (' + p.format + ') - ';
+    html += p.days_of_inventory.toFixed(1) + ' days remaining at ' + p.daily_sell_rate + ' cases/day. ';
+    html += 'On hand: ' + p.on_hand + ' cases.</div>';
+  });
+  orderNow.forEach(function(p) {
+    html += '<div class="alert-item"><span class="alert-dot warning"></span>';
+    html += '<strong>ORDER NOW:</strong> ' + p.product_name + ' (' + p.format + ') - ';
+    html += p.days_of_inventory.toFixed(1) + ' days remaining. On hand: ' + p.on_hand + ' cases.</div>';
+  });
+  html += '</div>';
+  panel.innerHTML = html;
+}
+
+/* ===== KPIs ===== */
+function renderKPIs(d, prev) {
+  var a = d.accounts;
+  var sc = d.sales_comp;
+  var pa = prev ? prev.accounts : null;
+  var psc = prev ? prev.sales_comp : null;
+
+  var totalDaily = (a.on_premise_daily || 0) + (a.off_premise_daily || 0);
+  var prevTotalDaily = pa ? ((pa.on_premise_daily || 0) + (pa.off_premise_daily || 0)) : null;
+
+  var avgDOI = sc.products.length > 0
+    ? sc.products.reduce(function(s, p) { return s + Math.min(p.days_of_inventory, 999); }, 0) / sc.products.length
+    : 0;
+
+  var actualMTD = sc.totals.actual_mtd || 0;
+  var actualOH = sc.totals.actual_on_hand || 0;
+  var prevActualMTD = psc ? (psc.totals.actual_mtd || 0) : null;
+  var prevActualOH = psc ? (psc.totals.actual_on_hand || 0) : null;
+  var dayOfMonth = parseInt(latestDate.split("-")[2]);
+  var dailyRate = dayOfMonth > 0 ? (actualMTD / dayOfMonth) : 0;
+
+  var kpis = [
+    { label: 'Total Accounts', value: a.total_accounts, prev: pa ? pa.total_accounts : null, sub: a.on_premise_count + ' on-prem / ' + a.off_premise_count + ' off-prem' },
+    { label: 'MTD Units Sold', value: actualMTD, prev: prevActualMTD, sub: sc.totals.mtd_sales + ' CEs = ' + actualMTD + ' actual cases/kegs' },
+    { label: 'Distributor On Hand', value: actualOH, prev: prevActualOH, sub: sc.totals.on_hand + ' CEs = ' + actualOH + ' actual units' },
+    { label: "Latest Day's Orders", value: totalDaily + ' CEs', prev: null, sub: a.accounts_ordering_today + ' accounts ordered (' + formatDateShort(latestDate) + ')' },
+    { label: 'Daily Sell Rate', value: dailyRate.toFixed(1), prev: null, sub: 'actual units/day avg this month' },
+    { label: 'Avg Days of Inventory', value: avgDOI.toFixed(0) + 'd', prev: null, sub: 'across all SKUs' },
+  ];
+
+  var html = '';
+  kpis.forEach(function(k) {
+    var d_html = (k.prev !== null && k.prev !== undefined) ? delta(typeof k.value === 'number' ? k.value : 0, k.prev) : '';
+    html += '<div class="kpi-card">';
+    html += '<div class="label">' + k.label + '</div>';
+    html += '<div class="value">' + k.value + '</div>';
+    html += '<div class="sub">' + k.sub + '</div>';
+    if (d_html) html += d_html;
+    if (prevDate && k.prev !== null && k.prev !== undefined) {
+      html += '<div style="font-size:11px;color:#6c757d;margin-top:4px;">vs ' + formatDateShort(prevDate) + '</div>';
+    }
+    html += '</div>';
+  });
+  document.getElementById('kpiRow').innerHTML = html;
+}
+
+/* ===== ACTIVITY FEED ===== */
+function renderActivityFeed() {
+  var recentDates = allDates.slice(-7).reverse();
+  var html = '';
+  recentDates.forEach(function(date, idx) {
+    var d = DATA[date];
+    var sc = d.sales_comp;
+    var a = d.accounts;
+    var totalDaily = (a.on_premise_daily || 0) + (a.off_premise_daily || 0);
+    var actualMTD = sc.totals.actual_mtd || 0;
+    var critical = sc.products.filter(function(p) { return p.inventory_status === 'CRITICAL'; }).length;
+    var isLatest = idx === 0;
+
+    html += '<div class="feed-item' + (isLatest ? ' latest' : '') + '">';
+    html += '<div class="feed-date">' + formatDateShort(date) + '</div>';
+    html += '<div class="feed-body">';
+    html += '<span class="num">' + totalDaily + '</span> CEs shipped to ';
+    html += '<span class="num">' + a.accounts_ordering_today + '</span> accounts';
+    html += ' | MTD total: <span class="num">' + actualMTD + '</span> units';
+    html += ' | <span class="num">' + a.total_accounts + '</span> active accounts';
+    if (critical > 0) {
+      html += ' | <span style="color:var(--red);font-weight:600;">' + critical + ' critical SKU' + (critical > 1 ? 's' : '') + '</span>';
+    }
+    html += '</div></div>';
+  });
+  document.getElementById('activityFeed').innerHTML = html;
+  document.getElementById('feedBadge').textContent = 'last ' + recentDates.length + ' days';
+}
+
+/* ===== INVENTORY TABLE ===== */
+function renderInventory(d) {
+  var products = d.sales_comp.products;
+  var acctDist = d.accounts.product_distribution || {};
+
+  // Build 7-day on-hand history per SKU for sparklines
+  var recentDates = allDates.slice(-7);
+  var skuHistory = {};
+  recentDates.forEach(function(date) {
+    var snap = DATA[date];
+    if (!snap) return;
+    (snap.sales_comp.products || []).forEach(function(p) {
+      var key = p.sku_code + '|' + p.format;
+      if (!skuHistory[key]) skuHistory[key] = [];
+      skuHistory[key].push({ date: date, on_hand: p.actual_on_hand || 0 });
+    });
+  });
+
+  var html = '';
+  products.forEach(function(p) {
+    var doiPct = Math.min((p.days_of_inventory / 60) * 100, 100);
+    var barColor = p.inventory_status === 'CRITICAL' ? 'var(--red)'
+      : p.inventory_status === 'ORDER_NOW' ? 'var(--orange)'
+      : p.inventory_status === 'PLAN_PRODUCTION' ? 'var(--yellow)' : 'var(--green)';
+
+    var unit = p.actual_unit === 'kegs' ? 'kegs' : 'cases';
+
+    // Build sparkline for this SKU
+    var key = p.sku_code + '|' + p.format;
+    var history = skuHistory[key] || [];
+    var sparkHtml = '';
+    if (history.length > 1) {
+      var vals = history.map(function(h) { return h.on_hand; });
+      var maxVal = Math.max.apply(null, vals.concat([1]));
+      var trendDir = vals[vals.length - 1] - vals[0];
+      var trendColor = trendDir > 0 ? 'var(--green)' : trendDir < 0 ? 'var(--red)' : 'var(--gold)';
+      sparkHtml = '<div class="inv-spark" title="On-hand last ' + vals.length + ' days: ' + vals.join(', ') + '">';
+      vals.forEach(function(v, i) {
+        var h = Math.max((v / maxVal) * 100, 8);
+        var opacity = i === vals.length - 1 ? '1' : '0.5';
+        sparkHtml += '<div class="inv-spark-bar" style="height:' + h + '%;background:' + trendColor + ';opacity:' + opacity + '"></div>';
+      });
+      sparkHtml += '</div>';
+    } else {
+      sparkHtml = '<span style="color:#6c757d;font-size:11px;">-</span>';
+    }
+
+    html += '<tr>';
+    html += '<td><strong>' + p.product_name + '</strong></td>';
+    html += '<td>' + p.format + '</td>';
+    html += '<td>' + p.actual_mtd + ' <small style="color:#6c757d">' + unit + '</small></td>';
+    html += '<td>' + p.actual_on_hand + ' <small style="color:#6c757d">' + unit + '</small></td>';
+    html += '<td>' + p.actual_daily_rate + '/day</td>';
+    html += '<td>' + p.days_of_inventory.toFixed(1) + ' days';
+    html += '<div class="doi-bar"><div class="doi-fill" style="width:' + doiPct + '%;background:' + barColor + '"></div></div></td>';
+    html += '<td>' + sparkHtml + '</td>';
+    html += '<td><span class="status-badge status-' + p.inventory_status + '">' + p.inventory_status.replace('_', ' ') + '</span></td>';
+    html += '<td>' + (acctDist[p.sku_code] || 0) + '</td>';
+    html += '</tr>';
+  });
+  document.getElementById('invBody').innerHTML = html;
+}
+
+/* ===== CHARTS ===== */
+function renderCharts(d) {
+  var products = d.sales_comp.products;
+
+  // 1. Horizontal stacked bar: MTD sales by beer
+  var beerMap = {};
+  products.forEach(function(p) {
+    if (!beerMap[p.product_name]) beerMap[p.product_name] = { cans: 0, kegs: 0 };
+    if (p.format.includes('BBL')) beerMap[p.product_name].kegs += (p.actual_mtd || 0);
+    else beerMap[p.product_name].cans += (p.actual_mtd || 0);
+  });
+  var beerNames = Object.keys(beerMap);
+  var canData = beerNames.map(function(b) { return beerMap[b].cans; });
+  var kegData = beerNames.map(function(b) { return beerMap[b].kegs; });
+
+  if (salesChart) salesChart.destroy();
+  salesChart = new Chart(document.getElementById('salesChart'), {
+    type: 'bar',
+    data: {
+      labels: beerNames,
+      datasets: [
+        { label: 'Cans', data: canData, backgroundColor: 'rgba(212,167,54,0.8)', borderColor: 'rgba(212,167,54,1)', borderWidth: 1, borderRadius: 3 },
+        { label: 'Kegs (1/6 BBL)', data: kegData, backgroundColor: 'rgba(52,152,219,0.7)', borderColor: 'rgba(52,152,219,1)', borderWidth: 1, borderRadius: 3 }
+      ]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#adb5bd', font: { size: 12 }, boxWidth: 14 } },
+        tooltip: { backgroundColor: 'rgba(26,35,50,0.95)', titleColor: '#d4a736', bodyColor: '#f8f9fa',
+          callbacks: { label: function(ctx) { return ctx.dataset.label + ': ' + ctx.parsed.x.toFixed(1) + ' units'; } }
+        }
+      },
+      scales: {
+        x: { stacked: true, beginAtZero: true, ticks: { color: '#adb5bd' }, grid: { color: 'rgba(255,255,255,0.05)' }, title: { display: true, text: 'MTD Actual Units', color: '#adb5bd' } },
+        y: { stacked: true, ticks: { color: '#e9ecef', font: { size: 13, weight: '600' } }, grid: { display: false } }
+      }
+    }
+  });
+
+  // 2. Inventory Runway
+  var sortedProds = products.slice().sort(function(a, b) { return a.days_of_inventory - b.days_of_inventory; });
+  var invLabels = sortedProds.map(function(p) { return p.product_name + ' (' + p.format.replace('4PK CAN','4pk').replace('6PK CAN','6pk').replace('1/6 BBL','keg') + ')'; });
+  var maxDays = 70;
+
+  if (inventoryChart) inventoryChart.destroy();
+  inventoryChart = new Chart(document.getElementById('inventoryChart'), {
+    type: 'bar',
+    data: {
+      labels: invLabels,
+      datasets: [{
+        label: 'Days of Inventory',
+        data: sortedProds.map(function(p) { return Math.min(p.days_of_inventory, maxDays); }),
+        backgroundColor: sortedProds.map(function(p) {
+          return p.inventory_status === 'CRITICAL' ? '#e74c3c' : p.inventory_status === 'ORDER_NOW' ? '#e67e22' : p.inventory_status === 'PLAN_PRODUCTION' ? '#f39c12' : '#27ae60';
+        }),
+        borderRadius: 4, borderSkipped: false, barPercentage: 0.7
+      }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { backgroundColor: 'rgba(26,35,50,0.95)', titleColor: '#d4a736', bodyColor: '#f8f9fa',
+          callbacks: {
+            label: function(ctx) {
+              var p = sortedProds[ctx.dataIndex];
+              var unit = p.actual_unit === 'kegs' ? 'kegs' : 'cases';
+              return [p.days_of_inventory.toFixed(1) + ' days remaining', 'On hand: ' + (p.actual_on_hand||0) + ' ' + unit, 'Sell rate: ' + (p.actual_daily_rate||0) + ' ' + unit + '/day', 'Status: ' + p.inventory_status.replace('_',' ')];
+            }
+          }
+        }
+      },
+      scales: {
+        x: { beginAtZero: true, max: maxDays, ticks: { color: '#adb5bd', callback: function(v) { return v + 'd'; } }, grid: { color: 'rgba(255,255,255,0.05)' } },
+        y: { ticks: { color: '#e9ecef', font: { size: 12, weight: '500' } }, grid: { display: false } }
+      }
+    },
+    plugins: [{
+      id: 'thresholdZones',
+      beforeDraw: function(chart) {
+        var ctx = chart.ctx; var xScale = chart.scales.x; var yScale = chart.scales.y;
+        var top = yScale.top; var bottom = yScale.bottom;
+        ctx.fillStyle = 'rgba(231,76,60,0.08)'; var x14 = xScale.getPixelForValue(14); ctx.fillRect(xScale.left, top, x14 - xScale.left, bottom - top);
+        ctx.fillStyle = 'rgba(230,126,34,0.06)'; var x21 = xScale.getPixelForValue(21); ctx.fillRect(x14, top, x21 - x14, bottom - top);
+        ctx.fillStyle = 'rgba(243,156,18,0.05)'; var x28 = xScale.getPixelForValue(28); ctx.fillRect(x21, top, x28 - x21, bottom - top);
+        [{val:14,label:'14d',color:'rgba(231,76,60,0.5)'},{val:21,label:'21d',color:'rgba(230,126,34,0.4)'},{val:28,label:'28d',color:'rgba(243,156,18,0.3)'}].forEach(function(t) {
+          var x = xScale.getPixelForValue(t.val);
+          ctx.strokeStyle = t.color; ctx.lineWidth = 1.5; ctx.setLineDash([4,4]);
+          ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bottom); ctx.stroke(); ctx.setLineDash([]);
+          ctx.fillStyle = t.color; ctx.font = '10px system-ui'; ctx.textAlign = 'center'; ctx.fillText(t.label, x, top - 4);
+        });
+      }
+    }]
+  });
+
+  // 3. Format mix doughnut
+  var totalCans = 0, totalKegs = 0;
+  products.forEach(function(p) { if (p.format.includes('BBL')) totalKegs += (p.actual_mtd||0); else totalCans += (p.actual_mtd||0); });
+  totalCans = Math.round(totalCans * 10) / 10;
+  totalKegs = Math.round(totalKegs * 10) / 10;
+
+  if (formatChart) formatChart.destroy();
+  formatChart = new Chart(document.getElementById('formatChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Cans (Retail/Off-Premise)', 'Kegs (On-Premise)'],
+      datasets: [{ data: [totalCans, totalKegs], backgroundColor: ['rgba(212,167,54,0.8)', 'rgba(52,152,219,0.8)'], borderColor: ['rgba(212,167,54,1)', 'rgba(52,152,219,1)'], borderWidth: 2, hoverOffset: 8 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '55%',
+      plugins: {
+        legend: { position: 'bottom', labels: { color: '#adb5bd', font: { size: 13 }, padding: 20, boxWidth: 16 } },
+        tooltip: { backgroundColor: 'rgba(26,35,50,0.95)', titleColor: '#d4a736', bodyColor: '#f8f9fa',
+          callbacks: { label: function(ctx) { var total = totalCans + totalKegs; var pct = ((ctx.parsed / total) * 100).toFixed(1); return ctx.label + ': ' + ctx.parsed.toFixed(1) + ' units (' + pct + '%)'; } }
+        }
+      }
+    },
+    plugins: [{
+      id: 'centerText',
+      afterDraw: function(chart) {
+        var ctx = chart.ctx; var total = totalCans + totalKegs;
+        ctx.save(); var cx = (chart.chartArea.left + chart.chartArea.right) / 2; var cy = (chart.chartArea.top + chart.chartArea.bottom) / 2;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#adb5bd'; ctx.font = '13px system-ui'; ctx.fillText('Total MTD', cx, cy - 12);
+        ctx.fillStyle = '#f8f9fa'; ctx.font = 'bold 28px system-ui'; ctx.fillText(total, cx, cy + 14);
+        ctx.restore();
+      }
+    }]
+  });
+}
+
+/* ===== TREND CHART ===== */
+function renderTrendChart() {
+  var dates = getDatesInRange();
+  if (dates.length === 0) return;
+  document.getElementById('trendBadge').textContent = formatDateShort(dates[0]) + ' - ' + formatDateShort(dates[dates.length - 1]);
+
+  var beerColors = { 'P3 Pale Ale': '#d4a736', 'Subhunter IPA': '#e74c3c', 'Wings Hazy IPA': '#3498db', 'Plane Beer Pilsner': '#27ae60', 'Remove Before Flight': '#9b59b6', 'Real Maine Italian Pilsner': '#e67e22' };
+  var fallbackColors = ['#1abc9c', '#f39c12', '#2980b9', '#c0392b', '#16a085'];
+
+  var beerNames = [];
+  DATA[dates[0]].sales_comp.products.forEach(function(p) { if (beerNames.indexOf(p.product_name) < 0) beerNames.push(p.product_name); });
+
+  var datasets = beerNames.map(function(beer, idx) {
+    var mtdData = dates.map(function(date) {
+      return Math.round(DATA[date].sales_comp.products.filter(function(p) { return p.product_name === beer; }).reduce(function(sum, p) { return sum + (p.actual_mtd || 0); }, 0) * 10) / 10;
+    });
+    var color = beerColors[beer] || fallbackColors[idx % fallbackColors.length];
+    return { label: beer, data: mtdData, borderColor: color, backgroundColor: color + '33', fill: false, tension: 0.3, pointRadius: 6, pointHoverRadius: 9, borderWidth: 3, pointStyle: 'circle', pointBackgroundColor: color };
+  });
+
+  if (trendChart) trendChart.destroy();
+  trendChart = new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: { labels: dates.map(function(d) { return formatDateShort(d); }), datasets: datasets },
+    options: {
+      responsive: true, interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { labels: { color: '#adb5bd', font: { size: 12 }, boxWidth: 14, padding: 18, usePointStyle: true }, position: 'bottom' },
+        tooltip: { backgroundColor: 'rgba(26,35,50,0.95)', titleColor: '#d4a736', bodyColor: '#f8f9fa', borderColor: '#d4a736', borderWidth: 1,
+          callbacks: { label: function(ctx) { return ctx.dataset.label + ': ' + ctx.parsed.y + ' actual units MTD'; } }
+        }
+      },
+      scales: {
+        y: { beginAtZero: true, title: { display: true, text: 'MTD Actual Units', color: '#adb5bd' }, ticks: { color: '#adb5bd' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+        x: { ticks: { color: '#adb5bd' }, grid: { color: 'rgba(255,255,255,0.08)' } }
+      }
+    }
+  });
+
+  // Sparkline cards
+  var sparkHTML = '';
+  beerNames.forEach(function(beer) {
+    var color = beerColors[beer] || '#d4a736';
+    var dailyTotals = dates.map(function(date) {
+      return Math.round(DATA[date].sales_comp.products.filter(function(p) { return p.product_name === beer; }).reduce(function(sum, p) { return sum + (p.actual_mtd || 0); }, 0) * 10) / 10;
+    });
+    var latest = dailyTotals[dailyTotals.length - 1];
+    var maxVal = Math.max.apply(null, dailyTotals.concat([1]));
+    var latestDateStr = dates[dates.length - 1];
+    var skus = DATA[latestDateStr].sales_comp.products.filter(function(p) { return p.product_name === beer; });
+    var breakdown = skus.map(function(p) {
+      var fmt = p.format.replace('4PK CAN','4pk').replace('6PK CAN','6pk').replace('1/6 BBL','keg');
+      var unit = p.actual_unit === 'kegs' ? 'kegs' : 'cases';
+      return fmt + ': ' + (p.actual_mtd || 0) + ' ' + unit;
+    }).join(' / ');
+
+    var bars = dailyTotals.map(function(v, i) {
+      var h = Math.max((v / maxVal) * 100, 4);
+      return '<div class="spark-bar" style="height:' + h + '%;background:' + color + '88" title="' + formatDateShort(dates[i]) + ': ' + v + ' units"></div>';
+    }).join('');
+
+    sparkHTML += '<div class="spark-card">';
+    sparkHTML += '<div class="spark-header"><div><span class="name">' + beer + '</span>';
+    sparkHTML += '<span class="sub">' + breakdown + '</span></div>';
+    sparkHTML += '<div style="text-align:right"><span class="total">' + latest + '</span>';
+    sparkHTML += '<span class="sub"> units MTD</span></div></div>';
+    sparkHTML += '<div class="spark-bar-row">' + bars + '</div>';
+    sparkHTML += '</div>';
+  });
+  document.getElementById('sparkContainer').innerHTML = sparkHTML;
+}
+
+/* ===== PRODUCTION TIMELINE ===== */
+function renderProdTimeline(d) {
+  var products = d.sales_comp.products;
+  var maxDays = 60; var leadTime = 25;
+  var beerMap = {};
+  products.forEach(function(p) { if (!beerMap[p.product_name]) beerMap[p.product_name] = []; beerMap[p.product_name].push(p); });
+  var beers = Object.keys(beerMap).sort(function(a, b) {
+    return Math.min.apply(null, beerMap[a].map(function(p) { return p.days_of_inventory; })) - Math.min.apply(null, beerMap[b].map(function(p) { return p.days_of_inventory; }));
+  });
+
+  var html = '<div class="timeline-scale">';
+  for (var i = 0; i <= maxDays; i += 10) html += '<span>' + i + 'd</span>';
+  html += '</div>';
+
+  beers.forEach(function(beer) {
+    beerMap[beer].forEach(function(p) {
+      var doi = Math.min(p.days_of_inventory, maxDays);
+      var pct = (doi / maxDays) * 100;
+      var fmt = p.format.replace('4PK CAN','4pk').replace('6PK CAN','6pk').replace('1/6 BBL','keg');
+      var barColor = p.inventory_status === 'CRITICAL' ? '#e74c3c' : p.inventory_status === 'ORDER_NOW' ? '#e67e22' : p.inventory_status === 'PLAN_PRODUCTION' ? '#f39c12' : '#27ae60';
+      var brewDeadline = doi - leadTime;
+      var brewPct = Math.max(0, (brewDeadline / maxDays) * 100);
+      var unit = p.actual_unit === 'kegs' ? 'kegs' : 'cases';
+
+      html += '<div class="prod-row">';
+      html += '<div class="prod-label">' + beer + '<small>' + fmt + ' | ' + (p.actual_on_hand || 0) + ' ' + unit + ' on hand</small></div>';
+      html += '<div class="prod-bar-container">';
+      html += '<div class="prod-bar-fill" style="width:' + pct + '%;background:' + barColor + ';">' + p.days_of_inventory.toFixed(0) + 'd</div>';
+      if (brewDeadline > 0) {
+        html += '<div class="prod-marker" style="left:' + brewPct + '%;background:rgba(255,255,255,0.7);"></div>';
+        html += '<span class="prod-marker-label" style="left:' + brewPct + '%;color:rgba(255,255,255,0.6);">brew by</span>';
+      } else {
+        html += '<span style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:11px;color:#e74c3c;font-weight:700;">BREW NOW</span>';
+      }
+      html += '</div></div>';
+    });
+  });
+
+  html += '<div class="timeline-legend">';
+  html += '<div class="timeline-legend-item"><div class="timeline-legend-swatch" style="background:#e74c3c;"></div>Critical (&lt;14d)</div>';
+  html += '<div class="timeline-legend-item"><div class="timeline-legend-swatch" style="background:#e67e22;"></div>Order Now (&lt;21d)</div>';
+  html += '<div class="timeline-legend-item"><div class="timeline-legend-swatch" style="background:#f39c12;"></div>Plan Production (&lt;28d)</div>';
+  html += '<div class="timeline-legend-item"><div class="timeline-legend-swatch" style="background:#27ae60;"></div>OK (&gt;28d)</div>';
+  html += '<div class="timeline-legend-item"><div style="width:3px;height:14px;background:rgba(255,255,255,0.7);border-radius:2px;"></div>Brew-by deadline (~25d lead)</div>';
+  html += '</div>';
+  document.getElementById('prodTimeline').innerHTML = html;
+}
+
+/* ===== SALESMEN ===== */
+function renderSalesmen(d) {
+  var sm = d.accounts.salesman_summary || {};
+  var entries = Object.entries(sm).sort(function(a, b) { return b[1].mtd_cases - a[1].mtd_cases; });
+
+  var html = '';
+  entries.forEach(function(e) {
+    var name = e[0]; var stats = e[1];
+    var avg = stats.account_count > 0 ? (stats.mtd_cases / stats.account_count).toFixed(1) : '0';
+    html += '<tr><td><strong>' + name + '</strong></td><td>' + stats.account_count + '</td><td>' + stats.daily_cases + '</td><td>' + stats.mtd_cases + '</td><td>' + avg + '</td></tr>';
+  });
+  document.getElementById('smBody').innerHTML = html;
+  document.getElementById('smBadge').textContent = entries.length + ' reps | as of ' + formatDateShort(latestDate);
+}
+
+/* ===== CITIES ===== */
+function renderCities(d) {
+  var cityMap = {};
+  (d.accounts.detail || []).forEach(function(a) {
+    if (!a.city) return;
+    if (!cityMap[a.city]) cityMap[a.city] = new Set();
+    cityMap[a.city].add(a.acct_num);
+  });
+  var sorted = Object.entries(cityMap).map(function(e) { return [e[0], e[1].size]; }).sort(function(a, b) { return b[1] - a[1]; });
+
+  var html = '';
+  sorted.forEach(function(e) { html += '<div class="city-chip"><span>' + e[0] + '</span><span class="count">' + e[1] + '</span></div>'; });
+  document.getElementById('cityGrid').innerHTML = html;
+  document.getElementById('cityBadge').textContent = sorted.length + ' cities';
+}
+
+/* ===== ACCOUNTS ===== */
+function renderAccounts() {
+  var dateVal = document.getElementById('dateFilter').value;
+  var selectedDate = (dateVal === 'latest') ? latestDate : dateVal;
+  var d = DATA[selectedDate];
+  if (!d) return;
+
+  var search = document.getElementById('acctSearch').value.toLowerCase();
+  var premise = document.getElementById('premiseFilter').value;
+  var product = document.getElementById('productFilter').value;
+
+  var accounts = (d.accounts.detail || []).map(function(a) {
+    var copy = {};
+    for (var k in a) copy[k] = a[k];
+    copy._date = selectedDate;
+    return copy;
+  });
+
+  if (search) {
+    accounts = accounts.filter(function(a) {
+      return a.name.toLowerCase().includes(search) || a.city.toLowerCase().includes(search) || a.product_name.toLowerCase().includes(search) || a.salesman.toLowerCase().includes(search);
+    });
+  }
+  if (premise !== 'all') accounts = accounts.filter(function(a) { return a.premise_type === premise; });
+  if (product !== 'all') accounts = accounts.filter(function(a) { return a.product_name === product; });
+
+  accounts.sort(function(a, b) {
+    var av = a[currentSort.field] || '';
+    var bv = b[currentSort.field] || '';
+    if (typeof av === 'number') return (av - bv) * currentSort.dir;
+    return String(av).localeCompare(String(bv)) * currentSort.dir;
+  });
+
+  var html = '';
+  accounts.forEach(function(a) {
+    var premClass = a.premise_type === 'on_premise' ? 'premise-on' : 'premise-off';
+    var premLabel = a.premise_type === 'on_premise' ? 'On' : 'Off';
+    html += '<tr>';
+    html += '<td><strong>' + a.name + '</strong></td>';
+    html += '<td>' + a.city + '</td>';
+    html += '<td><span class="' + premClass + '">' + premLabel + '</span></td>';
+    html += '<td>' + a.product_name + ' <small style="color:#6c757d">' + a.product_format + '</small></td>';
+    html += '<td>' + (a.actual_daily > 0 ? '<strong style="color:var(--green)">' + a.actual_daily + '</strong>' : '-') + '</td>';
+    html += '<td>' + (a.actual_mtd || a.mtd_qty) + '</td>';
+    html += '<td>' + a.salesman + '</td>';
+    html += '<td style="color:#6c757d;font-size:12px;">' + formatDateShort(a._date) + '</td>';
+    html += '</tr>';
+  });
+  document.getElementById('acctBody').innerHTML = html;
+  document.getElementById('acctBadge').textContent = accounts.length + ' rows | ' + formatDateShort(selectedDate);
+}
+
+function sortAccounts(field) {
+  if (currentSort.field === field) currentSort.dir *= -1;
+  else { currentSort.field = field; currentSort.dir = 1; }
+  renderAccounts();
+}
+
+</script>
+</body>
+</html>

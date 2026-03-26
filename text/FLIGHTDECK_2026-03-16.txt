@@ -1,0 +1,28 @@
+COPYRIGHT 1993 VERMONT INFORMATION PROCESSING, INC. 3/16/26 20:47
+RFM.#659-BREWERY ACTUAL SALES TY VS LY
+NAPPI DISTRIBUTORS CFM.#659-BREWERY ACTUAL SALES TY VS LY 3/16/26 PAGE 44
+==================================================================================================================================================================================================== 1 FLIGHT DECK BREWING
+======================================================================================================================================================================================================
+
+----ACTUAL SELL DAYS THIS YEAR -VS ACTUAL SELL DAYS LAST YEAR -- -------ACTUAL SELLING DAYS THIS YR --VS-- ALL OF LAST YE AR ---- ----- PRODUCT  PACK DESC1 M-T-D M-T-D M-T-D M-T-D Y-T-D Y-T-D Y-T-D Y-T-D M-T-D M-T-D M-T-D M-T-D Y-T-D Y-T-D Y-T-D Y-T-D ON HAND SALES SALES DIFF PCT SALES SALES DIFF PCT SALES SALES DIFF PCT SALES SALES DIFF PCT
+
+45000 FLIGHT DECK P3 PALE 4PK CN 32 32 --- 32 32 --- 32 32 --- 32 32 --- 55
+45003 FLIGHT DECK P3 PALE 1/6BBL 7 7 --- 7 7 --- 7 7 --- 7 7 --- 9
+45005 FLIGHT DECK SUBHUNTER 4PK 24 24 --- 24 24 --- 24 24 --- 24 24 --- 64
+45008 FLIGHT DECK SUBHUNTER 1/6B 2 2 --- 2 2 --- 2 2 --- 2 2 --- 5
+45010 FLIGHT DECK WINGS 4PK CAN 40 40 --- 40 40 --- 40 40 --- 40 40 --- 48
+45013 FLIGHT DECK WINGS 1/6BBL 9 9 --- 9 9 --- 9 9 --- 9 9 --- 1
+45015 FLIGHT DECK PLANE BEER 6PK 12 12 --- 12 12 --- 12 12 --- 12 12 --- 55
+45018 FLIGHT DECK PLANE BEER 1/6 11 11 --- 11 11 --- 11 11 --- 11 11 --- 1
+45020 FLIGHT DECK REMOVE BF 4PK 16 16 --- 16 16 --- 16 16 --- 16 16 --- 13
+45023 FLIGHT DECK REMOVE BF 1/6B 5 5 --- 5 5 --- 5 5 --- 5 5 --- 2
+45038 FLIGHT DECK MAINE PILS 1/6 5 5 --- 5 5 --- 5 5 --- 5 5 --- 4
+------
+FLIGHT DECK TOTALS 163 163 --- 163 163 --- 163 163 --- 163 163 --- 257
+------
+------
+
+* TOTAL FB FLIGHT DECK BREWING
+163 163 --- 163 163 --- 163 163 --- 163 163 --- 257
+------
+ALL PRODUCTS ARE REPORTED IN 12OZ CASE EQUIVALENCY
