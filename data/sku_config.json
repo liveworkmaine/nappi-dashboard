@@ -1,0 +1,13 @@
+{
+  "45000": { "name": "P3 Pale Ale", "format": "4PK CAN", "lead_time_days": 21, "batch_size_bbl": 7 },
+  "45003": { "name": "P3 Pale Ale", "format": "1/6 BBL", "lead_time_days": 21, "batch_size_bbl": 7 },
+  "45005": { "name": "Subhunter IPA", "format": "4PK CAN", "lead_time_days": 30, "batch_size_bbl": 7 },
+  "45008": { "name": "Subhunter IPA", "format": "1/6 BBL", "lead_time_days": 30, "batch_size_bbl": 7 },
+  "45010": { "name": "Wings Hazy IPA", "format": "4PK CAN", "lead_time_days": 30, "batch_size_bbl": 7 },
+  "45013": { "name": "Wings Hazy IPA", "format": "1/6 BBL", "lead_time_days": 30, "batch_size_bbl": 7 },
+  "45015": { "name": "Plane Beer Pilsner", "format": "6PK CAN", "lead_time_days": 21, "batch_size_bbl": 7 },
+  "45018": { "name": "Plane Beer Pilsner", "format": "1/6 BBL", "lead_time_days": 21, "batch_size_bbl": 7 },
+  "45020": { "name": "Remove Before Flight", "format": "4PK CAN", "lead_time_days": 14, "batch_size_bbl": 7 },
+  "45023": { "name": "Remove Before Flight", "format": "1/6 BBL", "lead_time_days": 14, "batch_size_bbl": 7 },
+  "45038": { "name": "Real Maine Italian Pilsner", "format": "1/6 BBL", "lead_time_days": 30, "batch_size_bbl": 7 }
+}

@@ -15,8 +15,37 @@ import re
 from collections import defaultdict
 
 
-def build_dashboard_data(data):
+def load_sku_config(base_path=None):
+    """Load per-SKU config (lead times, batch sizes) from sku_config.json."""
+    if base_path is None:
+        base_path = os.path.dirname(os.path.abspath(__file__))
+    config_path = os.path.join(base_path, 'data', 'sku_config.json')
+    if os.path.exists(config_path):
+        with open(config_path) as f:
+            return json.load(f)
+    return {}
+
+
+DEFAULT_LEAD_TIME_DAYS = 21
+DEFAULT_BATCH_SIZE_BBL = 7
+
+
+def get_sku_lead_time(sku_config, sku_code):
+    """Get lead time for a SKU, falling back to default."""
+    cfg = sku_config.get(str(sku_code), {})
+    return cfg.get('lead_time_days', DEFAULT_LEAD_TIME_DAYS)
+
+
+def get_sku_batch_size(sku_config, sku_code):
+    """Get batch size for a SKU, falling back to default."""
+    cfg = sku_config.get(str(sku_code), {})
+    return cfg.get('batch_size_bbl', DEFAULT_BATCH_SIZE_BBL)
+
+
+def build_dashboard_data(data, sku_config=None):
     """Build compact dashboard data dict from full nappi_data.json dict."""
+    if sku_config is None:
+        sku_config = {}
     dates = sorted(data.keys())
     latest_date = dates[-1]
     latest = data[latest_date]
@@ -246,10 +275,12 @@ def build_dashboard_data(data):
         }
 
     # ── PRODUCTION ──
-    LEAD_TIME_DAYS = 21  # brew-to-ready lead time
+    from datetime import datetime, timedelta
 
     for p in latest['sales_comp']['products']:
         sku = p['sku_code']
+        lead_time = get_sku_lead_time(sku_config, sku)
+        batch_size = get_sku_batch_size(sku_config, sku)
         first_prods = data[dates[0]]['sales_comp']['products']
         first_p = [x for x in first_prods if x['sku_code'] == sku]
         early_rate = first_p[0]['daily_sell_rate'] if first_p else 0
@@ -258,15 +289,14 @@ def build_dashboard_data(data):
         a_rate = p.get('actual_daily_rate', 0)
         a_oh = p['actual_on_hand']
         days_to_zero = a_oh / a_rate if a_rate > 0 else 999
-        brew_urgency = days_to_zero - LEAD_TIME_DAYS
+        brew_urgency = days_to_zero - lead_time
         # Projected stockout and brew-by dates
-        from datetime import datetime, timedelta
         latest_dt = datetime.strptime(latest_date, '%Y-%m-%d')
         stockout_dt = latest_dt + timedelta(days=days_to_zero)
-        brew_by_dt = stockout_dt - timedelta(days=LEAD_TIME_DAYS)
+        brew_by_dt = stockout_dt - timedelta(days=lead_time)
         brew_status = "BREW_NOW" if brew_urgency <= 0 else "PLAN" if brew_urgency <= 7 else "OK"
-        # How many units needed to reach 21-day safety stock
-        target_oh = round(a_rate * LEAD_TIME_DAYS)
+        # How many units needed to reach lead-time safety stock
+        target_oh = round(a_rate * lead_time)
         shortfall = max(0, target_oh - a_oh)
 
         entry = {
@@ -284,6 +314,8 @@ def build_dashboard_data(data):
             "stockout_date": stockout_dt.strftime('%Y-%m-%d'),
             "target_oh": target_oh,
             "shortfall": shortfall,
+            "lead_time": lead_time,
+            "batch_size": batch_size,
         }
         if p['inventory_status'] in ('CRITICAL', 'ORDER_NOW'):
             dashboard["production"]["alerts"].append(entry)
@@ -331,6 +363,9 @@ def build_dashboard_data(data):
         "a_keg_oh": sum(p.get('actual_on_hand', 0) for p in keg_prods),
     }
 
+    # ── SKU CONFIG (for dashboard display) ──
+    dashboard["sku_config"] = sku_config
+
     # ── PRODUCT PENETRATION (accounts per SKU over time) ──
     product_penetration = {}
     for d in dates:
@@ -375,7 +410,13 @@ if __name__ == '__main__':
     with open(os.path.join(base, 'data', 'nappi_data.json')) as f:
         data = json.load(f)
 
-    dashboard = build_dashboard_data(data)
+    sku_config = load_sku_config(base)
+    if sku_config:
+        print(f"Loaded SKU config: {len(sku_config)} SKUs")
+    else:
+        print("No sku_config.json found, using defaults")
+
+    dashboard = build_dashboard_data(data, sku_config)
 
     compact = json.dumps(dashboard, separators=(',', ':'))
     with open(os.path.join(base, 'data', 'dashboard_data.json'), 'w') as f:
