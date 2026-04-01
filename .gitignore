@@ -18,6 +18,9 @@ problem-accounts-prototype.html
 # Google Apps Script reference copy
 nappi_gmail_to_drive.gs
 
+# Raw MCP fetch data (re-fetch from Google Sheets)
+data/inventory_raw.json
+
 # Credentials (never commit)
 *.json.key
 service-account*.json

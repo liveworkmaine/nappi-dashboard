@@ -1,0 +1,48 @@
+[
+  {
+    "timestamp": "2026-04-01T07:54:49.652825",
+    "date": "2026-04-01",
+    "data_freshness": {
+      "nappi": "2026-03-31",
+      "inventory": "2026-03-30",
+      "toast": "2026-04-01",
+      "selfdistro": "2026-04-01"
+    },
+    "brands_needing_brew": 5,
+    "brew_now_count": 4,
+    "plan_count": 1,
+    "brew_details": [
+      {
+        "name": "Wings Hazy IPA",
+        "status": "BREW_NOW",
+        "brew_by": "2026-03-15",
+        "days_to_zero": 14.4
+      },
+      {
+        "name": "Plane Beer Pilsner",
+        "status": "BREW_NOW",
+        "brew_by": "2026-03-26",
+        "days_to_zero": 16.7
+      },
+      {
+        "name": "After Dark",
+        "status": "BREW_NOW",
+        "brew_by": "2026-03-16",
+        "days_to_zero": 6.1
+      },
+      {
+        "name": "Zeppelin Rules",
+        "status": "BREW_NOW",
+        "brew_by": "2026-03-23",
+        "days_to_zero": 13.1
+      },
+      {
+        "name": "Space-A",
+        "status": "PLAN",
+        "brew_by": "2026-03-31",
+        "days_to_zero": 30.5
+      }
+    ],
+    "avg_days_to_stockout": 92.0
+  }
+]

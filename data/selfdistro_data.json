@@ -1,0 +1,1677 @@
+{
+  "generated": "2026-04-01",
+  "months": {
+    "2025-01": {
+      "total_ce": 228.08,
+      "total_revenue": 11800.0,
+      "brands": {
+        "takeoff": {
+          "cases": 5.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 5.0,
+          "revenue": 350.0
+        },
+        "plane_beer": {
+          "cases": 26.0,
+          "kegs_sixth": 2.0,
+          "kegs_half": 0.0,
+          "total_ce": 36.32,
+          "revenue": 1180.0
+        },
+        "p3": {
+          "cases": 30.0,
+          "kegs_sixth": 4.0,
+          "kegs_half": 0.0,
+          "total_ce": 50.64,
+          "revenue": 2160.0
+        },
+        "remove_before_flight": {
+          "cases": 12.0,
+          "kegs_sixth": 2.0,
+          "kegs_half": 0.0,
+          "total_ce": 22.32,
+          "revenue": 900.0
+        },
+        "subhunter": {
+          "cases": 24.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 24.0,
+          "revenue": 1920.0
+        },
+        "space_a": {
+          "cases": 8.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 8.0,
+          "revenue": 640.0
+        },
+        "real_maine_italian": {
+          "cases": 15.0,
+          "kegs_sixth": 4.0,
+          "kegs_half": 0.0,
+          "total_ce": 35.64,
+          "revenue": 1260.0
+        },
+        "wings": {
+          "cases": 27.0,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 32.16,
+          "revenue": 2270.0
+        },
+        "get_there_from_here": {
+          "cases": 7.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 7.0,
+          "revenue": 560.0
+        },
+        "sour_tower": {
+          "cases": 7.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 7.0,
+          "revenue": 560.0
+        }
+      }
+    },
+    "2025-02": {
+      "total_ce": 263.18,
+      "total_revenue": 11862.82,
+      "brands": {
+        "plane_beer": {
+          "cases": 15.87,
+          "kegs_sixth": 3.0,
+          "kegs_half": 0.0,
+          "total_ce": 31.35,
+          "revenue": 845.0
+        },
+        "p3": {
+          "cases": 26.28,
+          "kegs_sixth": 7.0,
+          "kegs_half": 1.0,
+          "total_ce": 77.9,
+          "revenue": 2417.64
+        },
+        "remove_before_flight": {
+          "cases": 10.0,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 15.16,
+          "revenue": 690.0
+        },
+        "subhunter": {
+          "cases": 31.21,
+          "kegs_sixth": 0.0,
+          "kegs_half": 1.0,
+          "total_ce": 46.71,
+          "revenue": 2746.88
+        },
+        "space_a": {
+          "cases": 13.5,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 13.5,
+          "revenue": 1080.0
+        },
+        "real_maine_italian": {
+          "cases": 11.0,
+          "kegs_sixth": 3.0,
+          "kegs_half": 0.0,
+          "total_ce": 26.48,
+          "revenue": 930.0
+        },
+        "wings": {
+          "cases": 21.5,
+          "kegs_sixth": 2.0,
+          "kegs_half": 0.0,
+          "total_ce": 31.82,
+          "revenue": 1940.27
+        },
+        "sour_tower": {
+          "cases": 8.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 8.0,
+          "revenue": 640.0
+        },
+        "preflight_czechlist": {
+          "cases": -0.87,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.87,
+          "revenue": -52.32
+        },
+        "breaking_the_sour_barrier": {
+          "cases": -0.29,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.29,
+          "revenue": -23.33
+        },
+        "munich_layover": {
+          "cases": -0.91,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.91,
+          "revenue": -54.98
+        },
+        "night_witches": {
+          "cases": -0.08,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.08,
+          "revenue": -6.66
+        },
+        "googly_skies": {
+          "cases": -1.46,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -1.46,
+          "revenue": -116.4
+        },
+        "flying_monk": {
+          "cases": 12.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 12.0,
+          "revenue": 840.0
+        },
+        "vetbeer": {
+          "cases": -1.29,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -1.29,
+          "revenue": -103.28
+        },
+        "choc_and_awe": {
+          "cases": 0.0,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 5.16,
+          "revenue": 90.0
+        }
+      }
+    },
+    "2025-03": {
+      "total_ce": 313.56,
+      "total_revenue": 12114.72,
+      "brands": {
+        "plane_beer": {
+          "cases": 30.96,
+          "kegs_sixth": 3.0,
+          "kegs_half": 0.0,
+          "total_ce": 46.44,
+          "revenue": 1448.32
+        },
+        "p3": {
+          "cases": 26.63,
+          "kegs_sixth": 7.0,
+          "kegs_half": 1.0,
+          "total_ce": 78.25,
+          "revenue": 2437.52
+        },
+        "remove_before_flight": {
+          "cases": 8.92,
+          "kegs_sixth": 3.0,
+          "kegs_half": 0.0,
+          "total_ce": 24.4,
+          "revenue": 805.0
+        },
+        "subhunter": {
+          "cases": 21.83,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 21.83,
+          "revenue": 1746.64
+        },
+        "space_a": {
+          "cases": 7.7,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 12.86,
+          "revenue": 726.64
+        },
+        "real_maine_italian": {
+          "cases": 8.83,
+          "kegs_sixth": 4.0,
+          "kegs_half": 0.0,
+          "total_ce": 29.47,
+          "revenue": 889.98
+        },
+        "wings": {
+          "cases": 13.51,
+          "kegs_sixth": 6.0,
+          "kegs_half": 1.0,
+          "total_ce": 59.97,
+          "revenue": 1990.08
+        },
+        "sour_tower": {
+          "cases": 6.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 6.0,
+          "revenue": 480.0
+        },
+        "googly_skies": {
+          "cases": -0.5,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.5,
+          "revenue": -40.0
+        },
+        "flying_monk": {
+          "cases": 8.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 8.0,
+          "revenue": 560.0
+        },
+        "vetbeer": {
+          "cases": -0.83,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.83,
+          "revenue": -66.4
+        },
+        "blube_tube": {
+          "cases": -0.66,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.66,
+          "revenue": -53.06
+        },
+        "puddle_jumper": {
+          "cases": -1.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -1.0,
+          "revenue": -70.0
+        },
+        "vuelo": {
+          "cases": 17.0,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 22.16,
+          "revenue": 750.0
+        },
+        "light_the_fires": {
+          "cases": 8.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 8.0,
+          "revenue": 560.0
+        },
+        "zeppelin_rules": {
+          "cases": -0.83,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.83,
+          "revenue": -50.0
+        }
+      }
+    },
+    "2025-04": {
+      "total_ce": 293.11,
+      "total_revenue": 14406.14,
+      "brands": {
+        "plane_beer": {
+          "cases": 18.0,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 23.16,
+          "revenue": 790.0
+        },
+        "p3": {
+          "cases": 39.83,
+          "kegs_sixth": 6.0,
+          "kegs_half": 0.0,
+          "total_ce": 70.79,
+          "revenue": 2930.0
+        },
+        "remove_before_flight": {
+          "cases": 12.5,
+          "kegs_sixth": 3.0,
+          "kegs_half": 0.0,
+          "total_ce": 27.98,
+          "revenue": 1019.98
+        },
+        "subhunter": {
+          "cases": 21.82,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 21.82,
+          "revenue": 1746.64
+        },
+        "space_a": {
+          "cases": 13.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 13.0,
+          "revenue": 1040.0
+        },
+        "real_maine_italian": {
+          "cases": 5.0,
+          "kegs_sixth": 2.0,
+          "kegs_half": 0.0,
+          "total_ce": 15.32,
+          "revenue": 480.0
+        },
+        "wings": {
+          "cases": 17.67,
+          "kegs_sixth": 2.0,
+          "kegs_half": 0.0,
+          "total_ce": 27.99,
+          "revenue": 1633.34
+        },
+        "get_there_from_here": {
+          "cases": -1.17,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -1.17,
+          "revenue": -93.33
+        },
+        "sour_tower": {
+          "cases": 5.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 5.0,
+          "revenue": 400.0
+        },
+        "googly_skies": {
+          "cases": 2.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 2.0,
+          "revenue": 160.0
+        },
+        "flying_monk": {
+          "cases": 4.0,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 9.16,
+          "revenue": 380.0
+        },
+        "vetbeer": {
+          "cases": -0.67,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.67,
+          "revenue": -53.36
+        },
+        "blube_tube": {
+          "cases": -1.46,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -1.46,
+          "revenue": -116.69
+        },
+        "puddle_jumper": {
+          "cases": 22.71,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 22.71,
+          "revenue": 1589.56
+        },
+        "vuelo": {
+          "cases": 14.0,
+          "kegs_sixth": 3.0,
+          "kegs_half": 0.0,
+          "total_ce": 29.48,
+          "revenue": 770.0
+        },
+        "light_the_fires": {
+          "cases": 5.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 5.0,
+          "revenue": 350.0
+        },
+        "flight_of_the_concorde": {
+          "cases": 23.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 23.0,
+          "revenue": 1380.0
+        }
+      }
+    },
+    "2025-05": {
+      "total_ce": 416.76,
+      "total_revenue": 17402.42,
+      "brands": {
+        "takeoff": {
+          "cases": -0.67,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.67,
+          "revenue": -46.69
+        },
+        "plane_beer": {
+          "cases": 46.88,
+          "kegs_sixth": 1.0,
+          "kegs_half": 1.0,
+          "total_ce": 67.54,
+          "revenue": 2125.0
+        },
+        "p3": {
+          "cases": 42.42,
+          "kegs_sixth": 9.0,
+          "kegs_half": 0.0,
+          "total_ce": 88.86,
+          "revenue": 3355.02
+        },
+        "remove_before_flight": {
+          "cases": 13.54,
+          "kegs_sixth": 2.0,
+          "kegs_half": 0.0,
+          "total_ce": 23.86,
+          "revenue": 992.52
+        },
+        "subhunter": {
+          "cases": 30.37,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 30.37,
+          "revenue": 2430.0
+        },
+        "space_a": {
+          "cases": -10.64,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -10.64,
+          "revenue": -853.01
+        },
+        "real_maine_italian": {
+          "cases": -1.91,
+          "kegs_sixth": 3.0,
+          "kegs_half": 0.0,
+          "total_ce": 13.57,
+          "revenue": 155.22
+        },
+        "wings": {
+          "cases": 18.71,
+          "kegs_sixth": 3.0,
+          "kegs_half": 0.0,
+          "total_ce": 34.19,
+          "revenue": 1826.65
+        },
+        "get_there_from_here": {
+          "cases": -3.46,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -3.46,
+          "revenue": -276.37
+        },
+        "sour_tower": {
+          "cases": -2.45,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -2.45,
+          "revenue": -196.64
+        },
+        "breaking_the_sour_barrier": {
+          "cases": -0.17,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.17,
+          "revenue": -13.36
+        },
+        "googly_skies": {
+          "cases": 22.0,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 27.16,
+          "revenue": 1870.0
+        },
+        "flying_monk": {
+          "cases": -0.5,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.5,
+          "revenue": -35.0
+        },
+        "blube_tube": {
+          "cases": 4.33,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 9.49,
+          "revenue": 456.64
+        },
+        "puddle_jumper": {
+          "cases": 38.5,
+          "kegs_sixth": 0.0,
+          "kegs_half": 2.0,
+          "total_ce": 69.5,
+          "revenue": 3155.0
+        },
+        "vuelo": {
+          "cases": 19.0,
+          "kegs_sixth": 1.0,
+          "kegs_half": 1.0,
+          "total_ce": 39.66,
+          "revenue": 1010.0
+        },
+        "light_the_fires": {
+          "cases": 6.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 6.0,
+          "revenue": 420.0
+        },
+        "zeppelin_rules": {
+          "cases": -3.37,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -3.37,
+          "revenue": -202.56
+        },
+        "flight_of_the_concorde": {
+          "cases": 17.5,
+          "kegs_sixth": 2.0,
+          "kegs_half": 0.0,
+          "total_ce": 27.82,
+          "revenue": 1230.0
+        }
+      }
+    },
+    "2025-06": {
+      "total_ce": 352.06,
+      "total_revenue": 16719.82,
+      "brands": {
+        "takeoff": {
+          "cases": -0.71,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.71,
+          "revenue": -49.7
+        },
+        "plane_beer": {
+          "cases": 39.0,
+          "kegs_sixth": 3.0,
+          "kegs_half": 0.0,
+          "total_ce": 54.48,
+          "revenue": 1770.0
+        },
+        "p3": {
+          "cases": 50.16,
+          "kegs_sixth": 9.0,
+          "kegs_half": 0.0,
+          "total_ce": 96.6,
+          "revenue": 3819.96
+        },
+        "remove_before_flight": {
+          "cases": 7.0,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 12.16,
+          "revenue": 510.0
+        },
+        "subhunter": {
+          "cases": 30.83,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 30.83,
+          "revenue": 2466.66
+        },
+        "space_a": {
+          "cases": -1.91,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -1.91,
+          "revenue": -153.3
+        },
+        "real_maine_italian": {
+          "cases": -0.63,
+          "kegs_sixth": 2.0,
+          "kegs_half": 0.0,
+          "total_ce": 9.69,
+          "revenue": 142.48
+        },
+        "wings": {
+          "cases": 29.33,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 34.49,
+          "revenue": 2456.64
+        },
+        "preflight_czechlist": {
+          "cases": 0.83,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 0.83,
+          "revenue": 50.0
+        },
+        "googly_skies": {
+          "cases": 19.5,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 24.66,
+          "revenue": 1670.0
+        },
+        "blube_tube": {
+          "cases": 10.0,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 15.16,
+          "revenue": 910.0
+        },
+        "puddle_jumper": {
+          "cases": 26.83,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 31.99,
+          "revenue": 1978.33
+        },
+        "vuelo": {
+          "cases": 14.0,
+          "kegs_sixth": 5.0,
+          "kegs_half": 0.0,
+          "total_ce": 39.8,
+          "revenue": 910.0
+        },
+        "light_the_fires": {
+          "cases": -0.13,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.13,
+          "revenue": -8.75
+        },
+        "zeppelin_rules": {
+          "cases": -0.38,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.38,
+          "revenue": -22.5
+        },
+        "flight_of_the_concorde": {
+          "cases": 4.5,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 4.5,
+          "revenue": 270.0
+        }
+      }
+    },
+    "2025-07": {
+      "total_ce": 580.66,
+      "total_revenue": 26945.01,
+      "brands": {
+        "plane_beer": {
+          "cases": 70.0,
+          "kegs_sixth": 2.0,
+          "kegs_half": 0.0,
+          "total_ce": 80.32,
+          "revenue": 2940.0
+        },
+        "p3": {
+          "cases": 80.83,
+          "kegs_sixth": 16.0,
+          "kegs_half": 0.0,
+          "total_ce": 163.39,
+          "revenue": 6289.98
+        },
+        "remove_before_flight": {
+          "cases": 15.0,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 20.16,
+          "revenue": 990.0
+        },
+        "subhunter": {
+          "cases": 38.46,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 43.62,
+          "revenue": 3186.67
+        },
+        "real_maine_italian": {
+          "cases": -0.33,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.33,
+          "revenue": -19.98
+        },
+        "wings": {
+          "cases": 42.0,
+          "kegs_sixth": 7.0,
+          "kegs_half": 0.0,
+          "total_ce": 78.12,
+          "revenue": 4130.0
+        },
+        "preflight_czechlist": {
+          "cases": 42.0,
+          "kegs_sixth": 6.0,
+          "kegs_half": 1.0,
+          "total_ce": 88.46,
+          "revenue": 3270.0
+        },
+        "googly_skies": {
+          "cases": 19.54,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 19.54,
+          "revenue": 1563.34
+        },
+        "blube_tube": {
+          "cases": 11.0,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 16.16,
+          "revenue": 990.0
+        },
+        "puddle_jumper": {
+          "cases": 39.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 39.0,
+          "revenue": 2730.0
+        },
+        "vuelo": {
+          "cases": 17.0,
+          "kegs_sixth": 3.0,
+          "kegs_half": 0.0,
+          "total_ce": 32.48,
+          "revenue": 890.0
+        },
+        "flight_of_the_concorde": {
+          "cases": -0.26,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.26,
+          "revenue": -15.0
+        }
+      }
+    },
+    "2025-08": {
+      "total_ce": 538.69,
+      "total_revenue": 21360.48,
+      "brands": {
+        "plane_beer": {
+          "cases": 47.0,
+          "kegs_sixth": 8.0,
+          "kegs_half": 0.0,
+          "total_ce": 88.28,
+          "revenue": 2440.0
+        },
+        "p3": {
+          "cases": 48.12,
+          "kegs_sixth": 11.0,
+          "kegs_half": 0.0,
+          "total_ce": 104.88,
+          "revenue": 3877.38
+        },
+        "remove_before_flight": {
+          "cases": 5.0,
+          "kegs_sixth": 2.0,
+          "kegs_half": 0.0,
+          "total_ce": 15.32,
+          "revenue": 480.0
+        },
+        "subhunter": {
+          "cases": 38.83,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 38.83,
+          "revenue": 3106.64
+        },
+        "wings": {
+          "cases": 35.24,
+          "kegs_sixth": 6.0,
+          "kegs_half": 0.0,
+          "total_ce": 66.2,
+          "revenue": 3479.76
+        },
+        "sour_tower": {
+          "cases": -0.04,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.04,
+          "revenue": -3.3
+        },
+        "preflight_czechlist": {
+          "cases": 22.0,
+          "kegs_sixth": 8.0,
+          "kegs_half": 1.0,
+          "total_ce": 78.78,
+          "revenue": 2250.0
+        },
+        "munich_layover": {
+          "cases": 10.0,
+          "kegs_sixth": 4.0,
+          "kegs_half": 0.0,
+          "total_ce": 30.64,
+          "revenue": 960.0
+        },
+        "googly_skies": {
+          "cases": 15.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 15.0,
+          "revenue": 1200.0
+        },
+        "puddle_jumper": {
+          "cases": 33.0,
+          "kegs_sixth": 2.0,
+          "kegs_half": 1.0,
+          "total_ce": 58.82,
+          "revenue": 2740.0
+        },
+        "vuelo": {
+          "cases": 11.0,
+          "kegs_sixth": 3.0,
+          "kegs_half": 1.0,
+          "total_ce": 41.98,
+          "revenue": 830.0
+        }
+      }
+    },
+    "2025-09": {
+      "total_ce": 383.98,
+      "total_revenue": 17150.0,
+      "brands": {
+        "plane_beer": {
+          "cases": 34.0,
+          "kegs_sixth": 4.0,
+          "kegs_half": 0.0,
+          "total_ce": 54.64,
+          "revenue": 1640.0
+        },
+        "p3": {
+          "cases": 50.83,
+          "kegs_sixth": 12.0,
+          "kegs_half": 0.0,
+          "total_ce": 112.75,
+          "revenue": 4129.98
+        },
+        "remove_before_flight": {
+          "cases": 9.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 9.0,
+          "revenue": 540.0
+        },
+        "subhunter": {
+          "cases": -1.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -1.0,
+          "revenue": -80.0
+        },
+        "wings": {
+          "cases": 29.0,
+          "kegs_sixth": 3.0,
+          "kegs_half": 0.0,
+          "total_ce": 44.48,
+          "revenue": 2650.0
+        },
+        "sour_tower": {
+          "cases": 9.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 9.0,
+          "revenue": 720.0
+        },
+        "preflight_czechlist": {
+          "cases": 15.5,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 20.66,
+          "revenue": 1020.0
+        },
+        "munich_layover": {
+          "cases": 56.0,
+          "kegs_sixth": 5.0,
+          "kegs_half": 0.0,
+          "total_ce": 81.8,
+          "revenue": 3810.0
+        },
+        "night_witches": {
+          "cases": 12.0,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 17.16,
+          "revenue": 1070.0
+        },
+        "googly_skies": {
+          "cases": 1.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 1.0,
+          "revenue": 80.0
+        },
+        "puddle_jumper": {
+          "cases": 16.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 16.0,
+          "revenue": 1120.0
+        },
+        "vuelo": {
+          "cases": 9.0,
+          "kegs_sixth": 2.0,
+          "kegs_half": 0.0,
+          "total_ce": 19.32,
+          "revenue": 500.0
+        },
+        "flight_of_the_concorde": {
+          "cases": -0.83,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.83,
+          "revenue": -49.98
+        }
+      }
+    },
+    "2025-10": {
+      "total_ce": 571.35,
+      "total_revenue": 22132.58,
+      "brands": {
+        "plane_beer": {
+          "cases": 41.25,
+          "kegs_sixth": 3.0,
+          "kegs_half": 1.0,
+          "total_ce": 72.23,
+          "revenue": 2040.0
+        },
+        "p3": {
+          "cases": 49.0,
+          "kegs_sixth": 14.0,
+          "kegs_half": 0.0,
+          "total_ce": 121.24,
+          "revenue": 4200.0
+        },
+        "remove_before_flight": {
+          "cases": 10.0,
+          "kegs_sixth": 4.0,
+          "kegs_half": 0.0,
+          "total_ce": 30.64,
+          "revenue": 960.0
+        },
+        "subhunter": {
+          "cases": 28.16,
+          "kegs_sixth": 0.0,
+          "kegs_half": 1.0,
+          "total_ce": 43.66,
+          "revenue": 2503.28
+        },
+        "real_maine_italian": {
+          "cases": 17.0,
+          "kegs_sixth": 3.0,
+          "kegs_half": 0.0,
+          "total_ce": 32.48,
+          "revenue": 1290.0
+        },
+        "wings": {
+          "cases": 32.67,
+          "kegs_sixth": 6.0,
+          "kegs_half": 2.0,
+          "total_ce": 94.63,
+          "revenue": 3763.14
+        },
+        "sour_tower": {
+          "cases": 4.0,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 9.16,
+          "revenue": 430.0
+        },
+        "preflight_czechlist": {
+          "cases": 9.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 9.0,
+          "revenue": 540.0
+        },
+        "munich_layover": {
+          "cases": 37.83,
+          "kegs_sixth": 2.0,
+          "kegs_half": 2.0,
+          "total_ce": 79.15,
+          "revenue": 2869.98
+        },
+        "night_witches": {
+          "cases": 13.0,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 18.16,
+          "revenue": 1150.0
+        },
+        "googly_skies": {
+          "cases": -1.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -1.0,
+          "revenue": -80.0
+        },
+        "vetbeer": {
+          "cases": 10.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 10.0,
+          "revenue": 800.0
+        },
+        "blube_tube": {
+          "cases": -0.34,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.34,
+          "revenue": -26.69
+        },
+        "puddle_jumper": {
+          "cases": -0.96,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.96,
+          "revenue": -67.13
+        },
+        "vuelo": {
+          "cases": 13.0,
+          "kegs_sixth": 4.0,
+          "kegs_half": 0.0,
+          "total_ce": 33.64,
+          "revenue": 800.0
+        },
+        "flight_of_the_concorde": {
+          "cases": -0.5,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.5,
+          "revenue": -30.0
+        },
+        "krosswinds": {
+          "cases": 15.0,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 20.16,
+          "revenue": 990.0
+        }
+      }
+    },
+    "2025-11": {
+      "total_ce": 329.62,
+      "total_revenue": 12526.69,
+      "brands": {
+        "plane_beer": {
+          "cases": 16.0,
+          "kegs_sixth": 2.0,
+          "kegs_half": 2.0,
+          "total_ce": 57.32,
+          "revenue": 1100.0
+        },
+        "p3": {
+          "cases": 31.17,
+          "kegs_sixth": 7.0,
+          "kegs_half": 0.0,
+          "total_ce": 67.29,
+          "revenue": 2500.0
+        },
+        "remove_before_flight": {
+          "cases": 0.67,
+          "kegs_sixth": 4.0,
+          "kegs_half": 0.0,
+          "total_ce": 21.31,
+          "revenue": 400.0
+        },
+        "subhunter": {
+          "cases": 31.67,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 36.83,
+          "revenue": 2643.34
+        },
+        "real_maine_italian": {
+          "cases": 5.0,
+          "kegs_sixth": 3.0,
+          "kegs_half": 0.0,
+          "total_ce": 20.48,
+          "revenue": 570.0
+        },
+        "wings": {
+          "cases": 25.33,
+          "kegs_sixth": 3.0,
+          "kegs_half": 2.0,
+          "total_ce": 71.81,
+          "revenue": 2830.0
+        },
+        "sour_tower": {
+          "cases": 1.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 1.0,
+          "revenue": 80.0
+        },
+        "preflight_czechlist": {
+          "cases": -0.17,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.17,
+          "revenue": -10.0
+        },
+        "munich_layover": {
+          "cases": 5.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 5.0,
+          "revenue": 300.0
+        },
+        "googly_skies": {
+          "cases": -0.3,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.3,
+          "revenue": -23.33
+        },
+        "vetbeer": {
+          "cases": 9.33,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 14.49,
+          "revenue": 830.0
+        },
+        "blube_tube": {
+          "cases": -0.33,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.33,
+          "revenue": -26.66
+        },
+        "puddle_jumper": {
+          "cases": -0.5,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.5,
+          "revenue": -35.0
+        },
+        "vuelo": {
+          "cases": 1.75,
+          "kegs_sixth": 2.0,
+          "kegs_half": 0.0,
+          "total_ce": 12.07,
+          "revenue": 210.0
+        },
+        "light_the_fires": {
+          "cases": -0.17,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.17,
+          "revenue": -11.66
+        },
+        "zeppelin_rules": {
+          "cases": 6.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 6.0,
+          "revenue": 360.0
+        },
+        "krosswinds": {
+          "cases": 4.5,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 9.66,
+          "revenue": 360.0
+        },
+        "pilots_porridge": {
+          "cases": 7.83,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 7.83,
+          "revenue": 450.0
+        }
+      }
+    },
+    "2025-12": {
+      "total_ce": 316.47,
+      "total_revenue": 13871.7,
+      "brands": {
+        "plane_beer": {
+          "cases": 16.96,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 16.96,
+          "revenue": 678.34
+        },
+        "p3": {
+          "cases": 45.59,
+          "kegs_sixth": 5.0,
+          "kegs_half": 1.0,
+          "total_ce": 86.89,
+          "revenue": 3395.0
+        },
+        "remove_before_flight": {
+          "cases": 7.0,
+          "kegs_sixth": 4.0,
+          "kegs_half": 0.0,
+          "total_ce": 27.64,
+          "revenue": 780.0
+        },
+        "subhunter": {
+          "cases": 19.17,
+          "kegs_sixth": 2.0,
+          "kegs_half": 0.0,
+          "total_ce": 29.49,
+          "revenue": 1753.34
+        },
+        "space_a": {
+          "cases": 4.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 4.0,
+          "revenue": 320.0
+        },
+        "real_maine_italian": {
+          "cases": 11.5,
+          "kegs_sixth": 4.0,
+          "kegs_half": 0.0,
+          "total_ce": 32.14,
+          "revenue": 1050.0
+        },
+        "wings": {
+          "cases": 38.17,
+          "kegs_sixth": 3.0,
+          "kegs_half": 0.0,
+          "total_ce": 53.65,
+          "revenue": 3383.33
+        },
+        "sour_tower": {
+          "cases": -0.08,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.08,
+          "revenue": -6.66
+        },
+        "preflight_czechlist": {
+          "cases": -0.17,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.17,
+          "revenue": -10.0
+        },
+        "googly_skies": {
+          "cases": -0.67,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.67,
+          "revenue": -53.32
+        },
+        "puddle_jumper": {
+          "cases": -0.84,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.84,
+          "revenue": -58.33
+        },
+        "vuelo": {
+          "cases": 2.5,
+          "kegs_sixth": 2.0,
+          "kegs_half": 0.0,
+          "total_ce": 12.82,
+          "revenue": 240.0
+        },
+        "zeppelin_rules": {
+          "cases": 8.0,
+          "kegs_sixth": 3.0,
+          "kegs_half": 0.0,
+          "total_ce": 23.48,
+          "revenue": 750.0
+        },
+        "krosswinds": {
+          "cases": 4.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 4.0,
+          "revenue": 240.0
+        },
+        "pilots_porridge": {
+          "cases": 19.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 19.0,
+          "revenue": 1140.0
+        },
+        "after_dark": {
+          "cases": 3.0,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 8.16,
+          "revenue": 270.0
+        }
+      }
+    },
+    "2026-01": {
+      "total_ce": 384.58,
+      "total_revenue": 14907.5,
+      "brands": {
+        "plane_beer": {
+          "cases": 9.0,
+          "kegs_sixth": 2.0,
+          "kegs_half": 0.0,
+          "total_ce": 19.32,
+          "revenue": 500.0
+        },
+        "p3": {
+          "cases": 33.0,
+          "kegs_sixth": 7.0,
+          "kegs_half": 0.0,
+          "total_ce": 69.12,
+          "revenue": 2610.0
+        },
+        "remove_before_flight": {
+          "cases": 9.67,
+          "kegs_sixth": 3.0,
+          "kegs_half": 0.0,
+          "total_ce": 25.15,
+          "revenue": 850.0
+        },
+        "subhunter": {
+          "cases": 38.0,
+          "kegs_sixth": 2.0,
+          "kegs_half": 0.0,
+          "total_ce": 48.32,
+          "revenue": 3260.0
+        },
+        "space_a": {
+          "cases": 10.0,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 15.16,
+          "revenue": 910.0
+        },
+        "real_maine_italian": {
+          "cases": 7.0,
+          "kegs_sixth": 2.0,
+          "kegs_half": 0.0,
+          "total_ce": 17.32,
+          "revenue": 600.0
+        },
+        "wings": {
+          "cases": 26.0,
+          "kegs_sixth": 6.0,
+          "kegs_half": 0.0,
+          "total_ce": 56.96,
+          "revenue": 2740.0
+        },
+        "preflight_czechlist": {
+          "cases": -0.33,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.33,
+          "revenue": -20.0
+        },
+        "munich_layover": {
+          "cases": -0.34,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 4.82,
+          "revenue": 70.0
+        },
+        "vuelo": {
+          "cases": 11.0,
+          "kegs_sixth": 6.0,
+          "kegs_half": 3.0,
+          "total_ce": 88.46,
+          "revenue": 1400.0
+        },
+        "zeppelin_rules": {
+          "cases": 0.96,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 0.96,
+          "revenue": 57.5
+        },
+        "krosswinds": {
+          "cases": 6.5,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 6.5,
+          "revenue": 390.0
+        },
+        "pilots_porridge": {
+          "cases": 11.5,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 11.5,
+          "revenue": 690.0
+        },
+        "after_dark": {
+          "cases": 11.0,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 16.16,
+          "revenue": 750.0
+        },
+        "puddle_jumper": {
+          "cases": 0.0,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 5.16,
+          "revenue": 100.0
+        }
+      }
+    },
+    "2026-02": {
+      "total_ce": 268.57,
+      "total_revenue": 11289.16,
+      "brands": {
+        "plane_beer": {
+          "cases": 7.5,
+          "kegs_sixth": 2.0,
+          "kegs_half": 0.0,
+          "total_ce": 17.82,
+          "revenue": 440.0
+        },
+        "p3": {
+          "cases": 30.17,
+          "kegs_sixth": 4.0,
+          "kegs_half": 1.0,
+          "total_ce": 66.31,
+          "revenue": 2380.0
+        },
+        "remove_before_flight": {
+          "cases": 6.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 1.0,
+          "total_ce": 21.5,
+          "revenue": 570.0
+        },
+        "subhunter": {
+          "cases": 22.0,
+          "kegs_sixth": 2.0,
+          "kegs_half": 0.0,
+          "total_ce": 32.32,
+          "revenue": 1980.0
+        },
+        "space_a": {
+          "cases": 9.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 9.0,
+          "revenue": 720.0
+        },
+        "real_maine_italian": {
+          "cases": 5.0,
+          "kegs_sixth": 3.0,
+          "kegs_half": 0.0,
+          "total_ce": 20.48,
+          "revenue": 570.0
+        },
+        "wings": {
+          "cases": 30.0,
+          "kegs_sixth": 3.0,
+          "kegs_half": 0.0,
+          "total_ce": 45.48,
+          "revenue": 2730.0
+        },
+        "sour_tower": {
+          "cases": 5.5,
+          "kegs_sixth": 2.0,
+          "kegs_half": 0.0,
+          "total_ce": 15.82,
+          "revenue": 660.0
+        },
+        "preflight_czechlist": {
+          "cases": -0.33,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.33,
+          "revenue": -20.0
+        },
+        "munich_layover": {
+          "cases": -0.46,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.46,
+          "revenue": -27.5
+        },
+        "blube_tube": {
+          "cases": -0.17,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.17,
+          "revenue": -13.34
+        },
+        "vuelo": {
+          "cases": 1.5,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 6.66,
+          "revenue": 130.0
+        },
+        "zeppelin_rules": {
+          "cases": 1.0,
+          "kegs_sixth": 2.0,
+          "kegs_half": 0.0,
+          "total_ce": 11.32,
+          "revenue": 240.0
+        },
+        "pilots_porridge": {
+          "cases": 8.5,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 8.5,
+          "revenue": 510.0
+        },
+        "after_dark": {
+          "cases": 4.0,
+          "kegs_sixth": 2.0,
+          "kegs_half": 0.0,
+          "total_ce": 14.32,
+          "revenue": 420.0
+        }
+      }
+    },
+    "2026-03": {
+      "total_ce": 133.12,
+      "total_revenue": 5918.34,
+      "brands": {
+        "plane_beer": {
+          "cases": 10.5,
+          "kegs_sixth": 0.0,
+          "kegs_half": 2.0,
+          "total_ce": 41.5,
+          "revenue": 780.0
+        },
+        "p3": {
+          "cases": 17.0,
+          "kegs_sixth": 3.0,
+          "kegs_half": 0.0,
+          "total_ce": 32.48,
+          "revenue": 1290.0
+        },
+        "remove_before_flight": {
+          "cases": 3.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 3.0,
+          "revenue": 180.0
+        },
+        "subhunter": {
+          "cases": 11.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 11.0,
+          "revenue": 880.0
+        },
+        "space_a": {
+          "cases": 5.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 5.0,
+          "revenue": 400.0
+        },
+        "real_maine_italian": {
+          "cases": 1.87,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 1.87,
+          "revenue": 112.5
+        },
+        "wings": {
+          "cases": 11.0,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 16.16,
+          "revenue": 990.0
+        },
+        "sour_tower": {
+          "cases": 1.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 1.0,
+          "revenue": 80.0
+        },
+        "night_witches": {
+          "cases": 4.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 4.0,
+          "revenue": 320.0
+        },
+        "vuelo": {
+          "cases": -0.92,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.92,
+          "revenue": -36.66
+        },
+        "light_the_fires": {
+          "cases": 6.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 6.0,
+          "revenue": 420.0
+        },
+        "krosswinds": {
+          "cases": -0.13,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": -0.13,
+          "revenue": -7.5
+        },
+        "pilots_porridge": {
+          "cases": 2.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 2.0,
+          "revenue": 120.0
+        },
+        "after_dark": {
+          "cases": 2.0,
+          "kegs_sixth": 0.0,
+          "kegs_half": 0.0,
+          "total_ce": 2.0,
+          "revenue": 120.0
+        },
+        "cartwheeler": {
+          "cases": 3.0,
+          "kegs_sixth": 1.0,
+          "kegs_half": 0.0,
+          "total_ce": 8.16,
+          "revenue": 270.0
+        }
+      }
+    }
+  }
+}

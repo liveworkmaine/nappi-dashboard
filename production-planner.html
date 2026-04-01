@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flight Deck Brewing — Production Planner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Oswald:wght@400;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f3ef;
+      --surface: #ffffff;
+      --surface2: #edeae4;
+      --border: #d9d4cb;
+      --text: #1c1a17;
+      --text2: #7a7267;
+      --blue: #2c5282;
+      --green: #276749;
+      --yellow: #975a16;
+      --orange: #c25a18;
+      --red: #9b2c2c;
+      --purple: #6b46c1;
+      --accent: #b8860b;
+      --blue-bg: rgba(44, 82, 130, 0.06);
+      --green-bg: rgba(39, 103, 73, 0.06);
+      --yellow-bg: rgba(151, 90, 22, 0.06);
+      --red-bg: rgba(155, 44, 44, 0.06);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* AUTH GATE */
+    .auth-gate {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
+    }
+
+    .auth-box {
+      background: var(--surface);
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+      text-align: center;
+      max-width: 300px;
+    }
+
+    .auth-box h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 28px;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .auth-box p {
+      color: var(--text2);
+      margin-bottom: 30px;
+    }
+
+    .auth-box input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .auth-box button {
+      width: 100%;
+      padding: 12px;
+      background: var(--blue);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .auth-box button:hover {
+      background: var(--purple);
+    }
+
+    .auth-box .error {
+      color: var(--red);
+      font-size: 12px;
+      margin-top: 10px;
+    }
+
+    /* MAIN APP */
+    .app {
+      display: none;
+    }
+
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
+
+    .header h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 32px;
+      margin-bottom: 5px;
+      color: var(--text);
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .header-subtitle {
+      font-family: 'Oswald', sans-serif;
+      font-size: 18px;
+      color: var(--text2);
+    }
+
+    .header-meta {
+      display: flex;
+      gap: 20px;
+      font-size: 12px;
+      color: var(--text2);
+      flex-wrap: wrap;
+    }
+
+    .data-freshness {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .freshness-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .freshness-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .freshness-dot.stale {
+      background: var(--yellow);
+    }
+
+    .header-link {
+      color: var(--blue);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .header-link:hover {
+      color: var(--purple);
+    }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 12px 20px;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      font-family: 'Oswald', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text2);
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+      border-bottom-color: var(--blue);
+    }
+
+    .tab-btn.active {
+      color: var(--text);
+      border-bottom-color: var(--blue);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* KPI STRIP */
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .kpi-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--blue);
+      margin-bottom: 5px;
+    }
+
+    .kpi-label {
+      font-size: 12px;
+      color: var(--text2);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* TABLE */
+    .table-wrapper {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--text);
+      font-family: 'Oswald', sans-serif;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr {
+      transition: background 0.2s;
+    }
+
+    tbody tr:hover {
+      background: var(--blue-bg);
+    }
+
+    tbody tr.brew-now {
+      background: var(--red-bg);
+    }
+
+    tbody tr.plan {
+      background: var(--yellow-bg);
+    }
+
+    .brand-name {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .brand-style {
+      font-size: 11px;
+      color: var(--text2);
+      margin-top: 3px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge.brew-now {
+      background: var(--red);
+      color: white;
+    }
+
+    .badge.plan {
+      background: var(--yellow);
+      color: white;
+    }
+
+    .badge.ok {
+      background: var(--green);
+      color: white;
+    }
+
+    .stockout-red { color: var(--red); font-weight: 600; }
+    .stockout-yellow { color: var(--yellow); font-weight: 600; }
+    .stockout-green { color: var(--green); font-weight: 600; }
+
+    /* CHANNEL SPLIT BAR */
+    .channel-bar {
+      display: flex;
+      height: 20px;
+      border-radius: 3px;
+      overflow: hidden;
+      gap: 2px;
+    }
+
+    .channel-seg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: white;
+      min-width: 20px;
+    }
+
+    .channel-nappi { background: var(--blue); }
+    .channel-toast { background: var(--purple); }
+    .channel-selfdist { background: var(--green); }
+    .channel-mmm { background: var(--orange); }
+
+    /* ALLOCATION CARDS */
+    .allocation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .allocation-card {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .allocation-card h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 16px;
+      margin-bottom: 15px;
+      color: var(--text);
+    }
+
+    .allocation-section {
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .allocation-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .allocation-label {
+      font-size: 11px;
+      color: var(--text2);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 5px;
+    }
+
+    .allocation-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .allocation-split {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 12px;
+    }
+
+    .allocation-split span {
+      font-weight: 600;
+    }
+
+    /* SPARKLINE */
+    .sparkline {
+      display: inline-block;
+      height: 20px;
+      margin-right: 5px;
+    }
+
+    /* CALENDAR */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+    }
+
+    .calendar-week {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 15px;
+    }
+
+    .calendar-week h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 14px;
+      margin-bottom: 15px;
+      color: var(--text);
+    }
+
+    .calendar-day {
+      display: flex;
+      align-items: center;
+      height: 30px;
+      margin-bottom: 8px;
+      font-size: 11px;
+      color: var(--text2);
+    }
+
+    .calendar-day-label {
+      min-width: 30px;
+    }
+
+    .calendar-bar {
+      flex: 1;
+      height: 24px;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      margin-left: 8px;
+      font-size: 10px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .calendar-bar.brew-now { background: var(--red); }
+    .calendar-bar.plan { background: var(--yellow); }
+    .calendar-bar.ok { background: var(--green); }
+
+    .calendar-warning {
+      background: var(--yellow-bg);
+      border: 1px solid var(--yellow);
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 15px;
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    /* MMM SCENARIOS */
+    .scenario-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .scenario-section h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 16px;
+      margin-bottom: 15px;
+      color: var(--text);
+    }
+
+    .scenario-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .control-group label {
+      font-weight: 600;
+      font-size: 12px;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      cursor: pointer;
+    }
+
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    input[type="number"] {
+      padding: 8px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+    }
+
+    .control-group button {
+      padding: 10px 20px;
+      background: var(--blue);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .control-group button:hover {
+      background: var(--purple);
+    }
+
+    .scenario-chart {
+      height: 200px;
+      margin: 20px 0;
+    }
+
+    .scenario-impact {
+      background: var(--blue-bg);
+      border: 1px solid var(--blue);
+      border-radius: 8px;
+      padding: 15px;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .scenario-active {
+      background: var(--green-bg);
+      border: 1px solid var(--green);
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 15px;
+      font-size: 12px;
+    }
+
+    .scenario-name {
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: var(--text2);
+      font-size: 12px;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+    }
+
+    /* TOOLTIP */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+
+    .tooltip:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--text);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 11px;
+      white-space: nowrap;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .container {
+        padding: 12px;
+      }
+
+      .header-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      table {
+        font-size: 12px;
+      }
+
+      th, td {
+        padding: 8px;
+      }
+
+      .kpi-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .allocation-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .calendar-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- AUTH GATE -->
+  <div class="auth-gate" id="authGate">
+    <div class="auth-box">
+      <h1>FLIGHT DECK</h1>
+      <p>Production Planner</p>
+      <input type="password" id="passwordInput" placeholder="Enter password" />
+      <button onclick="handleLogin()">Access</button>
+      <div class="error" id="errorMsg"></div>
+    </div>
+  </div>
+
+  <!-- MAIN APP -->
+  <div class="app" id="mainApp">
+    <div class="container">
+      <!-- HEADER -->
+      <div class="header">
+        <div class="header-row">
+          <div>
+            <h1>FLIGHT DECK BREWING</h1>
+            <div class="header-subtitle">Production Planner</div>
+          </div>
+          <div class="header-meta">
+            <div class="data-freshness">
+              <div class="freshness-item">
+                <div class="freshness-dot" id="nappiDot"></div>
+                <span>Nappi: <span id="nappiDate">—</span></span>
+              </div>
+              <div class="freshness-item">
+                <div class="freshness-dot" id="inventoryDot"></div>
+                <span>Inventory: <span id="inventoryDate">—</span></span>
+              </div>
+              <div class="freshness-item">
+                <div class="freshness-dot" id="toastDot"></div>
+                <span>Toast: <span id="toastDate">—</span></span>
+              </div>
+            </div>
+            <a href="dashboard.html" class="header-link">← Mission Control</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('brew-plan')">Brew Plan</button>
+        <button class="tab-btn" onclick="switchTab('calendar')">Calendar</button>
+        <button class="tab-btn" onclick="switchTab('mmm')">MMM Scenarios</button>
+        <button class="tab-btn" onclick="switchTab('log')">Forecast Log</button>
+      </div>
+
+      <!-- TAB 1: BREW PLAN -->
+      <div id="brew-plan" class="tab-content active">
+        <div class="kpi-strip">
+          <div class="kpi-card">
+            <div class="kpi-value" id="brewNowCount">0</div>
+            <div class="kpi-label">Brew Now</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-value" id="planThisWeekCount">0</div>
+            <div class="kpi-label">Plan This Week</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-value" id="totalDailyDemand">0.0</div>
+            <div class="kpi-label">Total Daily Demand (bbl/d)</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-value" id="avgStockout">—</div>
+            <div class="kpi-label">Avg Days to Stockout</div>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Priority</th>
+                <th>Brand</th>
+                <th>Inventory (bbl)</th>
+                <th>Velocity (bbl/d)</th>
+                <th>Channel Split</th>
+                <th>Days to Stockout</th>
+                <th>Brew By</th>
+                <th>Batch</th>
+                <th>Status</th>
+                <th>Trend</th>
+              </tr>
+            </thead>
+            <tbody id="brewTableBody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div id="allocationCards" class="allocation-grid">
+          <!-- Populated by JS -->
+        </div>
+
+        <div class="scenario-section">
+          <h3>Seasonal Velocity Comparison</h3>
+          <div id="seasonalComparison" style="font-size: 13px;">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: CALENDAR -->
+      <div id="calendar" class="tab-content">
+        <div class="calendar-grid" id="calendarGrid">
+          <!-- Populated by JS -->
+        </div>
+        <div class="calendar-warning" id="seasonalWarning" style="display: none;">
+          ⚠ Summer velocity ramp approaching — demand typically increases 80% Apr→Jul based on 2025 patterns
+        </div>
+      </div>
+
+      <!-- TAB 3: MMM SCENARIOS -->
+      <div id="mmm" class="tab-content">
+        <div class="scenario-section">
+          <h3>2025 Baseline</h3>
+          <div class="scenario-chart" id="baseline2025"></div>
+        </div>
+
+        <div class="scenario-section">
+          <h3>Scenario Builder</h3>
+          <div class="scenario-controls">
+            <div class="control-group">
+              <label>Multiplier (1.0x – 2.0x)</label>
+              <input type="range" id="mmmMultiplier" min="1.0" max="2.0" step="0.25" value="1.0" oninput="updateMMMScenario()" />
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px;" id="multiplierValue">1.0x</span>
+            </div>
+            <div class="control-group">
+              <label><input type="checkbox" id="addJune" onchange="updateMMMScenario()" /> Add June 2026</label>
+              <input type="number" id="juneUnits" placeholder="Units (e.g. 400)" value="400" onchange="updateMMMScenario()" style="width: 100%;" />
+            </div>
+          </div>
+
+          <div class="scenario-impact" id="scenarioImpact">
+            Loading scenario impact...
+          </div>
+
+          <div class="scenario-active" id="scenarioActive">
+            No active scenario set.
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: FORECAST LOG -->
+      <div id="log" class="tab-content">
+        <div class="scenario-section">
+          <h3>Forecast Snapshots</h3>
+          <table id="logTable" style="width: 100%;">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Brands Needing Brew</th>
+                <th>Avg Days to Stockout</th>
+                <th>Active MMM Scenario</th>
+              </tr>
+            </thead>
+            <tbody id="logTableBody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+          <div id="logMessage" style="padding: 20px; text-align: center; color: var(--text2);">
+            Forecast logging will begin after the first update_all.py run.
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="footer" id="footer">
+        Flight Deck Brewing · Production Planner · Last updated: —
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // PLACEHOLDER DATA
+    const D = {"generated":"2026-03-31","data_freshness":{"nappi":"2026-03-31","inventory":"2026-03-30","toast":"2026-04-01","selfdistro":"2026-04-01","toast_month":"2026-03","selfdistro_month":"2026-03"},"production_plan":[{"brand_key":"after_dark","display_name":"After Dark","style":"Coffee Stout","channels":["toast","selfdistro"],"brewery_kegs_sixth":0.0,"brewery_kegs_half":0.0,"brewery_cases_16oz":3.66,"brewery_cases_12oz":0.0,"nappi_cases":0,"nappi_kegs":0,"total_inv_bbl":0.1,"nappi_daily_bbl":0.0,"toast_daily_bbl":0.017,"selfdistro_daily_bbl":0.002,"mmm_daily_bbl":0.0,"total_daily_bbl":0.019,"channel_pcts":{"nappi":0,"toast":89,"selfdist":11,"mmm":0},"days_until_stockout_kegs":0,"days_until_stockout_cases":22,"days_until_stockout":7,"brew_by_date":"2026-03-16","lead_time_days":21,"batch_size_bbl":7,"recommended_batch":"single","brew_status":"BREW_NOW","priority_rank":1,"current_month_velocity_bbl":0.019,"same_month_last_year_bbl":null,"trailing_3mo_trend":"flat","allocation":{"total_bbl":7,"packaging":{"kegs_bbl":6.2,"cases_bbl":0.8},"kegs_output":"≈31 sixtels + 2 half-barrels","cases_output":"≈22 cases 16oz","channel_split":{"nappi":"0%","toast":"89%","selfdist":"11%","mmm":"0%"}}},{"brand_key":"zeppelin_rules","display_name":"Zeppelin Rules","style":null,"channels":["toast","selfdistro"],"brewery_kegs_sixth":0.0,"brewery_kegs_half":0.0,"brewery_cases_16oz":2.5,"brewery_cases_12oz":0.0,"nappi_cases":0,"nappi_kegs":0,"total_inv_bbl":0.1,"nappi_daily_bbl":0.0,"toast_daily_bbl":0.006,"selfdistro_daily_bbl":0.0,"mmm_daily_bbl":0.0,"total_daily_bbl":0.006,"channel_pcts":{"nappi":0,"toast":100,"selfdist":0,"mmm":0},"days_until_stockout_kegs":0,"days_until_stockout_cases":49,"days_until_stockout":15,"brew_by_date":"2026-03-24","lead_time_days":21,"batch_size_bbl":7,"recommended_batch":"single","brew_status":"BREW_NOW","priority_rank":2,"current_month_velocity_bbl":0.006,"same_month_last_year_bbl":null,"trailing_3mo_trend":"down","allocation":{"total_bbl":7,"packaging":{"kegs_bbl":7.0,"cases_bbl":0.0},"kegs_output":"≈36 sixtels + 2 half-barrels","cases_output":"≈0 cases 16oz","channel_split":{"nappi":"0%","toast":"100%","selfdist":"0%","mmm":"0%"}}},{"brand_key":"plane_beer","display_name":"Plane Beer Pilsner","style":"American Lager","channels":["nappi","toast","selfdistro","mmm"],"brewery_kegs_sixth":3.0,"brewery_kegs_half":0.0,"brewery_cases_16oz":0.0,"brewery_cases_12oz":41.25,"nappi_cases":47,"nappi_kegs":2,"total_inv_bbl":3.5,"nappi_daily_bbl":0.075,"toast_daily_bbl":0.054,"selfdistro_daily_bbl":0.043,"mmm_daily_bbl":0.0,"total_daily_bbl":0.173,"channel_pcts":{"nappi":44,"toast":31,"selfdist":25,"mmm":0},"days_until_stockout_kegs":15,"days_until_stockout_cases":22,"days_until_stockout":20,"brew_by_date":"2026-03-30","lead_time_days":21,"batch_size_bbl":7,"recommended_batch":"single","brew_status":"BREW_NOW","priority_rank":3,"current_month_velocity_bbl":0.173,"same_month_last_year_bbl":0.049,"trailing_3mo_trend":"up","allocation":{"total_bbl":7,"packaging":{"kegs_bbl":2.2,"cases_bbl":4.8},"kegs_output":"≈7 sixtels + 2 half-barrels","cases_output":"≈198 cases 12oz","channel_split":{"nappi":"44%","toast":"31%","selfdist":"25%","mmm":"0%"}}},{"brand_key":"space_a","display_name":"Space-A","style":"West Coast IPA","channels":["toast","selfdistro"],"brewery_kegs_sixth":5.0,"brewery_kegs_half":0.0,"brewery_cases_16oz":16.16,"brewery_cases_12oz":0.0,"nappi_cases":0,"nappi_kegs":0,"total_inv_bbl":1.4,"nappi_daily_bbl":0.0,"toast_daily_bbl":0.039,"selfdistro_daily_bbl":0.005,"mmm_daily_bbl":0.0,"total_daily_bbl":0.044,"channel_pcts":{"nappi":0,"toast":88,"selfdist":12,"mmm":0},"days_until_stockout_kegs":21,"days_until_stockout_cases":44,"days_until_stockout":32,"brew_by_date":"2026-04-01","lead_time_days":30,"batch_size_bbl":7,"recommended_batch":"single","brew_status":"PLAN","priority_rank":4,"current_month_velocity_bbl":0.044,"same_month_last_year_bbl":0.04,"trailing_3mo_trend":"flat","allocation":{"total_bbl":7,"packaging":{"kegs_bbl":6.2,"cases_bbl":0.8},"kegs_output":"≈31 sixtels + 2 half-barrels","cases_output":"≈22 cases 16oz","channel_split":{"nappi":"0%","toast":"88%","selfdist":"12%","mmm":"0%"}}},{"brand_key":"wings","display_name":"Wings Hazy IPA","style":"New England IPA","channels":["nappi","toast","selfdistro","mmm"],"brewery_kegs_sixth":16.0,"brewery_kegs_half":6.0,"brewery_cases_16oz":0.0,"brewery_cases_12oz":0.0,"nappi_cases":23,"nappi_kegs":3,"total_inv_bbl":7.0,"nappi_daily_bbl":0.092,"toast_daily_bbl":0.103,"selfdistro_daily_bbl":0.017,"mmm_daily_bbl":0.0,"total_daily_bbl":0.212,"channel_pcts":{"nappi":43,"toast":49,"selfdist":8,"mmm":0},"days_until_stockout_kegs":59,"days_until_stockout_cases":7,"days_until_stockout":33,"brew_by_date":"2026-04-03","lead_time_days":30,"batch_size_bbl":15,"recommended_batch":"double","brew_status":"PLAN","priority_rank":5,"current_month_velocity_bbl":0.212,"same_month_last_year_bbl":0.087,"trailing_3mo_trend":"up","allocation":{"total_bbl":15,"packaging":{"kegs_bbl":7.3,"cases_bbl":7.7},"kegs_output":"≈37 sixtels + 2 half-barrels","cases_output":"≈211 cases 16oz","channel_split":{"nappi":"43%","toast":"49%","selfdist":"8%","mmm":"0%"}}},{"brand_key":"pilots_porridge","display_name":"Pilot's Porridge","style":"Milk Stout","channels":["toast","selfdistro"],"brewery_kegs_sixth":6.0,"brewery_kegs_half":0.0,"brewery_cases_16oz":5.16,"brewery_cases_12oz":0.0,"nappi_cases":0,"nappi_kegs":0,"total_inv_bbl":1.2,"nappi_daily_bbl":0.0,"toast_daily_bbl":0.025,"selfdistro_daily_bbl":0.002,"mmm_daily_bbl":0.0,"total_daily_bbl":0.027,"channel_pcts":{"nappi":0,"toast":92,"selfdist":8,"mmm":0},"days_until_stockout_kegs":40,"days_until_stockout_cases":23,"days_until_stockout":44,"brew_by_date":"2026-04-22","lead_time_days":21,"batch_size_bbl":7,"recommended_batch":"single","brew_status":"OK","priority_rank":6,"current_month_velocity_bbl":0.027,"same_month_last_year_bbl":null,"trailing_3mo_trend":"flat","allocation":{"total_bbl":7,"packaging":{"kegs_bbl":6.4,"cases_bbl":0.6},"kegs_output":"≈32 sixtels + 2 half-barrels","cases_output":"≈16 cases 16oz","channel_split":{"nappi":"0%","toast":"92%","selfdist":"8%","mmm":"0%"}}},{"brand_key":"p3","display_name":"P3 Pale Ale","style":"American Pale Ale","channels":["nappi","toast","selfdistro","mmm"],"brewery_kegs_sixth":18.0,"brewery_kegs_half":7.0,"brewery_cases_16oz":102.0,"brewery_cases_12oz":0.0,"nappi_cases":23,"nappi_kegs":2,"total_inv_bbl":11.4,"nappi_daily_bbl":0.112,"toast_daily_bbl":0.068,"selfdistro_daily_bbl":0.034,"mmm_daily_bbl":0.0,"total_daily_bbl":0.214,"channel_pcts":{"nappi":52,"toast":32,"selfdist":16,"mmm":0},"days_until_stockout_kegs":99,"days_until_stockout_cases":31,"days_until_stockout":53,"brew_by_date":"2026-05-02","lead_time_days":21,"batch_size_bbl":15,"recommended_batch":"double","brew_status":"OK","priority_rank":7,"current_month_velocity_bbl":0.214,"same_month_last_year_bbl":0.064,"trailing_3mo_trend":"up","allocation":{"total_bbl":15,"packaging":{"kegs_bbl":4.8,"cases_bbl":10.2},"kegs_output":"≈22 sixtels + 2 half-barrels","cases_output":"≈280 cases 16oz","channel_split":{"nappi":"52%","toast":"32%","selfdist":"16%","mmm":"0%"}}},{"brand_key":"night_witches","display_name":"Night Witches","style":"Black IPA","channels":["toast","selfdistro"],"brewery_kegs_sixth":6.0,"brewery_kegs_half":0.0,"brewery_cases_16oz":33.0,"brewery_cases_12oz":0.0,"nappi_cases":0,"nappi_kegs":0,"total_inv_bbl":2.2,"nappi_daily_bbl":0.0,"toast_daily_bbl":0.027,"selfdistro_daily_bbl":0.004,"mmm_daily_bbl":0.0,"total_daily_bbl":0.032,"channel_pcts":{"nappi":0,"toast":87,"selfdist":13,"mmm":0},"days_until_stockout_kegs":36,"days_until_stockout_cases":126,"days_until_stockout":70,"brew_by_date":"2026-05-18","lead_time_days":21,"batch_size_bbl":7,"recommended_batch":"single","brew_status":"OK","priority_rank":8,"current_month_velocity_bbl":0.032,"same_month_last_year_bbl":null,"trailing_3mo_trend":"flat","allocation":{"total_bbl":7,"packaging":{"kegs_bbl":6.1,"cases_bbl":0.9},"kegs_output":"≈30 sixtels + 2 half-barrels","cases_output":"≈24 cases 16oz","channel_split":{"nappi":"0%","toast":"87%","selfdist":"13%","mmm":"0%"}}},{"brand_key":"real_maine_italian","display_name":"Real Maine Italian Pilsner","style":"Italian Pilsner","channels":["nappi","toast","selfdistro"],"brewery_kegs_sixth":11.0,"brewery_kegs_half":1.0,"brewery_cases_16oz":62.33,"brewery_cases_12oz":0.0,"nappi_cases":0,"nappi_kegs":0,"total_inv_bbl":4.6,"nappi_daily_bbl":0.033,"toast_daily_bbl":0.029,"selfdistro_daily_bbl":0.002,"mmm_daily_bbl":0.0,"total_daily_bbl":0.065,"channel_pcts":{"nappi":52,"toast":45,"selfdist":3,"mmm":0},"days_until_stockout_kegs":80,"days_until_stockout_cases":63,"days_until_stockout":71,"brew_by_date":"2026-05-11","lead_time_days":30,"batch_size_bbl":7,"recommended_batch":"single","brew_status":"OK","priority_rank":9,"current_month_velocity_bbl":0.065,"same_month_last_year_bbl":0.032,"trailing_3mo_trend":"up","allocation":{"total_bbl":7,"packaging":{"kegs_bbl":3.1,"cases_bbl":3.9},"kegs_output":"≈12 sixtels + 2 half-barrels","cases_output":"≈107 cases 16oz","channel_split":{"nappi":"52%","toast":"45%","selfdist":"3%","mmm":"0%"}}},{"brand_key":"light_the_fires","display_name":"Light the Fires","style":"Fruited Pale Ale","channels":["toast","selfdistro"],"brewery_kegs_sixth":3.0,"brewery_kegs_half":1.0,"brewery_cases_16oz":33.66,"brewery_cases_12oz":0.0,"nappi_cases":0,"nappi_kegs":0,"total_inv_bbl":2.2,"nappi_daily_bbl":0.0,"toast_daily_bbl":0.023,"selfdistro_daily_bbl":0.006,"mmm_daily_bbl":0.0,"total_daily_bbl":0.029,"channel_pcts":{"nappi":0,"toast":78,"selfdist":22,"mmm":0},"days_until_stockout_kegs":43,"days_until_stockout_cases":139,"days_until_stockout":76,"brew_by_date":"2026-05-24","lead_time_days":21,"batch_size_bbl":7,"recommended_batch":"single","brew_status":"OK","priority_rank":10,"current_month_velocity_bbl":0.029,"same_month_last_year_bbl":0.012,"trailing_3mo_trend":"flat","allocation":{"total_bbl":7,"packaging":{"kegs_bbl":5.5,"cases_bbl":1.5},"kegs_output":"≈27 sixtels + 2 half-barrels","cases_output":"≈41 cases 16oz","channel_split":{"nappi":"0%","toast":"78%","selfdist":"22%","mmm":"0%"}}},{"brand_key":"remove_before_flight","display_name":"Remove Before Flight","style":"Red Ale","channels":["nappi","toast","selfdistro"],"brewery_kegs_sixth":14.0,"brewery_kegs_half":3.0,"brewery_cases_16oz":64.33,"brewery_cases_12oz":0.0,"nappi_cases":23,"nappi_kegs":2,"total_inv_bbl":7.3,"nappi_daily_bbl":0.059,"toast_daily_bbl":0.025,"selfdistro_daily_bbl":0.003,"mmm_daily_bbl":0.0,"total_daily_bbl":0.087,"channel_pcts":{"nappi":68,"toast":29,"selfdist":4,"mmm":0},"days_until_stockout_kegs":160,"days_until_stockout_cases":51,"days_until_stockout":85,"brew_by_date":"2026-06-09","lead_time_days":14,"batch_size_bbl":7,"recommended_batch":"single","brew_status":"OK","priority_rank":11,"current_month_velocity_bbl":0.087,"same_month_last_year_bbl":0.04,"trailing_3mo_trend":"flat","allocation":{"total_bbl":7,"packaging":{"kegs_bbl":2.1,"cases_bbl":4.9},"kegs_output":"≈6 sixtels + 2 half-barrels","cases_output":"≈134 cases 16oz","channel_split":{"nappi":"68%","toast":"29%","selfdist":"4%","mmm":"0%"}}},{"brand_key":"vuelo","display_name":"Vuelo Nocturno","style":null,"channels":["toast","selfdistro","mmm"],"brewery_kegs_sixth":1.0,"brewery_kegs_half":0.0,"brewery_cases_16oz":0.0,"brewery_cases_12oz":0.0,"nappi_cases":0,"nappi_kegs":0,"total_inv_bbl":0.2,"nappi_daily_bbl":0.0,"toast_daily_bbl":0.002,"selfdistro_daily_bbl":0.0,"mmm_daily_bbl":0.0,"total_daily_bbl":0.002,"channel_pcts":{"nappi":0,"toast":100,"selfdist":0,"mmm":0},"days_until_stockout_kegs":90,"days_until_stockout_cases":0,"days_until_stockout":91,"brew_by_date":"2026-06-08","lead_time_days":21,"batch_size_bbl":7,"recommended_batch":"single","brew_status":"OK","priority_rank":12,"current_month_velocity_bbl":0.002,"same_month_last_year_bbl":0.021,"trailing_3mo_trend":"down","allocation":{"total_bbl":7,"packaging":{"kegs_bbl":7.0,"cases_bbl":0.0},"kegs_output":"≈36 sixtels + 2 half-barrels","cases_output":"≈0 cases 16oz","channel_split":{"nappi":"0%","toast":"100%","selfdist":"0%","mmm":"0%"}}},{"brand_key":"sour_tower","display_name":"Sour Tower","style":"Imperial Cherry Sour Ale","channels":["toast","selfdistro"],"brewery_kegs_sixth":4.0,"brewery_kegs_half":2.0,"brewery_cases_16oz":36.0,"brewery_cases_12oz":0.0,"nappi_cases":0,"nappi_kegs":0,"total_inv_bbl":3.0,"nappi_daily_bbl":0.0,"toast_daily_bbl":0.029,"selfdistro_daily_bbl":0.001,"mmm_daily_bbl":0.0,"total_daily_bbl":0.03,"channel_pcts":{"nappi":0,"toast":97,"selfdist":3,"mmm":0},"days_until_stockout_kegs":56,"days_until_stockout_cases":143,"days_until_stockout":98,"brew_by_date":"2026-06-07","lead_time_days":30,"batch_size_bbl":7,"recommended_batch":"single","brew_status":"OK","priority_rank":13,"current_month_velocity_bbl":0.03,"same_month_last_year_bbl":0.033,"trailing_3mo_trend":"up","allocation":{"total_bbl":7,"packaging":{"kegs_bbl":6.8,"cases_bbl":0.2},"kegs_output":"≈34 sixtels + 2 half-barrels","cases_output":"≈5 cases 16oz","channel_split":{"nappi":"0%","toast":"97%","selfdist":"3%","mmm":"0%"}}},{"brand_key":"subhunter","display_name":"Subhunter IPA","style":"Imperial IPA","channels":["nappi","toast","selfdistro"],"brewery_kegs_sixth":19.0,"brewery_kegs_half":9.0,"brewery_cases_16oz":111.49,"brewery_cases_12oz":0.0,"nappi_cases":38,"nappi_kegs":2,"total_inv_bbl":13.4,"nappi_daily_bbl":0.053,"toast_daily_bbl":0.037,"selfdistro_daily_bbl":0.012,"mmm_daily_bbl":0.0,"total_daily_bbl":0.102,"channel_pcts":{"nappi":52,"toast":37,"selfdist":11,"mmm":0},"days_until_stockout_kegs":211,"days_until_stockout_cases":84,"days_until_stockout":132,"brew_by_date":"2026-07-10","lead_time_days":30,"batch_size_bbl":7,"recommended_batch":"single","brew_status":"OK","priority_rank":14,"current_month_velocity_bbl":0.102,"same_month_last_year_bbl":0.041,"trailing_3mo_trend":"up","allocation":{"total_bbl":7,"packaging":{"kegs_bbl":2.6,"cases_bbl":4.4},"kegs_output":"≈9 sixtels + 2 half-barrels","cases_output":"≈121 cases 16oz","channel_split":{"nappi":"52%","toast":"37%","selfdist":"11%","mmm":"0%"}}},{"brand_key":"cartwheeler","display_name":"Cartwheeler","style":"German-style Altbier","channels":["toast","selfdistro"],"brewery_kegs_sixth":5.0,"brewery_kegs_half":2.0,"brewery_cases_16oz":35.5,"brewery_cases_12oz":0.0,"nappi_cases":0,"nappi_kegs":0,"total_inv_bbl":3.1,"nappi_daily_bbl":0.0,"toast_daily_bbl":0.012,"selfdistro_daily_bbl":0.008,"mmm_daily_bbl":0.0,"total_daily_bbl":0.021,"channel_pcts":{"nappi":0,"toast":59,"selfdist":41,"mmm":0},"days_until_stockout_kegs":150,"days_until_stockout_cases":152,"days_until_stockout":151,"brew_by_date":"2026-08-08","lead_time_days":21,"batch_size_bbl":7,"recommended_batch":"single","brew_status":"OK","priority_rank":15,"current_month_velocity_bbl":0.021,"same_month_last_year_bbl":null,"trailing_3mo_trend":"flat","allocation":{"total_bbl":7,"packaging":{"kegs_bbl":4.1,"cases_bbl":2.9},"kegs_output":"≈18 sixtels + 2 half-barrels","cases_output":"≈79 cases 16oz","channel_split":{"nappi":"0%","toast":"59%","selfdist":"41%","mmm":"0%"}}}],"mmm_2025_actuals":{"2025-06":{"units":0,"days":30},"2025-07":{"units":726,"days":31},"2025-08":{"units":862,"days":31},"2025-09":{"units":202,"days":30}},"mmm_brands":["blube_tube","munich_layover","p3","plane_beer","puddle_jumper","remove_before_flight","vuelo","wings"],"brew_calendar":[{"brand_key":"after_dark","display_name":"After Dark","brew_by":"2026-03-16","batch":"single","status":"BREW_NOW","week":"this_week"},{"brand_key":"zeppelin_rules","display_name":"Zeppelin Rules","brew_by":"2026-03-24","batch":"single","status":"BREW_NOW","week":"this_week"},{"brand_key":"plane_beer","display_name":"Plane Beer Pilsner","brew_by":"2026-03-30","batch":"single","status":"BREW_NOW","week":"this_week"},{"brand_key":"space_a","display_name":"Space-A","brew_by":"2026-04-01","batch":"single","status":"PLAN","week":"this_week"},{"brand_key":"wings","display_name":"Wings Hazy IPA","brew_by":"2026-04-03","batch":"double","status":"PLAN","week":"this_week"}]};
+
+    // STATE
+    let currentTab = 'brew-plan';
+    let activeMMMScenario = JSON.parse(sessionStorage.getItem('activeMMMScenario')) || null;
+
+    // AUTH
+    function handleLogin() {
+      const pwd = document.getElementById('passwordInput').value;
+      if (pwd === 'flightdeck') {
+        sessionStorage.setItem('authenticated', 'true');
+        document.getElementById('authGate').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+        init();
+      } else {
+        document.getElementById('errorMsg').innerText = 'Invalid password';
+      }
+    }
+
+    function checkAuth() {
+      if (sessionStorage.getItem('authenticated') === 'true') {
+        document.getElementById('authGate').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+      }
+    }
+
+    // INIT
+    function init() {
+      updateFreshness();
+      renderBrewPlan();
+      renderCalendar();
+      renderMMM();
+      renderForecastLog();
+    }
+
+    // FRESHNESS
+    function updateFreshness() {
+      const fresh = D.data_freshness;
+      const now = new Date('2026-04-01');
+
+      function isFresh(dateStr) {
+        const d = new Date(dateStr);
+        return (now - d) <= 3 * 24 * 60 * 60 * 1000;
+      }
+
+      document.getElementById('nappiDate').innerText = fresh.nappi;
+      document.getElementById('nappiDot').className = 'freshness-dot' + (isFresh(fresh.nappi) ? '' : ' stale');
+
+      document.getElementById('inventoryDate').innerText = fresh.inventory;
+      document.getElementById('inventoryDot').className = 'freshness-dot' + (isFresh(fresh.inventory) ? '' : ' stale');
+
+      document.getElementById('toastDate').innerText = fresh.toast;
+      document.getElementById('toastDot').className = 'freshness-dot' + (isFresh(fresh.toast) ? '' : ' stale');
+
+      document.getElementById('footer').innerText = `Flight Deck Brewing · Production Planner · Last updated: ${D.generated}`;
+    }
+
+    // TAB SWITCHING
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.getElementById(tab).classList.add('active');
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    // BREW PLAN
+    function renderBrewPlan() {
+      const sorted = [...D.production_plan].sort((a, b) => a.priority_rank - b.priority_rank);
+
+      let brewNow = 0, planWeek = 0;
+      let totalDemand = 0;
+      let stockoutDays = [];
+
+      const tbody = document.getElementById('brewTableBody');
+      tbody.innerHTML = '';
+
+      sorted.forEach(b => {
+        if (b.brew_status === 'BREW_NOW') brewNow++;
+        if (b.brew_status === 'PLAN') planWeek++;
+        totalDemand += b.total_daily_bbl;
+        stockoutDays.push(b.days_until_stockout);
+
+        const stockoutClass = b.days_until_stockout < 7 ? 'stockout-red' : b.days_until_stockout < 21 ? 'stockout-yellow' : 'stockout-green';
+        const rowClass = b.brew_status === 'BREW_NOW' ? 'brew-now' : b.brew_status === 'PLAN' ? 'plan' : '';
+
+        const channelBar = createChannelBar(b.channel_pcts);
+        const trendSvg = createSparkline(b.trailing_3mo_trend);
+
+        const row = `
+          <tr class="${rowClass}">
+            <td style="font-weight: 700;">${b.priority_rank}</td>
+            <td>
+              <div class="brand-name">${b.display_name}</div>
+              <div class="brand-style">${b.style}</div>
+            </td>
+            <td class="tooltip" data-tooltip="Kegs: ${b.brewery_kegs_sixth} 6th + ${b.brewery_kegs_half} half | Cases: ${b.brewery_cases_16oz} 16oz">${b.total_inv_bbl.toFixed(1)}</td>
+            <td class="tooltip" data-tooltip="Nappi: ${b.nappi_daily_bbl.toFixed(2)} | Toast: ${b.toast_daily_bbl.toFixed(2)} | SD: ${b.selfdistro_daily_bbl.toFixed(2)} | MMM: ${b.mmm_daily_bbl.toFixed(2)}">${b.total_daily_bbl.toFixed(2)}</td>
+            <td>${channelBar}</td>
+            <td><span class="${stockoutClass}">${b.days_until_stockout}</span></td>
+            <td>${b.brew_by_date}</td>
+            <td>${b.batch_size_bbl} bbl</td>
+            <td><span class="badge ${b.brew_status.toLowerCase()}">${b.brew_status}</span></td>
+            <td>${trendSvg}</td>
+          </tr>
+        `;
+        tbody.innerHTML += row;
+      });
+
+      document.getElementById('brewNowCount').innerText = brewNow;
+      document.getElementById('planThisWeekCount').innerText = planWeek;
+      document.getElementById('totalDailyDemand').innerText = totalDemand.toFixed(2);
+      document.getElementById('avgStockout').innerText = Math.round(stockoutDays.reduce((a, b) => a + b, 0) / stockoutDays.length);
+
+      renderAllocationCards(sorted.filter(b => ['BREW_NOW', 'PLAN'].includes(b.brew_status)));
+      renderSeasonalComparison(sorted);
+    }
+
+    function createChannelBar(pcts) {
+      let html = '<div class="channel-bar" style="display: flex; height: 20px; gap: 1px;">';
+      if (pcts.nappi > 0) html += `<div class="channel-seg channel-nappi" style="flex: ${pcts.nappi};">${pcts.nappi}%</div>`;
+      if (pcts.toast > 0) html += `<div class="channel-seg channel-toast" style="flex: ${pcts.toast};">${pcts.toast}%</div>`;
+      if (pcts.selfdist > 0) html += `<div class="channel-seg channel-selfdist" style="flex: ${pcts.selfdist};">${pcts.selfdist}%</div>`;
+      if (pcts.mmm > 0) html += `<div class="channel-seg channel-mmm" style="flex: ${pcts.mmm};">${pcts.mmm}%</div>`;
+      html += '</div>';
+      return html;
+    }
+
+    function createSparkline(trend) {
+      const symbols = { up: '📈', down: '📉', flat: '→' };
+      return `<span class="sparkline">${symbols[trend] || '→'}</span>`;
+    }
+
+    function renderAllocationCards(brands) {
+      const container = document.getElementById('allocationCards');
+      container.innerHTML = '';
+
+      brands.forEach(b => {
+        const card = `
+          <div class="allocation-card">
+            <h3>${b.display_name} — Brew ${b.allocation.total_bbl} bbl by ${b.brew_by_date}</h3>
+            <div class="allocation-section">
+              <div class="allocation-label">Package</div>
+              <div class="allocation-text">${b.allocation.packaging.kegs_bbl} bbl → kegs (${b.allocation.kegs_output})</div>
+              <div class="allocation-text">${b.allocation.packaging.cases_bbl} bbl → cases (${b.allocation.cases_output})</div>
+            </div>
+            <div class="allocation-section">
+              <div class="allocation-label">Allocate</div>
+              <div class="channel-bar" style="display: flex; height: 24px; margin-bottom: 10px;">
+                <div class="channel-seg channel-nappi" style="flex: ${b.allocation.channel_split.nappi.replace('%', '')};"></div>
+                <div class="channel-seg channel-toast" style="flex: ${b.allocation.channel_split.toast.replace('%', '')};"></div>
+                <div class="channel-seg channel-selfdist" style="flex: ${b.allocation.channel_split.selfdist.replace('%', '')};"></div>
+                <div class="channel-seg channel-mmm" style="flex: ${b.allocation.channel_split.mmm.replace('%', '')};"></div>
+              </div>
+              <div class="allocation-split">
+                <span>Nappi ${b.allocation.channel_split.nappi}</span> |
+                <span>Toast ${b.allocation.channel_split.toast}</span> |
+                <span>SD ${b.allocation.channel_

@@ -1,0 +1,4138 @@
+{
+  "generated": "2026-04-01",
+  "brunswick": {
+    "months": {
+      "2024-10": {
+        "days_in_period": 31,
+        "total_pours": 8216,
+        "brands": {
+          "bird_clock": {
+            "qty_sold": 96,
+            "gross_sales": 746.0,
+            "total_oz": 1264.5,
+            "daily_oz": 40.8,
+            "daily_kegs_equiv": 0.062,
+            "pour_breakdown": {
+              "7oz": 11,
+              "13.5oz": 69,
+              "first class": 16
+            }
+          },
+          "blip": {
+            "qty_sold": 283,
+            "gross_sales": 1931.0,
+            "total_oz": 3674.5,
+            "daily_oz": 118.5,
+            "daily_kegs_equiv": 0.179,
+            "pour_breakdown": {
+              "7oz": 25,
+              "13.5oz": 245,
+              "first class": 12
+            }
+          },
+          "blube_tube": {
+            "qty_sold": 404,
+            "gross_sales": 3498.0,
+            "total_oz": 5025.5,
+            "daily_oz": 162.1,
+            "daily_kegs_equiv": 0.245,
+            "pour_breakdown": {
+              "7oz": 69,
+              "13.5oz": 327,
+              "first class": 8
+            }
+          },
+          "breaking_the_sour_barrier": {
+            "qty_sold": 15,
+            "gross_sales": 105.0,
+            "total_oz": 240.0,
+            "daily_oz": 7.7,
+            "daily_kegs_equiv": 0.012,
+            "pour_breakdown": {
+              "can pour": 15
+            }
+          },
+          "bxm": {
+            "qty_sold": 425,
+            "gross_sales": 2865.0,
+            "total_oz": 5442.5,
+            "daily_oz": 175.6,
+            "daily_kegs_equiv": 0.266,
+            "pour_breakdown": {
+              "7oz": 55,
+              "13.5oz": 345,
+              "first class": 25
+            }
+          },
+          "googly_skies": {
+            "qty_sold": 0,
+            "gross_sales": 0.0,
+            "total_oz": 0.0,
+            "daily_oz": 0.0,
+            "daily_kegs_equiv": 0.0,
+            "pour_breakdown": {
+              "13.5oz": 0
+            }
+          },
+          "munich_layover": {
+            "qty_sold": 912,
+            "gross_sales": 7020.0,
+            "total_oz": 10540.5,
+            "daily_oz": 340.0,
+            "daily_kegs_equiv": 0.514,
+            "pour_breakdown": {
+              "7oz": 82,
+              "13oz": 679,
+              "first class": 50
+            }
+          },
+          "night_witches": {
+            "qty_sold": 481,
+            "gross_sales": 3710.0,
+            "total_oz": 6128.0,
+            "daily_oz": 197.7,
+            "daily_kegs_equiv": 0.299,
+            "pour_breakdown": {
+              "7oz": 68,
+              "13.5oz": 376,
+              "first class": 36
+            }
+          },
+          "p3": {
+            "qty_sold": 746,
+            "gross_sales": 5134.0,
+            "total_oz": 9850.5,
+            "daily_oz": 317.8,
+            "daily_kegs_equiv": 0.481,
+            "pour_breakdown": {
+              "first class": 29,
+              "7oz": 43,
+              "13oz": 673
+            }
+          },
+          "plane_beer": {
+            "qty_sold": 553,
+            "gross_sales": 3226.0,
+            "total_oz": 7226.5,
+            "daily_oz": 233.1,
+            "daily_kegs_equiv": 0.353,
+            "pour_breakdown": {
+              "7oz": 46,
+              "13.5oz": 483,
+              "first class": 24
+            }
+          },
+          "preflight_czechlist": {
+            "qty_sold": 3,
+            "gross_sales": 21.0,
+            "total_oz": 48.0,
+            "daily_oz": 1.5,
+            "daily_kegs_equiv": 0.002,
+            "pour_breakdown": {
+              "can pour": 3
+            }
+          },
+          "real_maine_italian": {
+            "qty_sold": 294,
+            "gross_sales": 2296.0,
+            "total_oz": 3849.5,
+            "daily_oz": 124.2,
+            "daily_kegs_equiv": 0.188,
+            "pour_breakdown": {
+              "7oz": 23,
+              "13.5oz": 259,
+              "first class": 12
+            }
+          },
+          "remove_before_flight": {
+            "qty_sold": 312,
+            "gross_sales": 2118.0,
+            "total_oz": 4070.5,
+            "daily_oz": 131.3,
+            "daily_kegs_equiv": 0.199,
+            "pour_breakdown": {
+              "7oz": 32,
+              "first class": 32,
+              "13.5oz": 247
+            }
+          },
+          "space_a": {
+            "qty_sold": 159,
+            "gross_sales": 1252.0,
+            "total_oz": 2106.5,
+            "daily_oz": 68.0,
+            "daily_kegs_equiv": 0.103,
+            "pour_breakdown": {
+              "7oz": 10,
+              "13.5oz": 139,
+              "first class": 10
+            }
+          },
+          "subhunter": {
+            "qty_sold": 591,
+            "gross_sales": 5027.0,
+            "total_oz": 6556.5,
+            "daily_oz": 211.5,
+            "daily_kegs_equiv": 0.32,
+            "pour_breakdown": {
+              "7oz": 41,
+              "first class": 51,
+              "13.5oz": 401,
+              "fcc ms": 8
+            }
+          },
+          "vetbeer": {
+            "qty_sold": 298,
+            "gross_sales": 2352.0,
+            "total_oz": 2801.0,
+            "daily_oz": 90.4,
+            "daily_kegs_equiv": 0.137,
+            "pour_breakdown": {
+              "7oz": 16,
+              "13.5oz": 166,
+              "first class": 28
+            }
+          },
+          "wings": {
+            "qty_sold": 1038,
+            "gross_sales": 8163.0,
+            "total_oz": 13638.5,
+            "daily_oz": 440.0,
+            "daily_kegs_equiv": 0.666,
+            "pour_breakdown": {
+              "7oz": 69,
+              "13.5oz": 935,
+              "first class": 33,
+              "fcc ms": 1
+            }
+          }
+        }
+      },
+      "2024-11": {
+        "days_in_period": 30,
+        "total_pours": 6004,
+        "brands": {
+          "bird_clock": {
+            "qty_sold": 376,
+            "gross_sales": 2948.0,
+            "total_oz": 4979.0,
+            "daily_oz": 166.0,
+            "daily_kegs_equiv": 0.251,
+            "pour_breakdown": {
+              "7oz": 29,
+              "13.5oz": 304,
+              "first class": 42
+            }
+          },
+          "blip": {
+            "qty_sold": 197,
+            "gross_sales": 1333.0,
+            "total_oz": 2532.5,
+            "daily_oz": 84.4,
+            "daily_kegs_equiv": 0.128,
+            "pour_breakdown": {
+              "7oz": 23,
+              "13.5oz": 165,
+              "first class": 9
+            }
+          },
+          "blube_tube": {
+            "qty_sold": 302,
+            "gross_sales": 2649.0,
+            "total_oz": 3852.0,
+            "daily_oz": 128.4,
+            "daily_kegs_equiv": 0.194,
+            "pour_breakdown": {
+              "7oz": 36,
+              "13.5oz": 256,
+              "first class": 9
+            }
+          },
+          "bxm": {
+            "qty_sold": 39,
+            "gross_sales": 261.0,
+            "total_oz": 495.0,
+            "daily_oz": 16.5,
+            "daily_kegs_equiv": 0.025,
+            "pour_breakdown": {
+              "7oz": 6,
+              "13.5oz": 30,
+              "first class": 3
+            }
+          },
+          "munich_layover": {
+            "qty_sold": 373,
+            "gross_sales": 2944.0,
+            "total_oz": 4469.0,
+            "daily_oz": 149.0,
+            "daily_kegs_equiv": 0.225,
+            "pour_breakdown": {
+              "7oz": 19,
+              "13oz": 256,
+              "first class": 18,
+              "can pour": 37
+            }
+          },
+          "night_witches": {
+            "qty_sold": 118,
+            "gross_sales": 920.0,
+            "total_oz": 1537.5,
+            "daily_oz": 51.2,
+            "daily_kegs_equiv": 0.078,
+            "pour_breakdown": {
+              "7oz": 12,
+              "13.5oz": 97,
+              "first class": 9
+            }
+          },
+          "p3": {
+            "qty_sold": 461,
+            "gross_sales": 3195.0,
+            "total_oz": 6159.5,
+            "daily_oz": 205.3,
+            "daily_kegs_equiv": 0.311,
+            "pour_breakdown": {
+              "first class": 16,
+              "7oz": 16,
+              "13oz": 429
+            }
+          },
+          "plane_beer": {
+            "qty_sold": 407,
+            "gross_sales": 2404.0,
+            "total_oz": 5442.5,
+            "daily_oz": 181.4,
+            "daily_kegs_equiv": 0.274,
+            "pour_breakdown": {
+              "7oz": 19,
+              "13.5oz": 353,
+              "first class": 34
+            }
+          },
+          "real_maine_italian": {
+            "qty_sold": 310,
+            "gross_sales": 2427.0,
+            "total_oz": 4087.5,
+            "daily_oz": 136.2,
+            "daily_kegs_equiv": 0.206,
+            "pour_breakdown": {
+              "7oz": 20,
+              "13.5oz": 277,
+              "first class": 13
+            }
+          },
+          "remove_before_flight": {
+            "qty_sold": 378,
+            "gross_sales": 2578.0,
+            "total_oz": 4942.0,
+            "daily_oz": 164.7,
+            "daily_kegs_equiv": 0.249,
+            "pour_breakdown": {
+              "7oz": 34,
+              "first class": 24,
+              "13.5oz": 320
+            }
+          },
+          "space_a": {
+            "qty_sold": 326,
+            "gross_sales": 2552.0,
+            "total_oz": 4289.0,
+            "daily_oz": 143.0,
+            "daily_kegs_equiv": 0.216,
+            "pour_breakdown": {
+              "7oz": 28,
+              "13.5oz": 270,
+              "first class": 28
+            }
+          },
+          "subhunter": {
+            "qty_sold": 408,
+            "gross_sales": 3597.0,
+            "total_oz": 5199.5,
+            "daily_oz": 173.3,
+            "daily_kegs_equiv": 0.262,
+            "pour_breakdown": {
+              "7oz": 28,
+              "first class": 52,
+              "13.5oz": 309
+            }
+          },
+          "takeoff": {
+            "qty_sold": 28,
+            "gross_sales": 238.5,
+            "total_oz": 317.5,
+            "daily_oz": 10.6,
+            "daily_kegs_equiv": 0.016,
+            "pour_breakdown": {
+              "7oz": 8,
+              "13.5oz": 17,
+              "first class": 2
+            }
+          },
+          "vetbeer": {
+            "qty_sold": 336,
+            "gross_sales": 2638.0,
+            "total_oz": 3530.0,
+            "daily_oz": 117.7,
+            "daily_kegs_equiv": 0.178,
+            "pour_breakdown": {
+              "7oz": 25,
+              "13.5oz": 194,
+              "first class": 32,
+              "can pour": 14
+            }
+          },
+          "wings": {
+            "qty_sold": 671,
+            "gross_sales": 5294.0,
+            "total_oz": 8888.0,
+            "daily_oz": 296.3,
+            "daily_kegs_equiv": 0.448,
+            "pour_breakdown": {
+              "7oz": 37,
+              "13.5oz": 606,
+              "first class": 28
+            }
+          }
+        }
+      },
+      "2024-12": {
+        "days_in_period": 31,
+        "total_pours": 4823,
+        "brands": {
+          "bird_clock": {
+            "qty_sold": 254,
+            "gross_sales": 1986.0,
+            "total_oz": 3357.0,
+            "daily_oz": 108.3,
+            "daily_kegs_equiv": 0.164,
+            "pour_breakdown": {
+              "7oz": 23,
+              "13.5oz": 200,
+              "first class": 31
+            }
+          },
+          "blip": {
+            "qty_sold": 157,
+            "gross_sales": 1075.0,
+            "total_oz": 2069.0,
+            "daily_oz": 66.7,
+            "daily_kegs_equiv": 0.101,
+            "pour_breakdown": {
+              "7oz": 12,
+              "13.5oz": 134,
+              "first class": 11
+            }
+          },
+          "blube_tube": {
+            "qty_sold": 12,
+            "gross_sales": 104.0,
+            "total_oz": 192.0,
+            "daily_oz": 6.2,
+            "daily_kegs_equiv": 0.009,
+            "pour_breakdown": {
+              "can_pour": 12
+            }
+          },
+          "choc_and_awe": {
+            "qty_sold": 88,
+            "gross_sales": 590.0,
+            "total_oz": 1136.0,
+            "daily_oz": 36.6,
+            "daily_kegs_equiv": 0.055,
+            "pour_breakdown": {
+              "7oz": 13,
+              "13oz": 62,
+              "first class": 13
+            }
+          },
+          "get_there_from_here": {
+            "qty_sold": 242,
+            "gross_sales": 2030.0,
+            "total_oz": 3049.0,
+            "daily_oz": 98.4,
+            "daily_kegs_equiv": 0.149,
+            "pour_breakdown": {
+              "7oz": 42,
+              "13.5oz": 178,
+              "first class": 22
+            }
+          },
+          "munich_layover": {
+            "qty_sold": 0,
+            "gross_sales": 0.0,
+            "total_oz": 0.0,
+            "daily_oz": 0.0,
+            "daily_kegs_equiv": 0.0,
+            "pour_breakdown": {
+              "13oz": 0
+            }
+          },
+          "p3": {
+            "qty_sold": 529,
+            "gross_sales": 3560.0,
+            "total_oz": 5774.0,
+            "daily_oz": 186.3,
+            "daily_kegs_equiv": 0.282,
+            "pour_breakdown": {
+              "first class": 53,
+              "7oz": 21,
+              "13oz": 354
+            }
+          },
+          "plane_beer": {
+            "qty_sold": 435,
+            "gross_sales": 2694.0,
+            "total_oz": 4906.0,
+            "daily_oz": 158.3,
+            "daily_kegs_equiv": 0.239,
+            "pour_breakdown": {
+              "7oz": 19,
+              "13.5oz": 318,
+              "first class": 30
+            }
+          },
+          "real_maine_italian": {
+            "qty_sold": 253,
+            "gross_sales": 1953.0,
+            "total_oz": 2774.0,
+            "daily_oz": 89.5,
+            "daily_kegs_equiv": 0.135,
+            "pour_breakdown": {
+              "7oz": 13,
+              "13.5oz": 194,
+              "first class": 4
+            }
+          },
+          "remove_before_flight": {
+            "qty_sold": 392,
+            "gross_sales": 2759.0,
+            "total_oz": 4493.0,
+            "daily_oz": 144.9,
+            "daily_kegs_equiv": 0.219,
+            "pour_breakdown": {
+              "7oz": 20,
+              "first class": 51,
+              "13.5oz": 262
+            }
+          },
+          "space_a": {
+            "qty_sold": 339,
+            "gross_sales": 2614.0,
+            "total_oz": 3844.0,
+            "daily_oz": 124.0,
+            "daily_kegs_equiv": 0.188,
+            "pour_breakdown": {
+              "7oz": 26,
+              "13.5oz": 244,
+              "first class": 23
+            }
+          },
+          "subhunter": {
+            "qty_sold": 352,
+            "gross_sales": 3070.0,
+            "total_oz": 4150.0,
+            "daily_oz": 133.9,
+            "daily_kegs_equiv": 0.203,
+            "pour_breakdown": {
+              "7oz": 18,
+              "first class": 49,
+              "13.5oz": 240
+            }
+          },
+          "takeoff": {
+            "qty_sold": 183,
+            "gross_sales": 1558.0,
+            "total_oz": 2343.0,
+            "daily_oz": 75.6,
+            "daily_kegs_equiv": 0.114,
+            "pour_breakdown": {
+              "7oz": 25,
+              "13.5oz": 144,
+              "first class": 14
+            }
+          },
+          "vetbeer": {
+            "qty_sold": 36,
+            "gross_sales": 288.0,
+            "total_oz": 576.0,
+            "daily_oz": 18.6,
+            "daily_kegs_equiv": 0.028,
+            "pour_breakdown": {
+              "can_pour": 36
+            }
+          },
+          "wings": {
+            "qty_sold": 653,
+            "gross_sales": 5054.0,
+            "total_oz": 7399.0,
+            "daily_oz": 238.7,
+            "daily_kegs_equiv": 0.361,
+            "pour_breakdown": {
+              "7oz": 37,
+              "13.5oz": 472,
+              "first class": 48
+            }
+          },
+          "zeppelin_rules": {
+            "qty_sold": 262,
+            "gross_sales": 1748.0,
+            "total_oz": 3037.5,
+            "daily_oz": 98.0,
+            "daily_kegs_equiv": 0.148,
+            "pour_breakdown": {
+              "7oz": 20,
+              "13oz": 185,
+              "first class": 25
+            }
+          }
+        }
+      },
+      "2025-01": {
+        "days_in_period": 31,
+        "total_pours": 4204,
+        "brands": {
+          "bird_clock": {
+            "qty_sold": 262,
+            "gross_sales": 2082.0,
+            "total_oz": 3601.5,
+            "daily_oz": 116.2,
+            "daily_kegs_equiv": 0.176,
+            "pour_breakdown": {
+              "7oz": 7,
+              "13.5oz": 211,
+              "first class": 44
+            }
+          },
+          "blip": {
+            "qty_sold": 134,
+            "gross_sales": 916.0,
+            "total_oz": 1750.0,
+            "daily_oz": 56.5,
+            "daily_kegs_equiv": 0.085,
+            "pour_breakdown": {
+              "7oz": 11,
+              "13.5oz": 118,
+              "first class": 5
+            }
+          },
+          "choc_and_awe": {
+            "qty_sold": 230,
+            "gross_sales": 1546.0,
+            "total_oz": 2945.0,
+            "daily_oz": 95.0,
+            "daily_kegs_equiv": 0.144,
+            "pour_breakdown": {
+              "7oz": 32,
+              "13oz": 166,
+              "first class": 30
+            }
+          },
+          "get_there_from_here": {
+            "qty_sold": 132,
+            "gross_sales": 1118.0,
+            "total_oz": 1649.5,
+            "daily_oz": 53.2,
+            "daily_kegs_equiv": 0.08,
+            "pour_breakdown": {
+              "7oz": 21,
+              "13.5oz": 103,
+              "first class": 7
+            }
+          },
+          "p3": {
+            "qty_sold": 538,
+            "gross_sales": 3612.0,
+            "total_oz": 5703.5,
+            "daily_oz": 184.0,
+            "daily_kegs_equiv": 0.278,
+            "pour_breakdown": {
+              "first class": 52,
+              "7oz": 19,
+              "13oz": 351
+            }
+          },
+          "plane_beer": {
+            "qty_sold": 404,
+            "gross_sales": 2331.0,
+            "total_oz": 4559.5,
+            "daily_oz": 147.1,
+            "daily_kegs_equiv": 0.223,
+            "pour_breakdown": {
+              "7oz": 12,
+              "13.5oz": 277,
+              "first class": 46
+            }
+          },
+          "real_maine_italian": {
+            "qty_sold": 195,
+            "gross_sales": 1493.0,
+            "total_oz": 2049.0,
+            "daily_oz": 66.1,
+            "daily_kegs_equiv": 0.1,
+            "pour_breakdown": {
+              "7oz": 12,
+              "13.5oz": 142,
+              "first class": 3
+            }
+          },
+          "remove_before_flight": {
+            "qty_sold": 256,
+            "gross_sales": 1720.0,
+            "total_oz": 2830.5,
+            "daily_oz": 91.3,
+            "daily_kegs_equiv": 0.138,
+            "pour_breakdown": {
+              "7oz": 10,
+              "first class": 35,
+              "13.5oz": 163
+            }
+          },
+          "sour_tower": {
+            "qty_sold": 13,
+            "gross_sales": 113.0,
+            "total_oz": 158.0,
+            "daily_oz": 5.1,
+            "daily_kegs_equiv": 0.008,
+            "pour_breakdown": {
+              "7oz": 1,
+              "13.5oz": 10,
+              "first class": 1
+            }
+          },
+          "space_a": {
+            "qty_sold": 304,
+            "gross_sales": 2350.0,
+            "total_oz": 3269.5,
+            "daily_oz": 105.5,
+            "daily_kegs_equiv": 0.16,
+            "pour_breakdown": {
+              "7oz": 10,
+              "13.5oz": 205,
+              "first class": 27
+            }
+          },
+          "subhunter": {
+            "qty_sold": 296,
+            "gross_sales": 2694.0,
+            "total_oz": 3319.0,
+            "daily_oz": 107.1,
+            "daily_kegs_equiv": 0.162,
+            "pour_breakdown": {
+              "7oz": 15,
+              "first class": 76,
+              "13.5oz": 148
+            }
+          },
+          "takeoff": {
+            "qty_sold": 110,
+            "gross_sales": 902.0,
+            "total_oz": 1339.0,
+            "daily_oz": 43.2,
+            "daily_kegs_equiv": 0.065,
+            "pour_breakdown": {
+              "7oz": 25,
+              "13.5oz": 72,
+              "first class": 12
+            }
+          },
+          "vetbeer": {
+            "qty_sold": 32,
+            "gross_sales": 256.0,
+            "total_oz": 512.0,
+            "daily_oz": 16.5,
+            "daily_kegs_equiv": 0.025,
+            "pour_breakdown": {
+              "can_pour": 32
+            }
+          },
+          "wings": {
+            "qty_sold": 646,
+            "gross_sales": 5101.0,
+            "total_oz": 6722.5,
+            "daily_oz": 216.9,
+            "daily_kegs_equiv": 0.328,
+            "pour_breakdown": {
+              "7oz": 28,
+              "13.5oz": 423,
+              "first class": 51
+            }
+          },
+          "zeppelin_rules": {
+            "qty_sold": 216,
+            "gross_sales": 1415.0,
+            "total_oz": 2183.0,
+            "daily_oz": 70.4,
+            "daily_kegs_equiv": 0.107,
+            "pour_breakdown": {
+              "7oz": 17,
+              "13oz": 128,
+              "first class": 21
+            }
+          }
+        }
+      },
+      "2025-02": {
+        "days_in_period": 28,
+        "total_pours": 3648,
+        "brands": {
+          "bird_clock": {
+            "qty_sold": 213,
+            "gross_sales": 1660.0,
+            "total_oz": 2794.0,
+            "daily_oz": 99.8,
+            "daily_kegs_equiv": 0.151,
+            "pour_breakdown": {
+              "7oz": 22,
+              "13.5oz": 160,
+              "first class": 30
+            }
+          },
+          "blip": {
+            "qty_sold": 110,
+            "gross_sales": 744.0,
+            "total_oz": 1408.0,
+            "daily_oz": 50.3,
+            "daily_kegs_equiv": 0.076,
+            "pour_breakdown": {
+              "7oz": 13,
+              "13.5oz": 94,
+              "first class": 3
+            }
+          },
+          "choc_and_awe": {
+            "qty_sold": 177,
+            "gross_sales": 1181.0,
+            "total_oz": 2223.5,
+            "daily_oz": 79.4,
+            "daily_kegs_equiv": 0.12,
+            "pour_breakdown": {
+              "7oz": 29,
+              "13oz": 139,
+              "first class": 9
+            }
+          },
+          "flying_monk": {
+            "qty_sold": 100,
+            "gross_sales": 858.0,
+            "total_oz": 1341.0,
+            "daily_oz": 47.9,
+            "daily_kegs_equiv": 0.072,
+            "pour_breakdown": {
+              "7oz": 7,
+              "13.5oz": 72,
+              "first class": 20
+            }
+          },
+          "get_there_from_here": {
+            "qty_sold": 112,
+            "gross_sales": 906.0,
+            "total_oz": 1333.0,
+            "daily_oz": 47.6,
+            "daily_kegs_equiv": 0.072,
+            "pour_breakdown": {
+              "7oz": 31,
+              "13.5oz": 72,
+              "first class": 9
+            }
+          },
+          "p3": {
+            "qty_sold": 477,
+            "gross_sales": 3222.0,
+            "total_oz": 5329.5,
+            "daily_oz": 190.3,
+            "daily_kegs_equiv": 0.288,
+            "pour_breakdown": {
+              "first class": 62,
+              "7oz": 16,
+              "13oz": 313
+            }
+          },
+          "plane_beer": {
+            "qty_sold": 321,
+            "gross_sales": 1853.0,
+            "total_oz": 3792.0,
+            "daily_oz": 135.4,
+            "daily_kegs_equiv": 0.205,
+            "pour_breakdown": {
+              "7oz": 18,
+              "13.5oz": 236,
+              "first class": 30
+            }
+          },
+          "real_maine_italian": {
+            "qty_sold": 202,
+            "gross_sales": 1549.0,
+            "total_oz": 2221.5,
+            "daily_oz": 79.3,
+            "daily_kegs_equiv": 0.12,
+            "pour_breakdown": {
+              "7oz": 14,
+              "13.5oz": 149,
+              "first class": 7
+            }
+          },
+          "remove_before_flight": {
+            "qty_sold": 230,
+            "gross_sales": 1534.0,
+            "total_oz": 2559.0,
+            "daily_oz": 91.4,
+            "daily_kegs_equiv": 0.138,
+            "pour_breakdown": {
+              "7oz": 20,
+              "first class": 28,
+              "13.5oz": 146
+            }
+          },
+          "sour_tower": {
+            "qty_sold": 253,
+            "gross_sales": 2124.0,
+            "total_oz": 2810.5,
+            "daily_oz": 100.4,
+            "daily_kegs_equiv": 0.152,
+            "pour_breakdown": {
+              "7oz": 42,
+              "13.5oz": 171,
+              "first class": 13
+            }
+          },
+          "space_a": {
+            "qty_sold": 219,
+            "gross_sales": 1685.0,
+            "total_oz": 2322.5,
+            "daily_oz": 82.9,
+            "daily_kegs_equiv": 0.125,
+            "pour_breakdown": {
+              "7oz": 11,
+              "13.5oz": 145,
+              "first class": 18
+            }
+          },
+          "subhunter": {
+            "qty_sold": 260,
+            "gross_sales": 2263.0,
+            "total_oz": 3018.5,
+            "daily_oz": 107.8,
+            "daily_kegs_equiv": 0.163,
+            "pour_breakdown": {
+              "7oz": 12,
+              "first class": 56,
+              "13.5oz": 151
+            }
+          },
+          "takeoff": {
+            "qty_sold": 89,
+            "gross_sales": 741.0,
+            "total_oz": 1127.5,
+            "daily_oz": 40.3,
+            "daily_kegs_equiv": 0.061,
+            "pour_breakdown": {
+              "7oz": 16,
+              "13.5oz": 61,
+              "first class": 12
+            }
+          },
+          "vetbeer": {
+            "qty_sold": 45,
+            "gross_sales": 360.0,
+            "total_oz": 720.0,
+            "daily_oz": 25.7,
+            "daily_kegs_equiv": 0.039,
+            "pour_breakdown": {
+              "can_pour": 45
+            }
+          },
+          "wings": {
+            "qty_sold": 528,
+            "gross_sales": 4103.0,
+            "total_oz": 5957.5,
+            "daily_oz": 212.8,
+            "daily_kegs_equiv": 0.322,
+            "pour_breakdown": {
+              "7oz": 20,
+              "13.5oz": 393,
+              "first class": 32
+            }
+          },
+          "zeppelin_rules": {
+            "qty_sold": 31,
+            "gross_sales": 207.0,
+            "total_oz": 347.5,
+            "daily_oz": 12.4,
+            "daily_kegs_equiv": 0.019,
+            "pour_breakdown": {
+              "7oz": 3,
+              "13oz": 23,
+              "first class": 1
+            }
+          }
+        }
+      },
+      "2025-03": {
+        "days_in_period": 31,
+        "total_pours": 6410,
+        "brands": {
+          "beermosa": {
+            "qty_sold": 4,
+            "gross_sales": 36.0,
+            "total_oz": 64.0,
+            "daily_oz": 2.1,
+            "daily_kegs_equiv": 0.003,
+            "pour_breakdown": {
+              "can_pour": 4
+            }
+          },
+          "bird_clock": {
+            "qty_sold": 373,
+            "gross_sales": 2952.0,
+            "total_oz": 5054.0,
+            "daily_oz": 163.0,
+            "daily_kegs_equiv": 0.247,
+            "pour_breakdown": {
+              "7oz": 16,
+              "13.5oz": 308,
+              "first class": 49
+            }
+          },
+          "blip": {
+            "qty_sold": 239,
+            "gross_sales": 1651.0,
+            "total_oz": 3200.0,
+            "daily_oz": 103.2,
+            "daily_kegs_equiv": 0.156,
+            "pour_breakdown": {
+              "7oz": 11,
+              "13.5oz": 210,
+              "first class": 18
+            }
+          },
+          "choc_and_awe": {
+            "qty_sold": 213,
+            "gross_sales": 1433.0,
+            "total_oz": 2703.5,
+            "daily_oz": 87.2,
+            "daily_kegs_equiv": 0.132,
+            "pour_breakdown": {
+              "7oz": 29,
+              "13oz": 171,
+              "first class": 12
+            }
+          },
+          "flying_monk": {
+            "qty_sold": 255,
+            "gross_sales": 2191.0,
+            "total_oz": 3348.5,
+            "daily_oz": 108.0,
+            "daily_kegs_equiv": 0.163,
+            "pour_breakdown": {
+              "7oz": 23,
+              "13.5oz": 197,
+              "first class": 33
+            }
+          },
+          "get_there_from_here": {
+            "qty_sold": 166,
+            "gross_sales": 1354.0,
+            "total_oz": 2102.0,
+            "daily_oz": 67.8,
+            "daily_kegs_equiv": 0.103,
+            "pour_breakdown": {
+              "7oz": 26,
+              "13.5oz": 128,
+              "first class": 12
+            }
+          },
+          "light_the_fires": {
+            "qty_sold": 120,
+            "gross_sales": 805.0,
+            "total_oz": 1408.0,
+            "daily_oz": 45.4,
+            "daily_kegs_equiv": 0.069,
+            "pour_breakdown": {
+              "7oz": 11,
+              "13oz": 82,
+              "first class": 14
+            }
+          },
+          "p3": {
+            "qty_sold": 725,
+            "gross_sales": 4882.0,
+            "total_oz": 7886.5,
+            "daily_oz": 254.4,
+            "daily_kegs_equiv": 0.385,
+            "pour_breakdown": {
+              "first class": 74,
+              "7oz": 26,
+              "13oz": 483
+            }
+          },
+          "plane_beer": {
+            "qty_sold": 558,
+            "gross_sales": 3208.0,
+            "total_oz": 6002.5,
+            "daily_oz": 193.6,
+            "daily_kegs_equiv": 0.293,
+            "pour_breakdown": {
+              "7oz": 14,
+              "13.5oz": 403,
+              "first class": 29
+            }
+          },
+          "real_maine_italian": {
+            "qty_sold": 345,
+            "gross_sales": 2652.0,
+            "total_oz": 3899.5,
+            "daily_oz": 125.8,
+            "daily_kegs_equiv": 0.19,
+            "pour_breakdown": {
+              "7oz": 24,
+              "13.5oz": 261,
+              "first class": 13
+            }
+          },
+          "remove_before_flight": {
+            "qty_sold": 441,
+            "gross_sales": 2961.0,
+            "total_oz": 4866.0,
+            "daily_oz": 157.0,
+            "daily_kegs_equiv": 0.237,
+            "pour_breakdown": {
+              "7oz": 27,
+              "first class": 24,
+              "13.5oz": 318
+            }
+          },
+          "sour_tower": {
+            "qty_sold": 369,
+            "gross_sales": 3154.0,
+            "total_oz": 4024.5,
+            "daily_oz": 129.8,
+            "daily_kegs_equiv": 0.196,
+            "pour_breakdown": {
+              "7oz": 37,
+              "13.5oz": 273,
+              "first class": 5
+            }
+          },
+          "space_a": {
+            "qty_sold": 437,
+            "gross_sales": 3384.0,
+            "total_oz": 4857.0,
+            "daily_oz": 156.7,
+            "daily_kegs_equiv": 0.237,
+            "pour_breakdown": {
+              "7oz": 19,
+              "13.5oz": 312,
+              "first class": 32
+            }
+          },
+          "subhunter": {
+            "qty_sold": 427,
+            "gross_sales": 3725.0,
+            "total_oz": 4986.0,
+            "daily_oz": 160.8,
+            "daily_kegs_equiv": 0.243,
+            "pour_breakdown": {
+              "7oz": 20,
+              "first class": 70,
+              "13.5oz": 276
+            }
+          },
+          "takeoff": {
+            "qty_sold": 57,
+            "gross_sales": 485.0,
+            "total_oz": 727.5,
+            "daily_oz": 23.5,
+            "daily_kegs_equiv": 0.036,
+            "pour_breakdown": {
+              "7oz": 8,
+              "13.5oz": 45,
+              "first class": 4
+            }
+          },
+          "vetbeer": {
+            "qty_sold": 79,
+            "gross_sales": 632.0,
+            "total_oz": 1264.0,
+            "daily_oz": 40.8,
+            "daily_kegs_equiv": 0.062,
+            "pour_breakdown": {
+              "can_pour": 79
+            }
+          },
+          "vuelo": {
+            "qty_sold": 205,
+            "gross_sales": 1191.0,
+            "total_oz": 2608.0,
+            "daily_oz": 84.1,
+            "daily_kegs_equiv": 0.127,
+            "pour_breakdown": {
+              "7oz": 14,
+              "13.5oz": 148,
+              "first class": 32
+            }
+          },
+          "wings": {
+            "qty_sold": 931,
+            "gross_sales": 7237.0,
+            "total_oz": 10669.0,
+            "daily_oz": 344.2,
+            "daily_kegs_equiv": 0.521,
+            "pour_breakdown": {
+              "7oz": 38,
+              "13.5oz": 690,
+              "first class": 68
+            }
+          }
+        },
+        "month": "2025-03"
+      },
+      "2025-04": {
+        "days_in_period": 30,
+        "total_pours": 7070,
+        "brands": {
+          "beermosa": {
+            "qty_sold": 9,
+            "gross_sales": 72.0,
+            "total_oz": 144.0,
+            "daily_oz": 4.8,
+            "daily_kegs_equiv": 0.007,
+            "pour_breakdown": {
+              "can_pour": 9
+            }
+          },
+          "bird_clock": {
+            "qty_sold": 376,
+            "gross_sales": 2956.0,
+            "total_oz": 5002.0,
+            "daily_oz": 166.7,
+            "daily_kegs_equiv": 0.252,
+            "pour_breakdown": {
+              "7oz": 26,
+              "13.5oz": 312,
+              "first class": 38
+            }
+          },
+          "blip": {
+            "qty_sold": 294,
+            "gross_sales": 2020.0,
+            "total_oz": 3880.5,
+            "daily_oz": 129.3,
+            "daily_kegs_equiv": 0.196,
+            "pour_breakdown": {
+              "7oz": 19,
+              "13.5oz": 261,
+              "first class": 14
+            }
+          },
+          "choc_and_awe": {
+            "qty_sold": 327,
+            "gross_sales": 2181.0,
+            "total_oz": 4078.5,
+            "daily_oz": 135.9,
+            "daily_kegs_equiv": 0.206,
+            "pour_breakdown": {
+              "7oz": 54,
+              "13oz": 267,
+              "first class": 6
+            }
+          },
+          "flight_of_the_concorde": {
+            "qty_sold": 396,
+            "gross_sales": 3100.0,
+            "total_oz": 5263.0,
+            "daily_oz": 175.4,
+            "daily_kegs_equiv": 0.265,
+            "pour_breakdown": {
+              "7oz": 22,
+              "13.5oz": 350,
+              "first class": 24
+            }
+          },
+          "flying_monk": {
+            "qty_sold": 179,
+            "gross_sales": 1534.0,
+            "total_oz": 2469.0,
+            "daily_oz": 82.3,
+            "daily_kegs_equiv": 0.125,
+            "pour_breakdown": {
+              "7oz": 10,
+              "13.5oz": 122,
+              "first class": 19,
+              "can pour": 28
+            }
+          },
+          "get_there_from_here": {
+            "qty_sold": 77,
+            "gross_sales": 511.0,
+            "total_oz": 1006.0,
+            "daily_oz": 33.5,
+            "daily_kegs_equiv": 0.051,
+            "pour_breakdown": {
+              "7oz": 9,
+              "13.5oz": 58,
+              "first class": 10
+            }
+          },
+          "light_the_fires": {
+            "qty_sold": 260,
+            "gross_sales": 1771.0,
+            "total_oz": 3438.0,
+            "daily_oz": 114.6,
+            "daily_kegs_equiv": 0.173,
+            "pour_breakdown": {
+              "7oz": 24,
+              "13oz": 196,
+              "first class": 39
+            }
+          },
+          "p3": {
+            "qty_sold": 718,
+            "gross_sales": 4968.0,
+            "total_oz": 9656.0,
+            "daily_oz": 321.9,
+            "daily_kegs_equiv": 0.487,
+            "pour_breakdown": {
+              "first class": 77,
+              "7oz": 27,
+              "13oz": 610
+            }
+          },
+          "plane_beer": {
+            "qty_sold": 516,
+            "gross_sales": 3048.0,
+            "total_oz": 6892.0,
+            "daily_oz": 229.7,
+            "daily_kegs_equiv": 0.348,
+            "pour_breakdown": {
+              "7oz": 23,
+              "13.5oz": 450,
+              "first class": 41
+            }
+          },
+          "puddle_jumper": {
+            "qty_sold": 354,
+            "gross_sales": 2418.0,
+            "total_oz": 4651.5,
+            "daily_oz": 155.1,
+            "daily_kegs_equiv": 0.235,
+            "pour_breakdown": {
+              "7oz": 30,
+              "first class": 27,
+              "13.5oz": 297
+            }
+          },
+          "real_maine_italian": {
+            "qty_sold": 95,
+            "gross_sales": 753.0,
+            "total_oz": 1403.0,
+            "daily_oz": 46.8,
+            "daily_kegs_equiv": 0.071,
+            "pour_breakdown": {
+              "7oz": 1,
+              "13.5oz": 24,
+              "first class": 2,
+              "can pour": 65
+            }
+          },
+          "remove_before_flight": {
+            "qty_sold": 398,
+            "gross_sales": 2851.0,
+            "total_oz": 5201.0,
+            "daily_oz": 173.4,
+            "daily_kegs_equiv": 0.262,
+            "pour_breakdown": {
+              "7oz": 21,
+              "first class": 29,
+              "13.5oz": 340
+            }
+          },
+          "sour_tower": {
+            "qty_sold": 423,
+            "gross_sales": 3663.0,
+            "total_oz": 5416.0,
+            "daily_oz": 180.5,
+            "daily_kegs_equiv": 0.273,
+            "pour_breakdown": {
+              "7oz": 48,
+              "13.5oz": 368,
+              "first class": 7
+            }
+          },
+          "space_a": {
+            "qty_sold": 407,
+            "gross_sales": 3221.0,
+            "total_oz": 5433.0,
+            "daily_oz": 181.1,
+            "daily_kegs_equiv": 0.274,
+            "pour_breakdown": {
+              "7oz": 17,
+              "13.5oz": 364,
+              "first class": 25
+            }
+          },
+          "subhunter": {
+            "qty_sold": 466,
+            "gross_sales": 4262.0,
+            "total_oz": 6232.0,
+            "daily_oz": 207.7,
+            "daily_kegs_equiv": 0.314,
+            "pour_breakdown": {
+              "7oz": 20,
+              "first class": 50,
+              "13.5oz": 392
+            }
+          },
+          "vetbeer": {
+            "qty_sold": 67,
+            "gross_sales": 536.0,
+            "total_oz": 1072.0,
+            "daily_oz": 35.7,
+            "daily_kegs_equiv": 0.054,
+            "pour_breakdown": {
+              "can_pour": 67
+            }
+          },
+          "vuelo": {
+            "qty_sold": 327,
+            "gross_sales": 1930.0,
+            "total_oz": 4377.0,
+            "daily_oz": 145.9,
+            "daily_kegs_equiv": 0.221,
+            "pour_breakdown": {
+              "7oz": 16,
+              "13.5oz": 278,
+              "first class": 32
+            }
+          },
+          "wings": {
+            "qty_sold": 1036,
+            "gross_sales": 8209.0,
+            "total_oz": 13839.5,
+            "daily_oz": 461.3,
+            "daily_kegs_equiv": 0.698,
+            "pour_breakdown": {
+              "7oz": 37,
+              "13.5oz": 923,
+              "first class": 70
+            }
+          }
+        }
+      },
+      "2025-05": {
+        "days_in_period": 31,
+        "total_pours": 10098,
+        "brands": {
+          "beermosa": {
+            "qty_sold": 8,
+            "gross_sales": 64.0,
+            "total_oz": 128.0,
+            "daily_oz": 4.1,
+            "daily_kegs_equiv": 0.006,
+            "pour_breakdown": {
+              "can_pour": 8
+            }
+          },
+          "bird_clock": {
+            "qty_sold": 227,
+            "gross_sales": 1792.0,
+            "total_oz": 3034.0,
+            "daily_oz": 97.9,
+            "daily_kegs_equiv": 0.148,
+            "pour_breakdown": {
+              "7oz": 12,
+              "13.5oz": 196,
+              "first class": 19
+            }
+          },
+          "blip": {
+            "qty_sold": 566,
+            "gross_sales": 3916.0,
+            "total_oz": 7533.0,
+            "daily_oz": 243.0,
+            "daily_kegs_equiv": 0.368,
+            "pour_breakdown": {
+              "7oz": 23,
+              "13.5oz": 520,
+              "first class": 22
+            }
+          },
+          "blube_tube": {
+            "qty_sold": 210,
+            "gross_sales": 1824.0,
+            "total_oz": 2717.0,
+            "daily_oz": 87.6,
+            "daily_kegs_equiv": 0.133,
+            "pour_breakdown": {
+              "7oz": 22,
+              "13.5oz": 178,
+              "first class": 10
+            }
+          },
+          "choc_and_awe": {
+            "qty_sold": 444,
+            "gross_sales": 2974.0,
+            "total_oz": 5570.0,
+            "daily_oz": 179.7,
+            "daily_kegs_equiv": 0.272,
+            "pour_breakdown": {
+              "7oz": 67,
+              "13oz": 366,
+              "first class": 10
+            }
+          },
+          "flight_of_the_concorde": {
+            "qty_sold": 724,
+            "gross_sales": 5688.0,
+            "total_oz": 9684.5,
+            "daily_oz": 312.4,
+            "daily_kegs_equiv": 0.473,
+            "pour_breakdown": {
+              "7oz": 39,
+              "13.5oz": 613,
+              "first class": 25,
+              "can pour": 46
+            }
+          },
+          "googly_skies": {
+            "qty_sold": 530,
+            "gross_sales": 4710.0,
+            "total_oz": 7179.0,
+            "daily_oz": 231.6,
+            "daily_kegs_equiv": 0.35,
+            "pour_breakdown": {
+              "7oz": 27,
+              "13.5oz": 404,
+              "first class": 95,
+              "can pour": 1
+            }
+          },
+          "light_the_fires": {
+            "qty_sold": 311,
+            "gross_sales": 2125.0,
+            "total_oz": 4097.0,
+            "daily_oz": 132.2,
+            "daily_kegs_equiv": 0.2,
+            "pour_breakdown": {
+              "7oz": 26,
+              "13oz": 258,
+              "first class": 27
+            }
+          },
+          "munich_layover": {
+            "qty_sold": 0,
+            "gross_sales": 0.0,
+            "total_oz": 0.0,
+            "daily_oz": 0.0,
+            "daily_kegs_equiv": 0.0,
+            "pour_breakdown": {
+              "13oz": 0
+            }
+          },
+          "p3": {
+            "qty_sold": 1238,
+            "gross_sales": 8590.0,
+            "total_oz": 16659.0,
+            "daily_oz": 537.4,
+            "daily_kegs_equiv": 0.813,
+            "pour_breakdown": {
+              "first class": 88,
+              "7oz": 38,
+              "13oz": 1110
+            }
+          },
+          "plane_beer": {
+            "qty_sold": 836,
+            "gross_sales": 4976.0,
+            "total_oz": 11265.0,
+            "daily_oz": 363.4,
+            "daily_kegs_equiv": 0.55,
+            "pour_breakdown": {
+              "7oz": 20,
+              "13.5oz": 766,
+              "first class": 49
+            }
+          },
+          "puddle_jumper": {
+            "qty_sold": 597,
+            "gross_sales": 4240.0,
+            "total_oz": 8242.5,
+            "daily_oz": 265.9,
+            "daily_kegs_equiv": 0.402,
+            "pour_breakdown": {
+              "7oz": 24,
+              "first class": 32,
+              "13.5oz": 431,
+              "can pour": 109
+            }
+          },
+          "real_maine_italian": {
+            "qty_sold": 80,
+            "gross_sales": 640.0,
+            "total_oz": 1255.0,
+            "daily_oz": 40.5,
+            "daily_kegs_equiv": 0.061,
+            "pour_breakdown": {
+              "13.5oz": 10,
+              "can pour": 70
+            }
+          },
+          "remove_before_flight": {
+            "qty_sold": 520,
+            "gross_sales": 3643.0,
+            "total_oz": 7043.5,
+            "daily_oz": 227.2,
+            "daily_kegs_equiv": 0.344,
+            "pour_breakdown": {
+              "7oz": 31,
+              "first class": 25,
+              "13.5oz": 399,
+              "can pour": 65
+            }
+          },
+          "sour_tower": {
+            "qty_sold": 129,
+            "gross_sales": 1131.0,
+            "total_oz": 1684.0,
+            "daily_oz": 54.3,
+            "daily_kegs_equiv": 0.082,
+            "pour_breakdown": {
+              "7oz": 10,
+              "13.5oz": 116,
+              "first class": 3
+            }
+          },
+          "space_a": {
+            "qty_sold": 318,
+            "gross_sales": 2528.0,
+            "total_oz": 4285.0,
+            "daily_oz": 138.2,
+            "daily_kegs_equiv": 0.209,
+            "pour_breakdown": {
+              "7oz": 8,
+              "13.5oz": 286,
+              "first class": 23
+            }
+          },
+          "subhunter": {
+            "qty_sold": 745,
+            "gross_sales": 6594.0,
+            "total_oz": 10014.5,
+            "daily_oz": 323.0,
+            "daily_kegs_equiv": 0.489,
+            "pour_breakdown": {
+              "7oz": 37,
+              "first class": 79,
+              "13.5oz": 629
+            }
+          },
+          "vetbeer": {
+            "qty_sold": 98,
+            "gross_sales": 784.0,
+            "total_oz": 1568.0,
+            "daily_oz": 50.6,
+            "daily_kegs_equiv": 0.077,
+            "pour_breakdown": {
+              "can_pour": 98
+            }
+          },
+          "vuelo": {
+            "qty_sold": 464,
+            "gross_sales": 2718.0,
+            "total_oz": 6149.5,
+            "daily_oz": 198.4,
+            "daily_kegs_equiv": 0.3,
+            "pour_breakdown": {
+              "7oz": 33,
+              "13.5oz": 391,
+              "first class": 40
+            }
+          },
+          "wings": {
+            "qty_sold": 1373,
+            "gross_sales": 11024.0,
+            "total_oz": 18389.5,
+            "daily_oz": 593.2,
+            "daily_kegs_equiv": 0.897,
+            "pour_breakdown": {
+              "7oz": 46,
+              "13.5oz": 1253,
+              "first class": 72
+            }
+          }
+        }
+      },
+      "2025-06": {
+        "days_in_period": 30,
+        "total_pours": 10464,
+        "brands": {
+          "beermosa": {
+            "qty_sold": 8,
+            "gross_sales": 64.0,
+            "total_oz": 128.0,
+            "daily_oz": 4.3,
+            "daily_kegs_equiv": 0.006,
+            "pour_breakdown": {
+              "can_pour": 8
+            }
+          },
+          "blip": {
+            "qty_sold": 445,
+            "gross_sales": 3075.0,
+            "total_oz": 5897.5,
+            "daily_oz": 196.6,
+            "daily_kegs_equiv": 0.297,
+            "pour_breakdown": {
+              "7oz": 20,
+              "13.5oz": 417,
+              "first class": 8
+            }
+          },
+          "blube_tube": {
+            "qty_sold": 798,
+            "gross_sales": 6921.0,
+            "total_oz": 10247.5,
+            "daily_oz": 341.6,
+            "daily_kegs_equiv": 0.517,
+            "pour_breakdown": {
+              "7oz": 87,
+              "13.5oz": 695,
+              "first class": 16
+            }
+          },
+          "choc_and_awe": {
+            "qty_sold": 360,
+            "gross_sales": 2394.0,
+            "total_oz": 4465.5,
+            "daily_oz": 148.8,
+            "daily_kegs_equiv": 0.225,
+            "pour_breakdown": {
+              "7oz": 63,
+              "13oz": 291,
+              "first class": 6
+            }
+          },
+          "flight_of_the_concorde": {
+            "qty_sold": 200,
+            "gross_sales": 1597.0,
+            "total_oz": 3110.5,
+            "daily_oz": 103.7,
+            "daily_kegs_equiv": 0.157,
+            "pour_breakdown": {
+              "13.5oz": 23,
+              "first class": 3,
+              "can pour": 172
+            }
+          },
+          "googly_skies": {
+            "qty_sold": 707,
+            "gross_sales": 6391.0,
+            "total_oz": 9807.0,
+            "daily_oz": 326.9,
+            "daily_kegs_equiv": 0.495,
+            "pour_breakdown": {
+              "7oz": 31,
+              "13.5oz": 484,
+              "first class": 95,
+              "can pour": 96
+            }
+          },
+          "p3": {
+            "qty_sold": 1337,
+            "gross_sales": 9261.0,
+            "total_oz": 18038.5,
+            "daily_oz": 601.3,
+            "daily_kegs_equiv": 0.91,
+            "pour_breakdown": {
+              "first class": 123,
+              "7oz": 49,
+              "13oz": 1165
+            }
+          },
+          "plane_beer": {
+            "qty_sold": 1197,
+            "gross_sales": 7084.0,
+            "total_oz": 16005.0,
+            "daily_oz": 533.5,
+            "daily_kegs_equiv": 0.807,
+            "pour_breakdown": {
+              "7oz": 49,
+              "13.5oz": 1076,
+              "first class": 71
+            }
+          },
+          "preflight_czechlist": {
+            "qty_sold": 448,
+            "gross_sales": 3080.0,
+            "total_oz": 5907.5,
+            "daily_oz": 196.9,
+            "daily_kegs_equiv": 0.298,
+            "pour_breakdown": {
+              "7oz": 23,
+              "13.5oz": 415,
+              "first class": 9
+            }
+          },
+          "puddle_jumper": {
+            "qty_sold": 733,
+            "gross_sales": 5058.0,
+            "total_oz": 9688.0,
+            "daily_oz": 322.9,
+            "daily_kegs_equiv": 0.489,
+            "pour_breakdown": {
+              "7oz": 56,
+              "first class": 27,
+              "13.5oz": 608,
+              "can pour": 41
+            }
+          },
+          "remove_before_flight": {
+            "qty_sold": 566,
+            "gross_sales": 4006.0,
+            "total_oz": 7771.5,
+            "daily_oz": 259.1,
+            "daily_kegs_equiv": 0.392,
+            "pour_breakdown": {
+              "7oz": 23,
+              "first class": 22,
+              "13.5oz": 431,
+              "can pour": 90
+            }
+          },
+          "subhunter": {
+            "qty_sold": 814,
+            "gross_sales": 7191.0,
+            "total_oz": 10902.0,
+            "daily_oz": 363.4,
+            "daily_kegs_equiv": 0.55,
+            "pour_breakdown": {
+              "7oz": 45,
+              "first class": 93,
+              "13.5oz": 674
+            }
+          },
+          "vetbeer": {
+            "qty_sold": 78,
+            "gross_sales": 624.0,
+            "total_oz": 1248.0,
+            "daily_oz": 41.6,
+            "daily_kegs_equiv": 0.063,
+            "pour_breakdown": {
+              "can_pour": 78
+            }
+          },
+          "vuelo": {
+            "qty_sold": 677,
+            "gross_sales": 3974.0,
+            "total_oz": 9031.0,
+            "daily_oz": 301.0,
+            "daily_kegs_equiv": 0.455,
+            "pour_breakdown": {
+              "7oz": 44,
+              "13.5oz": 562,
+              "first class": 71
+            }
+          },
+          "wings": {
+            "qty_sold": 1536,
+            "gross_sales": 12310.0,
+            "total_oz": 20587.5,
+            "daily_oz": 686.2,
+            "daily_kegs_equiv": 1.038,
+            "pour_breakdown": {
+              "7oz": 55,
+              "13.5oz": 1391,
+              "first class": 89
+            }
+          }
+        }
+      },
+      "2025-07": {
+        "days_in_period": 31,
+        "total_pours": 11728,
+        "brands": {
+          "blube_tube": {
+            "qty_sold": 702,
+            "gross_sales": 6433.0,
+            "total_oz": 9814.5,
+            "daily_oz": 316.6,
+            "daily_kegs_equiv": 0.479,
+            "pour_breakdown": {
+              "7oz": 63,
+              "13.5oz": 321,
+              "first class": 8,
+              "can pour": 307
+            }
+          },
+          "choc_and_awe": {
+            "qty_sold": 345,
+            "gross_sales": 2277.0,
+            "total_oz": 4217.0,
+            "daily_oz": 136.0,
+            "daily_kegs_equiv": 0.206,
+            "pour_breakdown": {
+              "7oz": 68,
+              "13oz": 270,
+              "first class": 6
+            }
+          },
+          "googly_skies": {
+            "qty_sold": 906,
+            "gross_sales": 8015.0,
+            "total_oz": 12158.0,
+            "daily_oz": 392.2,
+            "daily_kegs_equiv": 0.593,
+            "pour_breakdown": {
+              "7oz": 68,
+              "13.5oz": 684,
+              "first class": 88,
+              "can pour": 65
+            }
+          },
+          "p3": {
+            "qty_sold": 1441,
+            "gross_sales": 9953.0,
+            "total_oz": 19263.0,
+            "daily_oz": 621.4,
+            "daily_kegs_equiv": 0.94,
+            "pour_breakdown": {
+              "first class": 109,
+              "7oz": 65,
+              "13oz": 1264
+            }
+          },
+          "plane_beer": {
+            "qty_sold": 1202,
+            "gross_sales": 7158.0,
+            "total_oz": 15889.5,
+            "daily_oz": 512.6,
+            "daily_kegs_equiv": 0.775,
+            "pour_breakdown": {
+              "7oz": 73,
+              "13.5oz": 1055,
+              "first class": 71
+            }
+          },
+          "preflight_czechlist": {
+            "qty_sold": 1177,
+            "gross_sales": 8056.0,
+            "total_oz": 15546.5,
+            "daily_oz": 501.5,
+            "daily_kegs_equiv": 0.759,
+            "pour_breakdown": {
+              "7oz": 83,
+              "13.5oz": 1009,
+              "first class": 50,
+              "can pour": 34
+            }
+          },
+          "puddle_jumper": {
+            "qty_sold": 630,
+            "gross_sales": 4288.0,
+            "total_oz": 8155.5,
+            "daily_oz": 263.1,
+            "daily_kegs_equiv": 0.398,
+            "pour_breakdown": {
+              "7oz": 60,
+              "first class": 27,
+              "13.5oz": 541
+            }
+          },
+          "remove_before_flight": {
+            "qty_sold": 672,
+            "gross_sales": 4664.0,
+            "total_oz": 8945.0,
+            "daily_oz": 288.5,
+            "daily_kegs_equiv": 0.437,
+            "pour_breakdown": {
+              "7oz": 55,
+              "first class": 31,
+              "13.5oz": 512,
+              "can pour": 72
+            }
+          },
+          "subhunter": {
+            "qty_sold": 845,
+            "gross_sales": 7407.0,
+            "total_oz": 11135.0,
+            "daily_oz": 359.2,
+            "daily_kegs_equiv": 0.543,
+            "pour_breakdown": {
+              "7oz": 66,
+              "first class": 68,
+              "13.5oz": 710
+            }
+          },
+          "vetbeer": {
+            "qty_sold": 111,
+            "gross_sales": 888.0,
+            "total_oz": 1776.0,
+            "daily_oz": 57.3,
+            "daily_kegs_equiv": 0.087,
+            "pour_breakdown": {
+              "can_pour": 111
+            }
+          },
+          "vuelo": {
+            "qty_sold": 534,
+            "gross_sales": 3148.0,
+            "total_oz": 7083.0,
+            "daily_oz": 228.5,
+            "daily_kegs_equiv": 0.346,
+            "pour_breakdown": {
+              "7oz": 54,
+              "13.5oz": 390,
+              "first class": 38,
+              "can pour": 52
+            }
+          },
+          "wings": {
+            "qty_sold": 1869,
+            "gross_sales": 14754.0,
+            "total_oz": 24767.5,
+            "daily_oz": 799.0,
+            "daily_kegs_equiv": 1.209,
+            "pour_breakdown": {
+              "7oz": 98,
+              "13.5oz": 1689,
+              "first class": 80
+            }
+          }
+        }
+      },
+      "2025-08": {
+        "days_in_period": 31,
+        "total_pours": 13077,
+        "brands": {
+          "blube_tube": {
+            "qty_sold": 159,
+            "gross_sales": 1581.0,
+            "total_oz": 2508.0,
+            "daily_oz": 80.9,
+            "daily_kegs_equiv": 0.122,
+            "pour_breakdown": {
+              "13.5oz": 8,
+              "first class": 1,
+              "can pour": 149
+            }
+          },
+          "googly_skies": {
+            "qty_sold": 1123,
+            "gross_sales": 10082.0,
+            "total_oz": 15037.5,
+            "daily_oz": 485.1,
+            "daily_kegs_equiv": 0.734,
+            "pour_breakdown": {
+              "7oz": 79,
+              "13.5oz": 875,
+              "first class": 86,
+              "can pour": 81
+            }
+          },
+          "munich_layover": {
+            "qty_sold": 270,
+            "gross_sales": 1850.0,
+            "total_oz": 3231.5,
+            "daily_oz": 104.2,
+            "daily_kegs_equiv": 0.158,
+            "pour_breakdown": {
+              "7oz": 20,
+              "13.5oz": 229
+            }
+          },
+          "p3": {
+            "qty_sold": 1643,
+            "gross_sales": 11520.0,
+            "total_oz": 22032.5,
+            "daily_oz": 710.7,
+            "daily_kegs_equiv": 1.075,
+            "pour_breakdown": {
+              "first class": 117,
+              "7oz": 74,
+              "13oz": 1423,
+              "can pour": 27
+            }
+          },
+          "plane_beer": {
+            "qty_sold": 1492,
+            "gross_sales": 8920.0,
+            "total_oz": 19837.5,
+            "daily_oz": 639.9,
+            "daily_kegs_equiv": 0.968,
+            "pour_breakdown": {
+              "7oz": 63,
+              "13.5oz": 1355,
+              "first class": 69
+            }
+          },
+          "preflight_czechlist": {
+            "qty_sold": 1374,
+            "gross_sales": 10422.0,
+            "total_oz": 18386.0,
+            "daily_oz": 593.1,
+            "daily_kegs_equiv": 0.897,
+            "pour_breakdown": {
+              "7oz": 59,
+              "13.5oz": 1214,
+              "first class": 35,
+              "can pour": 64
+            }
+          },
+          "puddle_jumper": {
+            "qty_sold": 1091,
+            "gross_sales": 7596.0,
+            "total_oz": 14206.5,
+            "daily_oz": 458.3,
+            "daily_kegs_equiv": 0.693,
+            "pour_breakdown": {
+              "7oz": 94,
+              "first class": 41,
+              "13.5oz": 955
+            }
+          },
+          "remove_before_flight": {
+            "qty_sold": 504,
+            "gross_sales": 3586.0,
+            "total_oz": 6777.0,
+            "daily_oz": 218.6,
+            "daily_kegs_equiv": 0.331,
+            "pour_breakdown": {
+              "7oz": 39,
+              "first class": 29,
+              "13.5oz": 368,
+              "can pour": 67
+            }
+          },
+          "subhunter": {
+            "qty_sold": 1055,
+            "gross_sales": 9425.0,
+            "total_oz": 13943.5,
+            "daily_oz": 449.8,
+            "daily_kegs_equiv": 0.68,
+            "pour_breakdown": {
+              "7oz": 67,
+              "first class": 60,
+              "13.5oz": 927
+            }
+          },
+          "vetbeer": {
+            "qty_sold": 92,
+            "gross_sales": 736.0,
+            "total_oz": 1472.0,
+            "daily_oz": 47.5,
+            "daily_kegs_equiv": 0.072,
+            "pour_breakdown": {
+              "can_pour": 92
+            }
+          },
+          "vuelo": {
+            "qty_sold": 751,
+            "gross_sales": 4494.0,
+            "total_oz": 10152.0,
+            "daily_oz": 327.5,
+            "daily_kegs_equiv": 0.495,
+            "pour_breakdown": {
+              "7oz": 46,
+              "13.5oz": 580,
+              "first class": 45,
+              "can pour": 80
+            }
+          },
+          "wings": {
+            "qty_sold": 1821,
+            "gross_sales": 15119.0,
+            "total_oz": 24421.5,
+            "daily_oz": 787.8,
+            "daily_kegs_equiv": 1.192,
+            "pour_breakdown": {
+              "7oz": 77,
+              "13.5oz": 1583,
+              "first class": 89,
+              "can pour": 68
+            }
+          }
+        }
+      },
+      "2025-09": {
+        "days_in_period": 30,
+        "total_pours": 8963,
+        "brands": {
+          "googly_skies": {
+            "qty_sold": 53,
+            "gross_sales": 527.0,
+            "total_oz": 848.0,
+            "daily_oz": 28.3,
+            "daily_kegs_equiv": 0.043,
+            "pour_breakdown": {
+              "first class": 3,
+              "can pour": 50
+            }
+          },
+          "munich_layover": {
+            "qty_sold": 1201,
+            "gross_sales": 8235.0,
+            "total_oz": 14034.5,
+            "daily_oz": 467.8,
+            "daily_kegs_equiv": 0.708,
+            "pour_breakdown": {
+              "7oz": 86,
+              "13.5oz": 995
+            }
+          },
+          "night_witches": {
+            "qty_sold": 151,
+            "gross_sales": 1311.0,
+            "total_oz": 1967.0,
+            "daily_oz": 65.6,
+            "daily_kegs_equiv": 0.099,
+            "pour_breakdown": {
+              "7oz": 16,
+              "first class": 13,
+              "13.5oz": 122
+            }
+          },
+          "p3": {
+            "qty_sold": 1202,
+            "gross_sales": 8443.0,
+            "total_oz": 16228.5,
+            "daily_oz": 541.0,
+            "daily_kegs_equiv": 0.818,
+            "pour_breakdown": {
+              "first class": 120,
+              "7oz": 45,
+              "13oz": 1033,
+              "can pour": 3
+            }
+          },
+          "plane_beer": {
+            "qty_sold": 867,
+            "gross_sales": 5198.0,
+            "total_oz": 11423.0,
+            "daily_oz": 380.8,
+            "daily_kegs_equiv": 0.576,
+            "pour_breakdown": {
+              "7oz": 49,
+              "13.5oz": 784,
+              "first class": 31
+            }
+          },
+          "preflight_czechlist": {
+            "qty_sold": 433,
+            "gross_sales": 3531.0,
+            "total_oz": 6141.5,
+            "daily_oz": 204.7,
+            "daily_kegs_equiv": 0.31,
+            "pour_breakdown": {
+              "7oz": 15,
+              "13.5oz": 235,
+              "first class": 12,
+              "can pour": 167
+            }
+          },
+          "puddle_jumper": {
+            "qty_sold": 506,
+            "gross_sales": 3968.0,
+            "total_oz": 6579.0,
+            "daily_oz": 219.3,
+            "daily_kegs_equiv": 0.332,
+            "pour_breakdown": {
+              "7oz": 40,
+              "first class": 9,
+              "13.5oz": 450,
+              "can pour": 5
+            }
+          },
+          "remove_before_flight": {
+            "qty_sold": 366,
+            "gross_sales": 2478.0,
+            "total_oz": 4720.5,
+            "daily_oz": 157.3,
+            "daily_kegs_equiv": 0.238,
+            "pour_breakdown": {
+              "7oz": 42,
+              "first class": 21,
+              "13.5oz": 303
+            }
+          },
+          "sour_tower": {
+            "qty_sold": 527,
+            "gross_sales": 4533.0,
+            "total_oz": 6663.5,
+            "daily_oz": 222.1,
+            "daily_kegs_equiv": 0.336,
+            "pour_breakdown": {
+              "7oz": 70,
+              "13.5oz": 449,
+              "first class": 7
+            }
+          },
+          "subhunter": {
+            "qty_sold": 379,
+            "gross_sales": 3324.0,
+            "total_oz": 5000.5,
+            "daily_oz": 166.7,
+            "daily_kegs_equiv": 0.252,
+            "pour_breakdown": {
+              "7oz": 29,
+              "first class": 29,
+              "13.5oz": 321
+            }
+          },
+          "vetbeer": {
+            "qty_sold": 71,
+            "gross_sales": 568.0,
+            "total_oz": 1136.0,
+            "daily_oz": 37.9,
+            "daily_kegs_equiv": 0.057,
+            "pour_breakdown": {
+              "can_pour": 71
+            }
+          },
+          "vuelo": {
+            "qty_sold": 418,
+            "gross_sales": 2432.0,
+            "total_oz": 5429.0,
+            "daily_oz": 181.0,
+            "daily_kegs_equiv": 0.274,
+            "pour_breakdown": {
+              "7oz": 37,
+              "13.5oz": 364,
+              "first class": 16
+            }
+          },
+          "wings": {
+            "qty_sold": 1452,
+            "gross_sales": 13171.0,
+            "total_oz": 20090.0,
+            "daily_oz": 669.7,
+            "daily_kegs_equiv": 1.013,
+            "pour_breakdown": {
+              "7oz": 49,
+              "13.5oz": 1074,
+              "first class": 79,
+              "can pour": 249
+            }
+          }
+        }
+      },
+      "2025-10": {
+        "days_in_period": 31,
+        "total_pours": 8849,
+        "brands": {
+          "krosswinds": {
+            "qty_sold": 434,
+            "gross_sales": 2978.0,
+            "total_oz": 5775.5,
+            "daily_oz": 186.3,
+            "daily_kegs_equiv": 0.282,
+            "pour_breakdown": {
+              "7oz": 30,
+              "first class": 50,
+              "13.5oz": 353
+            }
+          },
+          "munich_layover": {
+            "qty_sold": 1058,
+            "gross_sales": 7498.0,
+            "total_oz": 12673.0,
+            "daily_oz": 408.8,
+            "daily_kegs_equiv": 0.618,
+            "pour_breakdown": {
+              "7oz": 67,
+              "13.5oz": 904
+            }
+          },
+          "night_witches": {
+            "qty_sold": 358,
+            "gross_sales": 3132.0,
+            "total_oz": 4700.5,
+            "daily_oz": 151.6,
+            "daily_kegs_equiv": 0.229,
+            "pour_breakdown": {
+              "7oz": 30,
+              "first class": 25,
+              "13.5oz": 303
+            }
+          },
+          "p3": {
+            "qty_sold": 1061,
+            "gross_sales": 7327.0,
+            "total_oz": 14193.0,
+            "daily_oz": 457.8,
+            "daily_kegs_equiv": 0.693,
+            "pour_breakdown": {
+              "first class": 86,
+              "7oz": 49,
+              "13oz": 924
+            }
+          },
+          "pilots_porridge": {
+            "qty_sold": 14,
+            "gross_sales": 98.0,
+            "total_oz": 194.0,
+            "daily_oz": 6.3,
+            "daily_kegs_equiv": 0.009,
+            "pour_breakdown": {
+              "13.5oz": 12,
+              "first class": 2
+            }
+          },
+          "plane_beer": {
+            "qty_sold": 722,
+            "gross_sales": 4534.0,
+            "total_oz": 9473.5,
+            "daily_oz": 305.6,
+            "daily_kegs_equiv": 0.462,
+            "pour_breakdown": {
+              "7oz": 40,
+              "13.5oz": 649,
+              "first class": 27
+            }
+          },
+          "preflight_czechlist": {
+            "qty_sold": 256,
+            "gross_sales": 1887.0,
+            "total_oz": 3785.0,
+            "daily_oz": 122.1,
+            "daily_kegs_equiv": 0.185,
+            "pour_breakdown": {
+              "7oz": 5,
+              "13.5oz": 100,
+              "first class": 2,
+              "can pour": 148
+            }
+          },
+          "real_maine_italian": {
+            "qty_sold": 183,
+            "gross_sales": 1436.0,
+            "total_oz": 2389.5,
+            "daily_oz": 77.1,
+            "daily_kegs_equiv": 0.117,
+            "pour_breakdown": {
+              "7oz": 14,
+              "13.5oz": 165,
+              "first class": 4
+            }
+          },
+          "remove_before_flight": {
+            "qty_sold": 452,
+            "gross_sales": 3070.0,
+            "total_oz": 5818.0,
+            "daily_oz": 187.7,
+            "daily_kegs_equiv": 0.284,
+            "pour_breakdown": {
+              "7oz": 47,
+              "first class": 14,
+              "13.5oz": 390
+            }
+          },
+          "sour_tower": {
+            "qty_sold": 549,
+            "gross_sales": 4791.0,
+            "total_oz": 7136.5,
+            "daily_oz": 230.2,
+            "daily_kegs_equiv": 0.348,
+            "pour_breakdown": {
+              "7oz": 50,
+              "13.5oz": 479,
+              "first class": 20
+            }
+          },
+          "subhunter": {
+            "qty_sold": 522,
+            "gross_sales": 4590.0,
+            "total_oz": 6918.0,
+            "daily_oz": 223.2,
+            "daily_kegs_equiv": 0.338,
+            "pour_breakdown": {
+              "7oz": 36,
+              "first class": 42,
+              "13.5oz": 444
+            }
+          },
+          "vetbeer": {
+            "qty_sold": 131,
+            "gross_sales": 1048.0,
+            "total_oz": 138.5,
+            "daily_oz": 4.5,
+            "daily_kegs_equiv": 0.007,
+            "pour_breakdown": {
+              "7oz": 4,
+              "13.5oz": 7,
+              "first class": 1
+            }
+          },
+          "vuelo": {
+            "qty_sold": 289,
+            "gross_sales": 1663.0,
+            "total_oz": 3694.0,
+            "daily_oz": 119.2,
+            "daily_kegs_equiv": 0.18,
+            "pour_breakdown": {
+              "7oz": 36,
+              "13.5oz": 236,
+              "first class": 15,
+              "can pour": 1
+            }
+          },
+          "wings": {
+            "qty_sold": 1550,
+            "gross_sales": 13913.0,
+            "total_oz": 20780.0,
+            "daily_oz": 670.3,
+            "daily_kegs_equiv": 1.014,
+            "pour_breakdown": {
+              "7oz": 56,
+              "13.5oz": 1400,
+              "first class": 93,
+              "can pour": 0
+            }
+          }
+        }
+      },
+      "2025-11": {
+        "days_in_period": 30,
+        "total_pours": 5294,
+        "brands": {
+          "krosswinds": {
+            "qty_sold": 260,
+            "gross_sales": 1763.0,
+            "total_oz": 3382.0,
+            "daily_oz": 112.7,
+            "daily_kegs_equiv": 0.171,
+            "pour_breakdown": {
+              "7oz": 27,
+              "first class": 19,
+              "13.5oz": 214
+            }
+          },
+          "munich_layover": {
+            "qty_sold": 325,
+            "gross_sales": 2233.0,
+            "total_oz": 3643.5,
+            "daily_oz": 121.5,
+            "daily_kegs_equiv": 0.184,
+            "pour_breakdown": {
+              "7oz": 21,
+              "13.5oz": 259
+            }
+          },
+          "p3": {
+            "qty_sold": 582,
+            "gross_sales": 4027.0,
+            "total_oz": 7813.5,
+            "daily_oz": 260.4,
+            "daily_kegs_equiv": 0.394,
+            "pour_breakdown": {
+              "first class": 86,
+              "7oz": 19,
+              "13oz": 467
+            }
+          },
+          "pilots_porridge": {
+            "qty_sold": 388,
+            "gross_sales": 2595.0,
+            "total_oz": 4933.0,
+            "daily_oz": 164.4,
+            "daily_kegs_equiv": 0.249,
+            "pour_breakdown": {
+              "7oz": 56,
+              "13.5oz": 302,
+              "first class": 29
+            }
+          },
+          "plane_beer": {
+            "qty_sold": 357,
+            "gross_sales": 2081.0,
+            "total_oz": 4591.0,
+            "daily_oz": 153.0,
+            "daily_kegs_equiv": 0.232,
+            "pour_breakdown": {
+              "7oz": 27,
+              "13.5oz": 300,
+              "first class": 22
+            }
+          },
+          "preflight_czechlist": {
+            "qty_sold": 96,
+            "gross_sales": 682.0,
+            "total_oz": 1511.0,
+            "daily_oz": 50.4,
+            "daily_kegs_equiv": 0.076,
+            "pour_breakdown": {
+              "13.5oz": 10,
+              "first class": 2,
+              "can pour": 84
+            }
+          },
+          "real_maine_italian": {
+            "qty_sold": 261,
+            "gross_sales": 2035.0,
+            "total_oz": 3353.0,
+            "daily_oz": 111.8,
+            "daily_kegs_equiv": 0.169,
+            "pour_breakdown": {
+              "7oz": 21,
+              "13.5oz": 228,
+              "first class": 8
+            }
+          },
+          "remove_before_flight": {
+            "qty_sold": 241,
+            "gross_sales": 1655.0,
+            "total_oz": 3068.5,
+            "daily_oz": 102.3,
+            "daily_kegs_equiv": 0.155,
+            "pour_breakdown": {
+              "7oz": 25,
+              "first class": 8,
+              "13.5oz": 193,
+              "can pour": 10
+            }
+          },
+          "sour_tower": {
+            "qty_sold": 182,
+            "gross_sales": 1772.0,
+            "total_oz": 2786.0,
+            "daily_oz": 92.9,
+            "daily_kegs_equiv": 0.14,
+            "pour_breakdown": {
+              "7oz": 5,
+              "13.5oz": 26,
+              "first class": 2,
+              "can pour": 148
+            }
+          },
+          "subhunter": {
+            "qty_sold": 365,
+            "gross_sales": 3239.0,
+            "total_oz": 4860.0,
+            "daily_oz": 162.0,
+            "daily_kegs_equiv": 0.245,
+            "pour_breakdown": {
+              "7oz": 14,
+              "first class": 31,
+              "13.5oz": 316
+            }
+          },
+          "vetbeer": {
+            "qty_sold": 431,
+            "gross_sales": 3694.0,
+            "total_oz": 4727.5,
+            "daily_oz": 157.6,
+            "daily_kegs_equiv": 0.238,
+            "pour_breakdown": {
+              "7oz": 40,
+              "13.5oz": 301,
+              "first class": 24
+            }
+          },
+          "vuelo": {
+            "qty_sold": 158,
+            "gross_sales": 913.0,
+            "total_oz": 2034.0,
+            "daily_oz": 67.8,
+            "daily_kegs_equiv": 0.103,
+            "pour_breakdown": {
+              "7oz": 17,
+              "13.5oz": 130,
+              "first class": 10
+            }
+          },
+          "wings": {
+            "qty_sold": 785,
+            "gross_sales": 6946.0,
+            "total_oz": 10270.5,
+            "daily_oz": 342.4,
+            "daily_kegs_equiv": 0.518,
+            "pour_breakdown": {
+              "7oz": 30,
+              "13.5oz": 699,
+              "first class": 38,
+              "can pour": 1
+            }
+          },
+          "zeppelin_rules": {
+            "qty_sold": 97,
+            "gross_sales": 667.0,
+            "total_oz": 1333.0,
+            "daily_oz": 44.4,
+            "daily_kegs_equiv": 0.067,
+            "pour_breakdown": {
+              "7oz": 6,
+              "13oz": 66,
+              "first class": 25
+            }
+          }
+        }
+      },
+      "2025-12": {
+        "days_in_period": 31,
+        "total_pours": 3643,
+        "brands": {
+          "after_dark": {
+            "qty_sold": 40,
+            "gross_sales": 315.0,
+            "total_oz": 493.0,
+            "daily_oz": 15.9,
+            "daily_kegs_equiv": 0.024,
+            "pour_breakdown": {
+              "7oz": 1,
+              "13.5oz": 36
+            }
+          },
+          "krosswinds": {
+            "qty_sold": 240,
+            "gross_sales": 1641.0,
+            "total_oz": 3164.0,
+            "daily_oz": 102.1,
+            "daily_kegs_equiv": 0.154,
+            "pour_breakdown": {
+              "7oz": 19,
+              "first class": 19,
+              "13.5oz": 202
+            }
+          },
+          "p3": {
+            "qty_sold": 440,
+            "gross_sales": 3037.0,
+            "total_oz": 5899.0,
+            "daily_oz": 190.3,
+            "daily_kegs_equiv": 0.288,
+            "pour_breakdown": {
+              "first class": 60,
+              "7oz": 19,
+              "13oz": 356
+            }
+          },
+          "pilots_porridge": {
+            "qty_sold": 253,
+            "gross_sales": 1717.0,
+            "total_oz": 3305.5,
+            "daily_oz": 106.6,
+            "daily_kegs_equiv": 0.161,
+            "pour_breakdown": {
+              "7oz": 25,
+              "13.5oz": 207,
+              "first class": 21
+            }
+          },
+          "plane_beer": {
+            "qty_sold": 298,
+            "gross_sales": 1758.0,
+            "total_oz": 3963.0,
+            "daily_oz": 127.8,
+            "daily_kegs_equiv": 0.193,
+            "pour_breakdown": {
+              "7oz": 12,
+              "13.5oz": 234,
+              "first class": 45
+            }
+          },
+          "preflight_czechlist": {
+            "qty_sold": 15,
+            "gross_sales": 106.0,
+            "total_oz": 237.5,
+            "daily_oz": 7.7,
+            "daily_kegs_equiv": 0.012,
+            "pour_breakdown": {
+              "13.5oz": 1,
+              "can pour": 14
+            }
+          },
+          "real_maine_italian": {
+            "qty_sold": 170,
+            "gross_sales": 1336.0,
+            "total_oz": 2178.5,
+            "daily_oz": 70.3,
+            "daily_kegs_equiv": 0.106,
+            "pour_breakdown": {
+              "7oz": 10,
+              "13.5oz": 155,
+              "first class": 1
+            }
+          },
+          "remove_before_flight": {
+            "qty_sold": 227,
+            "gross_sales": 1564.0,
+            "total_oz": 2997.0,
+            "daily_oz": 96.7,
+            "daily_kegs_equiv": 0.146,
+            "pour_breakdown": {
+              "7oz": 10,
+              "first class": 26,
+              "13.5oz": 186
+            }
+          },
+          "space_a": {
+            "qty_sold": 107,
+            "gross_sales": 939.0,
+            "total_oz": 1437.5,
+            "daily_oz": 46.4,
+            "daily_kegs_equiv": 0.07,
+            "pour_breakdown": {
+              "7oz": 8,
+              "13.5oz": 81,
+              "first class": 18
+            }
+          },
+          "stormy_night": {
+            "qty_sold": 1,
+            "gross_sales": 10.0,
+            "total_oz": 16.0,
+            "daily_oz": 0.5,
+            "daily_kegs_equiv": 0.001,
+            "pour_breakdown": {
+              "can_pour": 1
+            }
+          },
+          "subhunter": {
+            "qty_sold": 308,
+            "gross_sales": 2739.0,
+            "total_oz": 4219.0,
+            "daily_oz": 136.1,
+            "daily_kegs_equiv": 0.206,
+            "pour_breakdown": {
+              "7oz": 11,
+              "first class": 53,
+              "13.5oz": 244
+            }
+          },
+          "vetbeer": {
+            "qty_sold": 188,
+            "gross_sales": 1643.0,
+            "total_oz": 2174.5,
+            "daily_oz": 70.1,
+            "daily_kegs_equiv": 0.106,
+            "pour_breakdown": {
+              "7oz": 7,
+              "13.5oz": 129,
+              "first class": 24
+            }
+          },
+          "vuelo": {
+            "qty_sold": 120,
+            "gross_sales": 702.0,
+            "total_oz": 1619.0,
+            "daily_oz": 52.2,
+            "daily_kegs_equiv": 0.079,
+            "pour_breakdown": {
+              "7oz": 9,
+              "13.5oz": 88,
+              "first class": 23
+            }
+          },
+          "wings": {
+            "qty_sold": 559,
+            "gross_sales": 5191.0,
+            "total_oz": 7338.5,
+            "daily_oz": 236.7,
+            "daily_kegs_equiv": 0.358,
+            "pour_breakdown": {
+              "7oz": 28,
+              "13.5oz": 471,
+              "first class": 49
+            }
+          },
+          "zeppelin_rules": {
+            "qty_sold": 157,
+            "gross_sales": 1076.0,
+            "total_oz": 2102.0,
+            "daily_oz": 67.8,
+            "daily_kegs_equiv": 0.103,
+            "pour_breakdown": {
+              "7oz": 11,
+              "13oz": 118,
+              "first class": 27
+            }
+          }
+        }
+      },
+      "2026-01": {
+        "days_in_period": 31,
+        "total_pours": 3785,
+        "brands": {
+          "after_dark": {
+            "qty_sold": 204,
+            "gross_sales": 1578.0,
+            "total_oz": 2476.0,
+            "daily_oz": 79.9,
+            "daily_kegs_equiv": 0.121,
+            "pour_breakdown": {
+              "7oz": 22,
+              "13.5oz": 172
+            }
+          },
+          "krosswinds": {
+            "qty_sold": 247,
+            "gross_sales": 1691.0,
+            "total_oz": 3297.5,
+            "daily_oz": 106.4,
+            "daily_kegs_equiv": 0.161,
+            "pour_breakdown": {
+              "7oz": 19,
+              "first class": 40,
+              "13.5oz": 187
+            }
+          },
+          "p3": {
+            "qty_sold": 472,
+            "gross_sales": 3255.0,
+            "total_oz": 6371.0,
+            "daily_oz": 205.5,
+            "daily_kegs_equiv": 0.311,
+            "pour_breakdown": {
+              "first class": 92,
+              "7oz": 21,
+              "13oz": 352
+            }
+          },
+          "pilots_porridge": {
+            "qty_sold": 216,
+            "gross_sales": 1470.0,
+            "total_oz": 2823.5,
+            "daily_oz": 91.1,
+            "daily_kegs_equiv": 0.138,
+            "pour_breakdown": {
+              "7oz": 21,
+              "13.5oz": 171,
+              "first class": 23
+            }
+          },
+          "plane_beer": {
+            "qty_sold": 294,
+            "gross_sales": 1730.0,
+            "total_oz": 3976.0,
+            "daily_oz": 128.3,
+            "daily_kegs_equiv": 0.194,
+            "pour_breakdown": {
+              "7oz": 17,
+              "13.5oz": 230,
+              "first class": 47
+            }
+          },
+          "real_maine_italian": {
+            "qty_sold": 159,
+            "gross_sales": 1232.0,
+            "total_oz": 2049.0,
+            "daily_oz": 66.1,
+            "daily_kegs_equiv": 0.1,
+            "pour_breakdown": {
+              "7oz": 13,
+              "13.5oz": 132,
+              "first class": 11
+            }
+          },
+          "remove_before_flight": {
+            "qty_sold": 208,
+            "gross_sales": 1414.0,
+            "total_oz": 2702.5,
+            "daily_oz": 87.2,
+            "daily_kegs_equiv": 0.132,
+            "pour_breakdown": {
+              "7oz": 20,
+              "first class": 26,
+              "13.5oz": 159
+            }
+          },
+          "space_a": {
+            "qty_sold": 349,
+            "gross_sales": 3055.0,
+            "total_oz": 4671.0,
+            "daily_oz": 150.7,
+            "daily_kegs_equiv": 0.228,
+            "pour_breakdown": {
+              "7oz": 28,
+              "13.5oz": 258,
+              "first class": 62
+            }
+          },
+          "subhunter": {
+            "qty_sold": 264,
+            "gross_sales": 2320.0,
+            "total_oz": 3516.0,
+            "daily_oz": 113.4,
+            "daily_kegs_equiv": 0.172,
+            "pour_breakdown": {
+              "7oz": 17,
+              "first class": 52,
+              "13.5oz": 190
+            }
+          },
+          "vetbeer": {
+            "qty_sold": 19,
+            "gross_sales": 153.0,
+            "total_oz": 16.0,
+            "daily_oz": 0.5,
+            "daily_kegs_equiv": 0.001,
+            "pour_breakdown": {
+              "first class": 1
+            }
+          },
+          "vuelo": {
+            "qty_sold": 104,
+            "gross_sales": 588.0,
+            "total_oz": 1304.0,
+            "daily_oz": 42.1,
+            "daily_kegs_equiv": 0.064,
+            "pour_breakdown": {
+              "7oz": 17,
+              "13.5oz": 70,
+              "first class": 15
+            }
+          },
+          "wings": {
+            "qty_sold": 656,
+            "gross_sales": 5799.0,
+            "total_oz": 8749.0,
+            "daily_oz": 282.2,
+            "daily_kegs_equiv": 0.427,
+            "pour_breakdown": {
+              "7oz": 29,
+              "13.5oz": 524,
+              "first class": 92
+            }
+          },
+          "zeppelin_rules": {
+            "qty_sold": 150,
+            "gross_sales": 1020.0,
+            "total_oz": 1962.5,
+            "daily_oz": 63.3,
+            "daily_kegs_equiv": 0.096,
+            "pour_breakdown": {
+              "7oz": 15,
+              "13oz": 121,
+              "first class": 14
+            }
+          }
+        }
+      },
+      "2026-02": {
+        "days_in_period": 28,
+        "total_pours": 3710,
+        "brands": {
+          "after_dark": {
+            "qty_sold": 179,
+            "gross_sales": 1394.0,
+            "total_oz": 2190.5,
+            "daily_oz": 78.2,
+            "daily_kegs_equiv": 0.118,
+            "pour_breakdown": {
+              "7oz": 14,
+              "13.5oz": 155
+            }
+          },
+          "krosswinds": {
+            "qty_sold": 195,
+            "gross_sales": 1325.0,
+            "total_oz": 2582.5,
+            "daily_oz": 92.2,
+            "daily_kegs_equiv": 0.14,
+            "pour_breakdown": {
+              "7oz": 20,
+              "first class": 32,
+              "13.5oz": 143
+            }
+          },
+          "p3": {
+            "qty_sold": 439,
+            "gross_sales": 3037.0,
+            "total_oz": 5958.0,
+            "daily_oz": 212.8,
+            "daily_kegs_equiv": 0.322,
+            "pour_breakdown": {
+              "first class": 73,
+              "7oz": 17,
+              "13oz": 346
+            }
+          },
+          "pilots_porridge": {
+            "qty_sold": 186,
+            "gross_sales": 1267.0,
+            "total_oz": 2398.5,
+            "daily_oz": 85.7,
+            "daily_kegs_equiv": 0.13,
+            "pour_breakdown": {
+              "7oz": 17,
+              "13.5oz": 157,
+              "first class": 10
+            }
+          },
+          "plane_beer": {
+            "qty_sold": 261,
+            "gross_sales": 1538.0,
+            "total_oz": 3466.0,
+            "daily_oz": 123.8,
+            "daily_kegs_equiv": 0.187,
+            "pour_breakdown": {
+              "7oz": 13,
+              "13.5oz": 218,
+              "first class": 27
+            }
+          },
+          "real_maine_italian": {
+            "qty_sold": 176,
+            "gross_sales": 1374.0,
+            "total_oz": 2243.0,
+            "daily_oz": 80.1,
+            "daily_kegs_equiv": 0.121,
+            "pour_breakdown": {
+              "7oz": 12,
+              "13.5oz": 154,
+              "first class": 5
+            }
+          },
+          "remove_before_flight": {
+            "qty_sold": 205,
+            "gross_sales": 1405.0,
+            "total_oz": 2653.5,
+            "daily_oz": 94.8,
+            "daily_kegs_equiv": 0.143,
+            "pour_breakdown": {
+              "7oz": 12,
+              "first class": 18,
+              "13.5oz": 169
+            }
+          },
+          "sour_tower": {
+            "qty_sold": 128,
+            "gross_sales": 1110.0,
+            "total_oz": 1690.5,
+            "daily_oz": 60.4,
+            "daily_kegs_equiv": 0.091,
+            "pour_breakdown": {
+              "7oz": 10,
+              "13.5oz": 107,
+              "first class": 11
+            }
+          },
+          "space_a": {
+            "qty_sold": 316,
+            "gross_sales": 2810.0,
+            "total_oz": 4299.0,
+            "daily_oz": 153.5,
+            "daily_kegs_equiv": 0.232,
+            "pour_breakdown": {
+              "7oz": 10,
+              "13.5oz": 254,
+              "first class": 50
+            }
+          },
+          "stormy_night": {
+            "qty_sold": 5,
+            "gross_sales": 50.0,
+            "total_oz": 80.0,
+            "daily_oz": 2.9,
+            "daily_kegs_equiv": 0.004,
+            "pour_breakdown": {
+              "can_pour": 5
+            }
+          },
+          "subhunter": {
+            "qty_sold": 273,
+            "gross_sales": 2448.0,
+            "total_oz": 3748.5,
+            "daily_oz": 133.9,
+            "daily_kegs_equiv": 0.203,
+            "pour_breakdown": {
+              "7oz": 3,
+              "first class": 33,
+              "13.5oz": 237
+            }
+          },
+          "vetbeer": {
+            "qty_sold": 27,
+            "gross_sales": 216.0,
+            "total_oz": 432.0,
+            "daily_oz": 15.4,
+            "daily_kegs_equiv": 0.023,
+            "pour_breakdown": {
+              "can_pour": 27
+            }
+          },
+          "vuelo": {
+            "qty_sold": 96,
+            "gross_sales": 542.0,
+            "total_oz": 1299.0,
+            "daily_oz": 46.4,
+            "daily_kegs_equiv": 0.07,
+            "pour_breakdown": {
+              "7oz": 6,
+              "13.5oz": 54,
+              "first class": 14,
+              "can pour": 19
+            }
+          },
+          "wings": {
+            "qty_sold": 674,
+            "gross_sales": 5991.0,
+            "total_oz": 9043.5,
+            "daily_oz": 323.0,
+            "daily_kegs_equiv": 0.489,
+            "pour_breakdown": {
+              "7oz": 21,
+              "13.5oz": 563,
+              "first class": 81
+            }
+          },
+          "zeppelin_rules": {
+            "qty_sold": 137,
+            "gross_sales": 933.0,
+            "total_oz": 1790.0,
+            "daily_oz": 63.9,
+            "daily_kegs_equiv": 0.097,
+            "pour_breakdown": {
+              "7oz": 13,
+              "13oz": 114,
+              "first class": 6,
+              "can pour": 4
+            }
+          }
+        }
+      },
+      "2026-03": {
+        "days_in_period": 31,
+        "total_pours": 5397,
+        "brands": {
+          "after_dark": {
+            "qty_sold": 168,
+            "gross_sales": 1311.0,
+            "total_oz": 2123.5,
+            "daily_oz": 68.5,
+            "daily_kegs_equiv": 0.104,
+            "pour_breakdown": {
+              "7oz": 10,
+              "13.5oz": 145,
+              "can pour": 6
+            }
+          },
+          "cartwheeler": {
+            "qty_sold": 154,
+            "gross_sales": 1062.0,
+            "total_oz": 1493.5,
+            "daily_oz": 48.2,
+            "daily_kegs_equiv": 0.073,
+            "pour_breakdown": {
+              "7oz": 7,
+              "13.5oz": 107
+            }
+          },
+          "krosswinds": {
+            "qty_sold": 48,
+            "gross_sales": 327.0,
+            "total_oz": 639.5,
+            "daily_oz": 20.6,
+            "daily_kegs_equiv": 0.031,
+            "pour_breakdown": {
+              "7oz": 4,
+              "first class": 7,
+              "13.5oz": 37
+            }
+          },
+          "light_the_fires": {
+            "qty_sold": 209,
+            "gross_sales": 1644.0,
+            "total_oz": 2838.0,
+            "daily_oz": 91.5,
+            "daily_kegs_equiv": 0.138,
+            "pour_breakdown": {
+              "7oz": 14,
+              "13oz": 152,
+              "first class": 43
+            }
+          },
+          "night_witches": {
+            "qty_sold": 254,
+            "gross_sales": 2223.0,
+            "total_oz": 3354.0,
+            "daily_oz": 108.2,
+            "daily_kegs_equiv": 0.164,
+            "pour_breakdown": {
+              "7oz": 21,
+              "first class": 30,
+              "13.5oz": 202
+            }
+          },
+          "p3": {
+            "qty_sold": 623,
+            "gross_sales": 4315.0,
+            "total_oz": 8395.0,
+            "daily_oz": 270.8,
+            "daily_kegs_equiv": 0.41,
+            "pour_breakdown": {
+              "first class": 70,
+              "7oz": 21,
+              "13oz": 528
+            }
+          },
+          "pilots_porridge": {
+            "qty_sold": 238,
+            "gross_sales": 1614.0,
+            "total_oz": 3083.0,
+            "daily_oz": 99.5,
+            "daily_kegs_equiv": 0.15,
+            "pour_breakdown": {
+              "7oz": 25,
+              "13.5oz": 200,
+              "first class": 13
+            }
+          },
+          "plane_beer": {
+            "qty_sold": 500,
+            "gross_sales": 3055.0,
+            "total_oz": 6683.0,
+            "daily_oz": 215.6,
+            "daily_kegs_equiv": 0.326,
+            "pour_breakdown": {
+              "7oz": 18,
+              "13.5oz": 430,
+              "first class": 47
+            }
+          },
+          "real_maine_italian": {
+            "qty_sold": 272,
+            "gross_sales": 2140.0,
+            "total_oz": 3576.0,
+            "daily_oz": 115.4,
+            "daily_kegs_equiv": 0.175,
+            "pour_breakdown": {
+              "7oz": 12,
+              "13.5oz": 248,
+              "first class": 9
+            }
+          },
+          "remove_before_flight": {
+            "qty_sold": 238,
+            "gross_sales": 1735.0,
+            "total_oz": 3052.0,
+            "daily_oz": 98.5,
+            "daily_kegs_equiv": 0.149,
+            "pour_breakdown": {
+              "7oz": 18,
+              "first class": 31,
+              "13.5oz": 180
+            }
+          },
+          "sour_tower": {
+            "qty_sold": 286,
+            "gross_sales": 2445.0,
+            "total_oz": 3607.0,
+            "daily_oz": 116.4,
+            "daily_kegs_equiv": 0.176,
+            "pour_breakdown": {
+              "7oz": 43,
+              "13.5oz": 220,
+              "first class": 21
+            }
+          },
+          "space_a": {
+            "qty_sold": 360,
+            "gross_sales": 3192.0,
+            "total_oz": 4843.5,
+            "daily_oz": 156.2,
+            "daily_kegs_equiv": 0.236,
+            "pour_breakdown": {
+              "7oz": 16,
+              "13.5oz": 309,
+              "first class": 35
+            }
+          },
+          "stormy_night": {
+            "qty_sold": 9,
+            "gross_sales": 90.0,
+            "total_oz": 144.0,
+            "daily_oz": 4.6,
+            "daily_kegs_equiv": 0.007,
+            "pour_breakdown": {
+              "can_pour": 9
+            }
+          },
+          "subhunter": {
+            "qty_sold": 343,
+            "gross_sales": 3029.0,
+            "total_oz": 4606.0,
+            "daily_oz": 148.6,
+            "daily_kegs_equiv": 0.225,
+            "pour_breakdown": {
+              "7oz": 19,
+              "first class": 45,
+              "13.5oz": 278
+            }
+          },
+          "vetbeer": {
+            "qty_sold": 45,
+            "gross_sales": 360.0,
+            "total_oz": 720.0,
+            "daily_oz": 23.2,
+            "daily_kegs_equiv": 0.035,
+            "pour_breakdown": {
+              "can_pour": 45
+            }
+          },
+          "vuelo": {
+            "qty_sold": 14,
+            "gross_sales": 71.0,
+            "total_oz": 221.5,
+            "daily_oz": 7.1,
+            "daily_kegs_equiv": 0.011,
+            "pour_breakdown": {
+              "13.5oz": 1,
+              "can pour": 13
+            }
+          },
+          "wings": {
+            "qty_sold": 943,
+            "gross_sales": 8526.0,
+            "total_oz": 12713.5,
+            "daily_oz": 410.1,
+            "daily_kegs_equiv": 0.62,
+            "pour_breakdown": {
+              "7oz": 30,
+              "13.5oz": 829,
+              "first class": 82
+            }
+          },
+          "zeppelin_rules": {
+            "qty_sold": 48,
+            "gross_sales": 336.0,
+            "total_oz": 765.5,
+            "daily_oz": 24.7,
+            "daily_kegs_equiv": 0.037,
+            "pour_breakdown": {
+              "13oz": 1,
+              "first class": 1,
+              "can pour": 46
+            }
+          }
+        },
+        "month": "2026-03"
+      }
+    },
+    "trailing_30d": {
+      "days_in_period": 31,
+      "total_pours": 5397,
+      "brands": {
+        "after_dark": {
+          "qty_sold": 168,
+          "gross_sales": 1311.0,
+          "total_oz": 2123.5,
+          "daily_oz": 68.5,
+          "daily_kegs_equiv": 0.104,
+          "pour_breakdown": {
+            "7oz": 10,
+            "13.5oz": 145,
+            "can pour": 6
+          }
+        },
+        "cartwheeler": {
+          "qty_sold": 154,
+          "gross_sales": 1062.0,
+          "total_oz": 1493.5,
+          "daily_oz": 48.2,
+          "daily_kegs_equiv": 0.073,
+          "pour_breakdown": {
+            "7oz": 7,
+            "13.5oz": 107
+          }
+        },
+        "krosswinds": {
+          "qty_sold": 48,
+          "gross_sales": 327.0,
+          "total_oz": 639.5,
+          "daily_oz": 20.6,
+          "daily_kegs_equiv": 0.031,
+          "pour_breakdown": {
+            "7oz": 4,
+            "first class": 7,
+            "13.5oz": 37
+          }
+        },
+        "light_the_fires": {
+          "qty_sold": 209,
+          "gross_sales": 1644.0,
+          "total_oz": 2838.0,
+          "daily_oz": 91.5,
+          "daily_kegs_equiv": 0.138,
+          "pour_breakdown": {
+            "7oz": 14,
+            "13oz": 152,
+            "first class": 43
+          }
+        },
+        "night_witches": {
+          "qty_sold": 254,
+          "gross_sales": 2223.0,
+          "total_oz": 3354.0,
+          "daily_oz": 108.2,
+          "daily_kegs_equiv": 0.164,
+          "pour_breakdown": {
+            "7oz": 21,
+            "first class": 30,
+            "13.5oz": 202
+          }
+        },
+        "p3": {
+          "qty_sold": 623,
+          "gross_sales": 4315.0,
+          "total_oz": 8395.0,
+          "daily_oz": 270.8,
+          "daily_kegs_equiv": 0.41,
+          "pour_breakdown": {
+            "first class": 70,
+            "7oz": 21,
+            "13oz": 528
+          }
+        },
+        "pilots_porridge": {
+          "qty_sold": 238,
+          "gross_sales": 1614.0,
+          "total_oz": 3083.0,
+          "daily_oz": 99.5,
+          "daily_kegs_equiv": 0.15,
+          "pour_breakdown": {
+            "7oz": 25,
+            "13.5oz": 200,
+            "first class": 13
+          }
+        },
+        "plane_beer": {
+          "qty_sold": 500,
+          "gross_sales": 3055.0,
+          "total_oz": 6683.0,
+          "daily_oz": 215.6,
+          "daily_kegs_equiv": 0.326,
+          "pour_breakdown": {
+            "7oz": 18,
+            "13.5oz": 430,
+            "first class": 47
+          }
+        },
+        "real_maine_italian": {
+          "qty_sold": 272,
+          "gross_sales": 2140.0,
+          "total_oz": 3576.0,
+          "daily_oz": 115.4,
+          "daily_kegs_equiv": 0.175,
+          "pour_breakdown": {
+            "7oz": 12,
+            "13.5oz": 248,
+            "first class": 9
+          }
+        },
+        "remove_before_flight": {
+          "qty_sold": 238,
+          "gross_sales": 1735.0,
+          "total_oz": 3052.0,
+          "daily_oz": 98.5,
+          "daily_kegs_equiv": 0.149,
+          "pour_breakdown": {
+            "7oz": 18,
+            "first class": 31,
+            "13.5oz": 180
+          }
+        },
+        "sour_tower": {
+          "qty_sold": 286,
+          "gross_sales": 2445.0,
+          "total_oz": 3607.0,
+          "daily_oz": 116.4,
+          "daily_kegs_equiv": 0.176,
+          "pour_breakdown": {
+            "7oz": 43,
+            "13.5oz": 220,
+            "first class": 21
+          }
+        },
+        "space_a": {
+          "qty_sold": 360,
+          "gross_sales": 3192.0,
+          "total_oz": 4843.5,
+          "daily_oz": 156.2,
+          "daily_kegs_equiv": 0.236,
+          "pour_breakdown": {
+            "7oz": 16,
+            "13.5oz": 309,
+            "first class": 35
+          }
+        },
+        "stormy_night": {
+          "qty_sold": 9,
+          "gross_sales": 90.0,
+          "total_oz": 144.0,
+          "daily_oz": 4.6,
+          "daily_kegs_equiv": 0.007,
+          "pour_breakdown": {
+            "can_pour": 9
+          }
+        },
+        "subhunter": {
+          "qty_sold": 343,
+          "gross_sales": 3029.0,
+          "total_oz": 4606.0,
+          "daily_oz": 148.6,
+          "daily_kegs_equiv": 0.225,
+          "pour_breakdown": {
+            "7oz": 19,
+            "first class": 45,
+            "13.5oz": 278
+          }
+        },
+        "vetbeer": {
+          "qty_sold": 45,
+          "gross_sales": 360.0,
+          "total_oz": 720.0,
+          "daily_oz": 23.2,
+          "daily_kegs_equiv": 0.035,
+          "pour_breakdown": {
+            "can_pour": 45
+          }
+        },
+        "vuelo": {
+          "qty_sold": 14,
+          "gross_sales": 71.0,
+          "total_oz": 221.5,
+          "daily_oz": 7.1,
+          "daily_kegs_equiv": 0.011,
+          "pour_breakdown": {
+            "13.5oz": 1,
+            "can pour": 13
+          }
+        },
+        "wings": {
+          "qty_sold": 943,
+          "gross_sales": 8526.0,
+          "total_oz": 12713.5,
+          "daily_oz": 410.1,
+          "daily_kegs_equiv": 0.62,
+          "pour_breakdown": {
+            "7oz": 30,
+            "13.5oz": 829,
+            "first class": 82
+          }
+        },
+        "zeppelin_rules": {
+          "qty_sold": 48,
+          "gross_sales": 336.0,
+          "total_oz": 765.5,
+          "daily_oz": 24.7,
+          "daily_kegs_equiv": 0.037,
+          "pour_breakdown": {
+            "13oz": 1,
+            "first class": 1,
+            "can pour": 46
+          }
+        }
+      },
+      "month": "2026-03"
+    },
+    "same_month_last_year": {
+      "days_in_period": 31,
+      "total_pours": 6410,
+      "brands": {
+        "beermosa": {
+          "qty_sold": 4,
+          "gross_sales": 36.0,
+          "total_oz": 64.0,
+          "daily_oz": 2.1,
+          "daily_kegs_equiv": 0.003,
+          "pour_breakdown": {
+            "can_pour": 4
+          }
+        },
+        "bird_clock": {
+          "qty_sold": 373,
+          "gross_sales": 2952.0,
+          "total_oz": 5054.0,
+          "daily_oz": 163.0,
+          "daily_kegs_equiv": 0.247,
+          "pour_breakdown": {
+            "7oz": 16,
+            "13.5oz": 308,
+            "first class": 49
+          }
+        },
+        "blip": {
+          "qty_sold": 239,
+          "gross_sales": 1651.0,
+          "total_oz": 3200.0,
+          "daily_oz": 103.2,
+          "daily_kegs_equiv": 0.156,
+          "pour_breakdown": {
+            "7oz": 11,
+            "13.5oz": 210,
+            "first class": 18
+          }
+        },
+        "choc_and_awe": {
+          "qty_sold": 213,
+          "gross_sales": 1433.0,
+          "total_oz": 2703.5,
+          "daily_oz": 87.2,
+          "daily_kegs_equiv": 0.132,
+          "pour_breakdown": {
+            "7oz": 29,
+            "13oz": 171,
+            "first class": 12
+          }
+        },
+        "flying_monk": {
+          "qty_sold": 255,
+          "gross_sales": 2191.0,
+          "total_oz": 3348.5,
+          "daily_oz": 108.0,
+          "daily_kegs_equiv": 0.163,
+          "pour_breakdown": {
+            "7oz": 23,
+            "13.5oz": 197,
+            "first class": 33
+          }
+        },
+        "get_there_from_here": {
+          "qty_sold": 166,
+          "gross_sales": 1354.0,
+          "total_oz": 2102.0,
+          "daily_oz": 67.8,
+          "daily_kegs_equiv": 0.103,
+          "pour_breakdown": {
+            "7oz": 26,
+            "13.5oz": 128,
+            "first class": 12
+          }
+        },
+        "light_the_fires": {
+          "qty_sold": 120,
+          "gross_sales": 805.0,
+          "total_oz": 1408.0,
+          "daily_oz": 45.4,
+          "daily_kegs_equiv": 0.069,
+          "pour_breakdown": {
+            "7oz": 11,
+            "13oz": 82,
+            "first class": 14
+          }
+        },
+        "p3": {
+          "qty_sold": 725,
+          "gross_sales": 4882.0,
+          "total_oz": 7886.5,
+          "daily_oz": 254.4,
+          "daily_kegs_equiv": 0.385,
+          "pour_breakdown": {
+            "first class": 74,
+            "7oz": 26,
+            "13oz": 483
+          }
+        },
+        "plane_beer": {
+          "qty_sold": 558,
+          "gross_sales": 3208.0,
+          "total_oz": 6002.5,
+          "daily_oz": 193.6,
+          "daily_kegs_equiv": 0.293,
+          "pour_breakdown": {
+            "7oz": 14,
+            "13.5oz": 403,
+            "first class": 29
+          }
+        },
+        "real_maine_italian": {
+          "qty_sold": 345,
+          "gross_sales": 2652.0,
+          "total_oz": 3899.5,
+          "daily_oz": 125.8,
+          "daily_kegs_equiv": 0.19,
+          "pour_breakdown": {
+            "7oz": 24,
+            "13.5oz": 261,
+            "first class": 13
+          }
+        },
+        "remove_before_flight": {
+          "qty_sold": 441,
+          "gross_sales": 2961.0,
+          "total_oz": 4866.0,
+          "daily_oz": 157.0,
+          "daily_kegs_equiv": 0.237,
+          "pour_breakdown": {
+            "7oz": 27,
+            "first class": 24,
+            "13.5oz": 318
+          }
+        },
+        "sour_tower": {
+          "qty_sold": 369,
+          "gross_sales": 3154.0,
+          "total_oz": 4024.5,
+          "daily_oz": 129.8,
+          "daily_kegs_equiv": 0.196,
+          "pour_breakdown": {
+            "7oz": 37,
+            "13.5oz": 273,
+            "first class": 5
+          }
+        },
+        "space_a": {
+          "qty_sold": 437,
+          "gross_sales": 3384.0,
+          "total_oz": 4857.0,
+          "daily_oz": 156.7,
+          "daily_kegs_equiv": 0.237,
+          "pour_breakdown": {
+            "7oz": 19,
+            "13.5oz": 312,
+            "first class": 32
+          }
+        },
+        "subhunter": {
+          "qty_sold": 427,
+          "gross_sales": 3725.0,
+          "total_oz": 4986.0,
+          "daily_oz": 160.8,
+          "daily_kegs_equiv": 0.243,
+          "pour_breakdown": {
+            "7oz": 20,
+            "first class": 70,
+            "13.5oz": 276
+          }
+        },
+        "takeoff": {
+          "qty_sold": 57,
+          "gross_sales": 485.0,
+          "total_oz": 727.5,
+          "daily_oz": 23.5,
+          "daily_kegs_equiv": 0.036,
+          "pour_breakdown": {
+            "7oz": 8,
+            "13.5oz": 45,
+            "first class": 4
+          }
+        },
+        "vetbeer": {
+          "qty_sold": 79,
+          "gross_sales": 632.0,
+          "total_oz": 1264.0,
+          "daily_oz": 40.8,
+          "daily_kegs_equiv": 0.062,
+          "pour_breakdown": {
+            "can_pour": 79
+          }
+        },
+        "vuelo": {
+          "qty_sold": 205,
+          "gross_sales": 1191.0,
+          "total_oz": 2608.0,
+          "daily_oz": 84.1,
+          "daily_kegs_equiv": 0.127,
+          "pour_breakdown": {
+            "7oz": 14,
+            "13.5oz": 148,
+            "first class": 32
+          }
+        },
+        "wings": {
+          "qty_sold": 931,
+          "gross_sales": 7237.0,
+          "total_oz": 10669.0,
+          "daily_oz": 344.2,
+          "daily_kegs_equiv": 0.521,
+          "pour_breakdown": {
+            "7oz": 38,
+            "13.5oz": 690,
+            "first class": 68
+          }
+        }
+      },
+      "month": "2025-03"
+    }
+  },
+  "mmm": {
+    "months": {
+      "2025-06": {
+        "days_in_period": 30,
+        "total_pours": 0,
+        "brands": {
+          "blube_tube": {
+            "qty_sold": 0,
+            "gross_sales": 0,
+            "total_oz": 1120.0,
+            "daily_oz": 37.3,
+            "daily_kegs_equiv": 0.056,
+            "pour_breakdown": {
+              "can pour": 70
+            }
+          },
+          "p3": {
+            "qty_sold": 0,
+            "gross_sales": 0,
+            "total_oz": 1565.5,
+            "daily_oz": 52.2,
+            "daily_kegs_equiv": 0.079,
+            "pour_breakdown": {
+              "13oz": 1,
+              "can pour": 97
+            }
+          },
+          "plane_beer": {
+            "qty_sold": 0,
+            "gross_sales": 0,
+            "total_oz": 2205.5,
+            "daily_oz": 73.5,
+            "daily_kegs_equiv": 0.111,
+            "pour_breakdown": {
+              "13.5oz": 1,
+              "can pour": 137
+            }
+          },
+          "vuelo": {
+            "qty_sold": 0,
+            "gross_sales": 0,
+            "total_oz": 1168.0,
+            "daily_oz": 38.9,
+            "daily_kegs_equiv": 0.059,
+            "pour_breakdown": {
+              "can pour": 73
+            }
+          },
+          "wings": {
+            "qty_sold": 0,
+            "gross_sales": 0,
+            "total_oz": 2976.0,
+            "daily_oz": 99.2,
+            "daily_kegs_equiv": 0.15,
+            "pour_breakdown": {
+              "can pour": 186
+            }
+          }
+        }
+      },
+      "2025-07": {
+        "days_in_period": 31,
+        "total_pours": 746,
+        "brands": {
+          "blube_tube": {
+            "qty_sold": 90,
+            "gross_sales": 900.0,
+            "total_oz": 1440.0,
+            "daily_oz": 46.5,
+            "daily_kegs_equiv": 0.07,
+            "pour_breakdown": {
+              "can pour": 90
+            }
+          },
+          "p3": {
+            "qty_sold": 198,
+            "gross_sales": 1782.0,
+            "total_oz": 3168.0,
+            "daily_oz": 102.2,
+            "daily_kegs_equiv": 0.155,
+            "pour_breakdown": {
+              "can pour": 198
+            }
+          },
+          "plane_beer": {
+            "qty_sold": 129,
+            "gross_sales": 903.0,
+            "total_oz": 2064.0,
+            "daily_oz": 66.6,
+            "daily_kegs_equiv": 0.101,
+            "pour_breakdown": {
+              "can pour": 129
+            }
+          },
+          "puddle_jumper": {
+            "qty_sold": 1,
+            "gross_sales": 9.0,
+            "total_oz": 16.0,
+            "daily_oz": 0.5,
+            "daily_kegs_equiv": 0.001,
+            "pour_breakdown": {
+              "can pour": 1
+            }
+          },
+          "vuelo": {
+            "qty_sold": 108,
+            "gross_sales": 756.0,
+            "total_oz": 1728.0,
+            "daily_oz": 55.7,
+            "daily_kegs_equiv": 0.084,
+            "pour_breakdown": {
+              "can pour": 108
+            }
+          },
+          "wings": {
+            "qty_sold": 200,
+            "gross_sales": 1800.0,
+            "total_oz": 3200.0,
+            "daily_oz": 103.2,
+            "daily_kegs_equiv": 0.156,
+            "pour_breakdown": {
+              "can pour": 200
+            }
+          }
+        }
+      },
+      "2025-08": {
+        "days_in_period": 31,
+        "total_pours": 905,
+        "brands": {
+          "blube_tube": {
+            "qty_sold": 61,
+            "gross_sales": 610.0,
+            "total_oz": 976.0,
+            "daily_oz": 31.5,
+            "daily_kegs_equiv": 0.048,
+            "pour_breakdown": {
+              "can pour": 61
+            }
+          },
+          "munich_layover": {
+            "qty_sold": 14,
+            "gross_sales": 126.0,
+            "total_oz": 224.0,
+            "daily_oz": 7.2,
+            "daily_kegs_equiv": 0.011,
+            "pour_breakdown": {
+              "can_pour": 14
+            }
+          },
+          "p3": {
+            "qty_sold": 208,
+            "gross_sales": 1872.0,
+            "total_oz": 3328.0,
+            "daily_oz": 107.4,
+            "daily_kegs_equiv": 0.162,
+            "pour_breakdown": {
+              "can pour": 208
+            }
+          },
+          "plane_beer": {
+            "qty_sold": 181,
+            "gross_sales": 1267.0,
+            "total_oz": 2896.0,
+            "daily_oz": 93.4,
+            "daily_kegs_equiv": 0.141,
+            "pour_breakdown": {
+              "can pour": 181
+            }
+          },
+          "puddle_jumper": {
+            "qty_sold": 48,
+            "gross_sales": 432.0,
+            "total_oz": 768.0,
+            "daily_oz": 24.8,
+            "daily_kegs_equiv": 0.037,
+            "pour_breakdown": {
+              "can pour": 48
+            }
+          },
+          "remove_before_flight": {
+            "qty_sold": 8,
+            "gross_sales": 72.0,
+            "total_oz": 128.0,
+            "daily_oz": 4.1,
+            "daily_kegs_equiv": 0.006,
+            "pour_breakdown": {
+              "can pour": 8
+            }
+          },
+          "vuelo": {
+            "qty_sold": 93,
+            "gross_sales": 651.0,
+            "total_oz": 1488.0,
+            "daily_oz": 48.0,
+            "daily_kegs_equiv": 0.073,
+            "pour_breakdown": {
+              "can pour": 93
+            }
+          },
+          "wings": {
+            "qty_sold": 249,
+            "gross_sales": 2241.0,
+            "total_oz": 3984.0,
+            "daily_oz": 128.5,
+            "daily_kegs_equiv": 0.194,
+            "pour_breakdown": {
+              "can pour": 249
+            }
+          }
+        }
+      },
+      "2025-09": {
+        "days_in_period": 30,
+        "total_pours": 205,
+        "brands": {
+          "munich_layover": {
+            "qty_sold": 40,
+            "gross_sales": 360.0,
+            "total_oz": 640.0,
+            "daily_oz": 21.3,
+            "daily_kegs_equiv": 0.032,
+            "pour_breakdown": {
+              "can_pour": 40
+            }
+          },
+          "p3": {
+            "qty_sold": 32,
+            "gross_sales": 288.0,
+            "total_oz": 512.0,
+            "daily_oz": 17.1,
+            "daily_kegs_equiv": 0.026,
+            "pour_breakdown": {
+              "can pour": 32
+            }
+          },
+          "plane_beer": {
+            "qty_sold": 30,
+            "gross_sales": 210.0,
+            "total_oz": 480.0,
+            "daily_oz": 16.0,
+            "daily_kegs_equiv": 0.024,
+            "pour_breakdown": {
+              "can pour": 30
+            }
+          },
+          "puddle_jumper": {
+            "qty_sold": 21,
+            "gross_sales": 189.0,
+            "total_oz": 336.0,
+            "daily_oz": 11.2,
+            "daily_kegs_equiv": 0.017,
+            "pour_breakdown": {
+              "can pour": 21
+            }
+          },
+          "remove_before_flight": {
+            "qty_sold": 19,
+            "gross_sales": 171.0,
+            "total_oz": 304.0,
+            "daily_oz": 10.1,
+            "daily_kegs_equiv": 0.015,
+            "pour_breakdown": {
+              "can pour": 19
+            }
+          },
+          "vuelo": {
+            "qty_sold": 5,
+            "gross_sales": 35.0,
+            "total_oz": 80.0,
+            "daily_oz": 2.7,
+            "daily_kegs_equiv": 0.004,
+            "pour_breakdown": {
+              "can pour": 5
+            }
+          },
+          "wings": {
+            "qty_sold": 55,
+            "gross_sales": 495.0,
+            "total_oz": 880.0,
+            "daily_oz": 29.3,
+            "daily_kegs_equiv": 0.044,
+            "pour_breakdown": {
+              "can pour": 55
+            }
+          }
+        }
+      }
+    }
+  }
+}

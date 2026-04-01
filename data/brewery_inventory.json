@@ -1,0 +1,96 @@
+{
+  "last_updated": "2026-03-30",
+  "source_tab": "3/30",
+  "brands": {
+    "after_dark": {
+      "kegs_sixth": 0.0,
+      "kegs_half": 0.0,
+      "cases_16oz": 3.66,
+      "cases_12oz": 0.0
+    },
+    "cartwheeler": {
+      "kegs_sixth": 5.0,
+      "kegs_half": 2.0,
+      "cases_16oz": 35.5,
+      "cases_12oz": 0.0
+    },
+    "light_the_fires": {
+      "kegs_sixth": 3.0,
+      "kegs_half": 1.0,
+      "cases_16oz": 33.66,
+      "cases_12oz": 0.0
+    },
+    "night_witches": {
+      "kegs_sixth": 6.0,
+      "kegs_half": 0.0,
+      "cases_16oz": 33.0,
+      "cases_12oz": 0.0
+    },
+    "p3": {
+      "kegs_sixth": 18.0,
+      "kegs_half": 7.0,
+      "cases_16oz": 102.0,
+      "cases_12oz": 0.0
+    },
+    "pilots_porridge": {
+      "kegs_sixth": 6.0,
+      "kegs_half": 0.0,
+      "cases_16oz": 5.16,
+      "cases_12oz": 0.0
+    },
+    "plane_beer": {
+      "kegs_sixth": 3.0,
+      "kegs_half": 0.0,
+      "cases_16oz": 0.0,
+      "cases_12oz": 41.25
+    },
+    "real_maine_italian": {
+      "kegs_sixth": 11.0,
+      "kegs_half": 1.0,
+      "cases_16oz": 62.33,
+      "cases_12oz": 0.0
+    },
+    "remove_before_flight": {
+      "kegs_sixth": 14.0,
+      "kegs_half": 3.0,
+      "cases_16oz": 64.33,
+      "cases_12oz": 0.0
+    },
+    "sour_tower": {
+      "kegs_sixth": 4.0,
+      "kegs_half": 2.0,
+      "cases_16oz": 36.0,
+      "cases_12oz": 0.0
+    },
+    "space_a": {
+      "kegs_sixth": 5.0,
+      "kegs_half": 0.0,
+      "cases_16oz": 16.16,
+      "cases_12oz": 0.0
+    },
+    "subhunter": {
+      "kegs_sixth": 19.0,
+      "kegs_half": 9.0,
+      "cases_16oz": 111.49,
+      "cases_12oz": 0.0
+    },
+    "vuelo": {
+      "kegs_sixth": 1.0,
+      "kegs_half": 0.0,
+      "cases_16oz": 0.0,
+      "cases_12oz": 0.0
+    },
+    "wings": {
+      "kegs_sixth": 16.0,
+      "kegs_half": 6.0,
+      "cases_16oz": 0.0,
+      "cases_12oz": 0.0
+    },
+    "zeppelin_rules": {
+      "kegs_sixth": 0.0,
+      "kegs_half": 0.0,
+      "cases_16oz": 2.5,
+      "cases_12oz": 0.0
+    }
+  }
+}

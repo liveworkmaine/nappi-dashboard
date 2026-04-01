@@ -12,11 +12,16 @@ Outputs dashboard_data.json with metrics for:
 import json
 import os
 import re
+from calendar import monthrange
 from collections import defaultdict
+from datetime import datetime, timedelta
+
+
+SIXTEL_OZ = 661.0
 
 
 def load_sku_config(base_path=None):
-    """Load per-SKU config (lead times, batch sizes) from sku_config.json."""
+    """Load brand-centric sku_config.json and build reverse lookups."""
     if base_path is None:
         base_path = os.path.dirname(os.path.abspath(__file__))
     config_path = os.path.join(base_path, 'data', 'sku_config.json')
@@ -26,29 +31,312 @@ def load_sku_config(base_path=None):
     return {}
 
 
+def load_brewery_inventory(base_path=None):
+    """Load brewery_inventory.json if it exists."""
+    if base_path is None:
+        base_path = os.path.dirname(os.path.abspath(__file__))
+    inv_path = os.path.join(base_path, 'data', 'brewery_inventory.json')
+    if os.path.exists(inv_path):
+        with open(inv_path) as f:
+            return json.load(f)
+    return None
+
+
+def load_toast_data(base_path=None):
+    """Load toast_data.json if it exists."""
+    if base_path is None:
+        base_path = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(base_path, 'data', 'toast_data.json')
+    if os.path.exists(path):
+        with open(path) as f:
+            return json.load(f)
+    return None
+
+
+def load_selfdistro_data(base_path=None):
+    """Load selfdistro_data.json if it exists."""
+    if base_path is None:
+        base_path = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(base_path, 'data', 'selfdistro_data.json')
+    if os.path.exists(path):
+        with open(path) as f:
+            return json.load(f)
+    return None
+
+
+def get_current_month_key():
+    """Get YYYY-MM for current month."""
+    return datetime.now().strftime('%Y-%m')
+
+
+def get_toast_velocity_for_brand(toast_data, brand_key, month_key=None):
+    """
+    Get Toast velocity for a brand for a specific month.
+    Returns dict with daily_kegs, daily_oz, qty_sold, or zeros.
+    """
+    zero = {'daily_kegs': 0.0, 'daily_oz': 0.0, 'qty_sold': 0, 'total_oz': 0.0, 'pour_breakdown': {}}
+    if not toast_data:
+        return zero
+
+    # Use trailing_30d (most recent month) if no month specified
+    if month_key is None:
+        t30 = toast_data.get('brunswick', {}).get('trailing_30d')
+        if not t30:
+            return zero
+        brand = t30.get('brands', {}).get(brand_key)
+        if not brand:
+            return zero
+        return {
+            'daily_kegs': brand.get('daily_kegs_equiv', 0),
+            'daily_oz': brand.get('daily_oz', 0),
+            'qty_sold': brand.get('qty_sold', 0),
+            'total_oz': brand.get('total_oz', 0),
+            'pour_breakdown': brand.get('pour_breakdown', {}),
+        }
+
+    months = toast_data.get('brunswick', {}).get('months', {})
+    month_data = months.get(month_key)
+    if not month_data:
+        return zero
+    brand = month_data.get('brands', {}).get(brand_key)
+    if not brand:
+        return zero
+    return {
+        'daily_kegs': brand.get('daily_kegs_equiv', 0),
+        'daily_oz': brand.get('daily_oz', 0),
+        'qty_sold': brand.get('qty_sold', 0),
+        'total_oz': brand.get('total_oz', 0),
+        'pour_breakdown': brand.get('pour_breakdown', {}),
+    }
+
+
+def get_mmm_velocity_for_brand(toast_data, brand_key, month_key=None):
+    """Get MMM velocity for a brand. Only has data Jun-Sep."""
+    zero = {'daily_kegs': 0.0, 'qty_sold': 0, 'total_oz': 0.0}
+    if not toast_data:
+        return zero
+    mmm_months = toast_data.get('mmm', {}).get('months', {})
+    if month_key and month_key in mmm_months:
+        brand = mmm_months[month_key].get('brands', {}).get(brand_key)
+        if brand:
+            return {
+                'daily_kegs': brand.get('daily_kegs_equiv', 0),
+                'qty_sold': brand.get('qty_sold', 0),
+                'total_oz': brand.get('total_oz', 0),
+            }
+    return zero
+
+
+def get_selfdistro_velocity_for_brand(sd_data, brand_key, month_key=None):
+    """Get self-distro velocity for a brand for a specific month."""
+    zero = {'daily_ce': 0.0, 'cases': 0.0, 'kegs_sixth': 0.0, 'kegs_half': 0.0, 'total_ce': 0.0}
+    if not sd_data:
+        return zero
+    months = sd_data.get('months', {})
+
+    # Find most recent month if none specified
+    if month_key is None:
+        sorted_m = sorted(months.keys())
+        if not sorted_m:
+            return zero
+        month_key = sorted_m[-1]
+
+    month_data = months.get(month_key)
+    if not month_data:
+        return zero
+    brand = month_data.get('brands', {}).get(brand_key)
+    if not brand:
+        return zero
+
+    # Calculate days in this month for daily rate
+    try:
+        year, month = int(month_key[:4]), int(month_key[5:7])
+        _, days = monthrange(year, month)
+    except (ValueError, IndexError):
+        days = 30
+
+    total_ce = brand.get('total_ce', 0)
+    return {
+        'daily_ce': round(total_ce / days, 3) if days > 0 else 0,
+        'cases': brand.get('cases', 0),
+        'kegs_sixth': brand.get('kegs_sixth', 0),
+        'kegs_half': brand.get('kegs_half', 0),
+        'total_ce': total_ce,
+    }
+
+
+def build_multichannel_velocity(sku_config, toast_data, sd_data, brewery_inv):
+    """
+    Build multi-channel velocity data for ALL brands (Nappi and non-Nappi).
+    Returns dict of brand_key → velocity metrics.
+    """
+    brands = sku_config.get('brands', {})
+    result = {}
+
+    for brand_key, brand in brands.items():
+        if not brand.get('active', True):
+            continue  # skip retired brands
+
+        toast_v = get_toast_velocity_for_brand(toast_data, brand_key)
+        sd_v = get_selfdistro_velocity_for_brand(sd_data, brand_key)
+
+        # Toast velocity in kegs/day
+        toast_daily_kegs = toast_v.get('daily_kegs', 0)
+
+        # Self-distro: convert daily CE to daily kegs (1 CE ≈ 1/5.16 sixtel)
+        sd_daily_ce = sd_v.get('daily_ce', 0)
+        sd_daily_kegs = sd_daily_ce / 5.16 if sd_daily_ce > 0 else 0
+
+        # Total non-Nappi velocity in kegs/day
+        total_daily_kegs = toast_daily_kegs + sd_daily_kegs
+
+        # YoY comparison
+        toast_same_ly = None
+        if toast_data:
+            smly = toast_data.get('brunswick', {}).get('same_month_last_year')
+            if smly:
+                ly_brand = smly.get('brands', {}).get(brand_key)
+                if ly_brand:
+                    toast_same_ly = ly_brand.get('daily_kegs_equiv', 0)
+
+        # Monthly trend (last 6 months)
+        monthly_trend = []
+        if toast_data:
+            all_months = sorted(toast_data.get('brunswick', {}).get('months', {}).keys())
+            for m in all_months[-6:]:
+                m_data = toast_data['brunswick']['months'][m].get('brands', {}).get(brand_key)
+                if m_data:
+                    monthly_trend.append({
+                        'month': m,
+                        'daily_kegs': m_data.get('daily_kegs_equiv', 0),
+                        'qty_sold': m_data.get('qty_sold', 0),
+                    })
+
+        result[brand_key] = {
+            'display_name': brand.get('display_name', brand_key),
+            'toast_daily_kegs': round(toast_daily_kegs, 3),
+            'toast_qty': toast_v.get('qty_sold', 0),
+            'toast_pour_breakdown': toast_v.get('pour_breakdown', {}),
+            'sd_daily_kegs': round(sd_daily_kegs, 3),
+            'sd_daily_ce': round(sd_daily_ce, 3),
+            'sd_cases': sd_v.get('cases', 0),
+            'sd_kegs_sixth': sd_v.get('kegs_sixth', 0),
+            'total_daily_kegs': round(total_daily_kegs, 3),
+            'toast_same_month_ly': toast_same_ly,
+            'monthly_trend': monthly_trend,
+        }
+
+    return result
+
+
 DEFAULT_LEAD_TIME_DAYS = 21
 DEFAULT_BATCH_SIZE_BBL = 7
 
 
+def build_sku_to_brand(sku_config):
+    """Build reverse lookup: Nappi SKU code → (brand_key, brand_config)."""
+    sku_to_brand = {}
+    brands = sku_config.get('brands', {})
+    for brand_key, brand in brands.items():
+        for sku_code, sku_info in brand.get('nappi_skus', {}).items():
+            sku_to_brand[str(sku_code)] = (brand_key, brand)
+    return sku_to_brand
+
+
 def get_sku_lead_time(sku_config, sku_code):
     """Get lead time for a SKU, falling back to default."""
+    # New brand-centric config
+    sku_to_brand = build_sku_to_brand(sku_config)
+    result = sku_to_brand.get(str(sku_code))
+    if result:
+        _, brand = result
+        return brand.get('lead_time_days', DEFAULT_LEAD_TIME_DAYS)
+    # Legacy flat config fallback
     cfg = sku_config.get(str(sku_code), {})
     return cfg.get('lead_time_days', DEFAULT_LEAD_TIME_DAYS)
 
 
 def get_sku_batch_size(sku_config, sku_code):
     """Get batch size for a SKU, falling back to default."""
+    # New brand-centric config
+    sku_to_brand = build_sku_to_brand(sku_config)
+    result = sku_to_brand.get(str(sku_code))
+    if result:
+        _, brand = result
+        return brand.get('batch_size_bbl', DEFAULT_BATCH_SIZE_BBL)
+    # Legacy flat config fallback
     cfg = sku_config.get(str(sku_code), {})
     return cfg.get('batch_size_bbl', DEFAULT_BATCH_SIZE_BBL)
 
 
-def build_dashboard_data(data, sku_config=None):
+def get_brewery_on_hand_for_sku(sku_code, sku_config, brewery_inv):
+    """
+    Look up brewery on-hand for a Nappi SKU.
+    Maps SKU → brand → inventory, then picks the right unit column.
+    Returns (brewery_on_hand, unit_type) or (0, None) if not found.
+    """
+    if not brewery_inv:
+        return 0, None
+
+    sku_to_brand = build_sku_to_brand(sku_config)
+    result = sku_to_brand.get(str(sku_code))
+    if not result:
+        return 0, None
+
+    brand_key, brand = result
+    brand_inv = brewery_inv.get('brands', {}).get(brand_key)
+    if not brand_inv:
+        return 0, None
+
+    sku_info = brand.get('nappi_skus', {}).get(str(sku_code), {})
+    sku_type = sku_info.get('type', '')
+
+    if sku_type == 'keg':
+        # For keg SKUs, return sixth-barrel count (that's what Nappi distributes)
+        return brand_inv.get('kegs_sixth', 0), 'kegs'
+    elif sku_type == 'case':
+        case_size = sku_info.get('case_size', '16oz')
+        if case_size == '12oz':
+            return brand_inv.get('cases_12oz', 0), 'cases'
+        else:
+            return brand_inv.get('cases_16oz', 0), 'cases'
+
+    return 0, None
+
+
+def build_dashboard_data(data, sku_config=None, brewery_inv=None,
+                          toast_data=None, sd_data=None):
     """Build compact dashboard data dict from full nappi_data.json dict."""
     if sku_config is None:
         sku_config = {}
+    if brewery_inv is None:
+        brewery_inv = {}
     dates = sorted(data.keys())
     latest_date = dates[-1]
     latest = data[latest_date]
+
+    # Build multi-channel velocity
+    mc_velocity = build_multichannel_velocity(sku_config, toast_data, sd_data, brewery_inv)
+
+    # Data freshness info
+    data_freshness = {
+        'nappi': latest_date,
+        'inventory': brewery_inv.get('last_updated', 'N/A') if brewery_inv else 'N/A',
+        'toast': toast_data.get('generated', 'N/A') if toast_data else 'N/A',
+        'selfdistro': sd_data.get('generated', 'N/A') if sd_data else 'N/A',
+    }
+    # Get Toast latest month
+    if toast_data:
+        t30 = toast_data.get('brunswick', {}).get('trailing_30d', {})
+        data_freshness['toast_month'] = t30.get('month', 'N/A')
+    else:
+        data_freshness['toast_month'] = 'N/A'
+    # Get self-distro latest month
+    if sd_data:
+        sd_months = sorted(sd_data.get('months', {}).keys())
+        data_freshness['selfdistro_month'] = sd_months[-1] if sd_months else 'N/A'
+    else:
+        data_freshness['selfdistro_month'] = 'N/A'
 
     dashboard = {
         "dates": dates,
@@ -65,6 +353,9 @@ def build_dashboard_data(data, sku_config=None):
             "stockout_projections": [],
         },
         "totals": latest['sales_comp']['totals'],
+        "brewery_inventory": brewery_inv,
+        "multichannel": mc_velocity,
+        "data_freshness": data_freshness,
     }
 
     # ── TREND ──
@@ -275,7 +566,9 @@ def build_dashboard_data(data, sku_config=None):
         }
 
     # ── PRODUCTION ──
-    from datetime import datetime, timedelta
+
+    # Cache sku_to_brand lookup (avoid rebuilding per SKU)
+    _sku_to_brand_cache = build_sku_to_brand(sku_config)
 
     for p in latest['sales_comp']['products']:
         sku = p['sku_code']
@@ -287,8 +580,14 @@ def build_dashboard_data(data, sku_config=None):
         current_rate = p['daily_sell_rate']
         velocity_pct = ((current_rate - early_rate) / early_rate * 100) if early_rate > 0 else 0
         a_rate = p.get('actual_daily_rate', 0)
-        a_oh = p['actual_on_hand']
-        days_to_zero = a_oh / a_rate if a_rate > 0 else 999
+        a_oh = p['actual_on_hand']  # Nappi on-hand
+
+        # Brewery on-hand for this SKU's format
+        brewery_oh, _ = get_brewery_on_hand_for_sku(sku, sku_config, brewery_inv)
+        total_available = a_oh + brewery_oh
+
+        # Use total_available for days-to-zero calculation
+        days_to_zero = total_available / a_rate if a_rate > 0 else 999
         brew_urgency = days_to_zero - lead_time
         # Projected stockout and brew-by dates
         latest_dt = datetime.strptime(latest_date, '%Y-%m-%d')
@@ -297,12 +596,39 @@ def build_dashboard_data(data, sku_config=None):
         brew_status = "BREW_NOW" if brew_urgency <= 0 else "PLAN" if brew_urgency <= 7 else "OK"
         # How many units needed to reach lead-time safety stock
         target_oh = round(a_rate * lead_time)
-        shortfall = max(0, target_oh - a_oh)
+        shortfall = max(0, target_oh - total_available)
+
+        # Look up brand key for this SKU
+        brand_result = _sku_to_brand_cache.get(str(sku))
+        brand_key = brand_result[0] if brand_result else None
+
+        # Multi-channel velocity for this brand
+        mc = mc_velocity.get(brand_key, {}) if brand_key else {}
+        toast_daily = mc.get('toast_daily_kegs', 0)
+        sd_daily = mc.get('sd_daily_kegs', 0)
+        nappi_daily_kegs = a_rate / 5.16 if 'BBL' not in p.get('format', '') else a_rate
+        total_daily_all_channels = nappi_daily_kegs + toast_daily + sd_daily
+
+        # Channel split percentages
+        channel_split = {}
+        if total_daily_all_channels > 0:
+            channel_split = {
+                'nappi_pct': round(nappi_daily_kegs / total_daily_all_channels * 100),
+                'toast_pct': round(toast_daily / total_daily_all_channels * 100),
+                'sd_pct': round(sd_daily / total_daily_all_channels * 100),
+            }
+
+        # YoY seasonality indicator
+        toast_yoy = None
+        if mc.get('toast_same_month_ly') is not None and mc.get('toast_same_month_ly', 0) > 0:
+            toast_yoy = round((toast_daily / mc['toast_same_month_ly'] - 1) * 100)
 
         entry = {
             "sku": sku, "name": p['product_name'], "format": p['format'],
             "status": p['inventory_status'], "days_inv": p['days_of_inventory'],
             "on_hand": p['on_hand'], "a_oh": a_oh,
+            "brewery_oh": brewery_oh,
+            "total_available": total_available,
             "rate": current_rate, "a_rate": a_rate,
             "a_unit": p['actual_unit'],
             "velocity_pct": round(velocity_pct),
@@ -316,11 +642,116 @@ def build_dashboard_data(data, sku_config=None):
             "shortfall": shortfall,
             "lead_time": lead_time,
             "batch_size": batch_size,
+            "brand_key": brand_key,
+            "channel": "nappi",
+            "toast_daily_kegs": toast_daily,
+            "sd_daily_kegs": sd_daily,
+            "total_daily_all_channels": round(total_daily_all_channels, 3),
+            "channel_split": channel_split,
+            "toast_yoy_pct": toast_yoy,
         }
         if p['inventory_status'] in ('CRITICAL', 'ORDER_NOW'):
             dashboard["production"]["alerts"].append(entry)
         dashboard["production"]["velocity"].append(entry)
         dashboard["production"]["stockout_projections"].append(entry)
+
+    # ── TASTING ROOM ONLY BRANDS (non-Nappi) — now with real Toast velocity ──
+    tasting_room_only = []
+    nappi_brand_keys = set()
+    for sku_code, (bk, _) in _sku_to_brand_cache.items():
+        nappi_brand_keys.add(bk)
+
+    latest_dt = datetime.strptime(latest_date, '%Y-%m-%d')
+
+    for brand_key, brand in sku_config.get('brands', {}).items():
+        if brand_key in nappi_brand_keys:
+            continue  # already covered by Nappi SKUs
+        if not brand.get('active', True):
+            continue  # skip retired brands
+        brand_inv = brewery_inv.get('brands', {}).get(brand_key, {})
+        mc = mc_velocity.get(brand_key, {})
+
+        # Get inventory totals
+        kegs_sixth = brand_inv.get('kegs_sixth', 0) if brand_inv else 0
+        kegs_half = brand_inv.get('kegs_half', 0) if brand_inv else 0
+        cases_16oz = brand_inv.get('cases_16oz', 0) if brand_inv else 0
+        cases_12oz = brand_inv.get('cases_12oz', 0) if brand_inv else 0
+        total_units = kegs_sixth + kegs_half + cases_16oz + cases_12oz
+
+        # Get velocity from Toast + self-distro
+        toast_daily_kegs = mc.get('toast_daily_kegs', 0)
+        sd_daily_kegs = mc.get('sd_daily_kegs', 0)
+        total_daily_kegs = toast_daily_kegs + sd_daily_kegs
+
+        # Skip if no inventory AND no velocity
+        if total_units == 0 and total_daily_kegs == 0:
+            continue
+
+        # Calculate days to zero based on total daily kegs consumed
+        # Convert inventory to keg equivalents: 1 sixth = 1, 1 half = 3, cases ≈ 1/5.16
+        inv_kegs_equiv = kegs_sixth + (kegs_half * 3) + ((cases_16oz + cases_12oz) / 5.16)
+        days_to_zero = inv_kegs_equiv / total_daily_kegs if total_daily_kegs > 0 else 999
+        lead_time = brand.get('lead_time_days', DEFAULT_LEAD_TIME_DAYS)
+        batch_size = brand.get('batch_size_bbl', DEFAULT_BATCH_SIZE_BBL)
+        brew_urgency = days_to_zero - lead_time
+        brew_status = "BREW_NOW" if brew_urgency <= 0 else "PLAN" if brew_urgency <= 7 else "OK"
+        stockout_dt = latest_dt + timedelta(days=days_to_zero)
+        brew_by_dt = stockout_dt - timedelta(days=lead_time)
+
+        # Channel split
+        channel_split = {}
+        if total_daily_kegs > 0:
+            channel_split = {
+                'nappi_pct': 0,
+                'toast_pct': round(toast_daily_kegs / total_daily_kegs * 100),
+                'sd_pct': round(sd_daily_kegs / total_daily_kegs * 100),
+            }
+
+        # YoY
+        toast_yoy = None
+        if mc.get('toast_same_month_ly') is not None and mc.get('toast_same_month_ly', 0) > 0:
+            toast_yoy = round((toast_daily_kegs / mc['toast_same_month_ly'] - 1) * 100)
+
+        entry = {
+            "brand_key": brand_key,
+            "name": brand.get('display_name', brand_key),
+            "style": brand.get('style'),
+            "kegs_sixth": kegs_sixth,
+            "kegs_half": kegs_half,
+            "cases_16oz": cases_16oz,
+            "cases_12oz": cases_12oz,
+            "inv_kegs_equiv": round(inv_kegs_equiv, 1),
+            "lead_time": lead_time,
+            "batch_size": batch_size,
+            "channel": "tasting_room",
+            "toast_daily_kegs": toast_daily_kegs,
+            "sd_daily_kegs": sd_daily_kegs,
+            "total_daily_kegs": round(total_daily_kegs, 3),
+            "days_to_zero": round(days_to_zero, 1),
+            "brew_urgency": round(brew_urgency, 1),
+            "brew_status": brew_status,
+            "brew_by": brew_by_dt.strftime('%Y-%m-%d'),
+            "stockout_date": stockout_dt.strftime('%Y-%m-%d'),
+            "channel_split": channel_split,
+            "toast_yoy_pct": toast_yoy,
+            "toast_qty": mc.get('toast_qty', 0),
+            "monthly_trend": mc.get('monthly_trend', []),
+        }
+        tasting_room_only.append(entry)
+
+    # Sort by brew urgency (most urgent first)
+    tasting_room_only.sort(key=lambda x: x.get('brew_urgency', 999))
+    dashboard["production"]["tasting_room_only"] = tasting_room_only
+
+    # ── MMM DATA ──
+    mmm_data = {}
+    if toast_data:
+        mmm_months = toast_data.get('mmm', {}).get('months', {})
+        mmm_data = {
+            'months': mmm_months,
+            'has_data': len(mmm_months) > 0,
+        }
+    dashboard["mmm"] = mmm_data
 
     dashboard["production"]["alerts"].sort(key=lambda x: x['days_inv'])
 
@@ -389,14 +820,334 @@ def build_dashboard_data(data, sku_config=None):
     return clean(dashboard)
 
 
+def build_production_planner_data(dashboard, sku_config, brewery_inv, toast_data, sd_data):
+    """
+    Build the production planner dataset from the main dashboard data.
+    This produces the data shape consumed by production-planner.html.
+    """
+    brands_cfg = sku_config.get('brands', {})
+    mc = dashboard.get('multichannel', {})
+    brew_queue = dashboard.get('production', {}).get('brew_queue', [])
+    tasting_room = dashboard.get('production', {}).get('tasting_room_only', [])
+    data_freshness = dashboard.get('data_freshness', {})
+    latest_date = dashboard.get('latest_date', datetime.now().strftime('%Y-%m-%d'))
+    latest_dt = datetime.strptime(latest_date, '%Y-%m-%d')
+    current_month = latest_dt.strftime('%Y-%m')
+
+    # Constants for unit conversions
+    SIXTEL_PER_BBL = 6.0  # 1 barrel = ~6 sixtels
+    HALF_PER_BBL = 2.0    # 1 barrel = 2 half-barrels
+    CASES_16OZ_PER_BBL = 27.5  # ~27.5 4-packs of 16oz per barrel
+    CASES_12OZ_PER_BBL = 41.3  # ~41.3 6-packs of 12oz per barrel
+
+    production_plan = []
+    seen_brand_keys = set()
+
+    # ── Process Nappi brands (from brew_queue) ──
+    # Group by brand_key to avoid duplicate entries per SKU
+    brand_nappi_data = {}
+    for item in brew_queue:
+        bk = item.get('brand_key')
+        if not bk:
+            continue
+        if bk not in brand_nappi_data:
+            brand_nappi_data[bk] = {'cases': 0, 'kegs': 0, 'nappi_daily_cases': 0, 'nappi_daily_kegs': 0}
+        if item.get('is_keg'):
+            brand_nappi_data[bk]['kegs'] = item.get('a_oh', 0)
+            brand_nappi_data[bk]['nappi_daily_kegs'] = item.get('a_rate', 0)
+        else:
+            brand_nappi_data[bk]['cases'] = item.get('a_oh', 0)
+            brand_nappi_data[bk]['nappi_daily_cases'] = item.get('a_rate', 0)
+
+    for brand_key, brand in brands_cfg.items():
+        if not brand.get('active', True):
+            continue
+        seen_brand_keys.add(brand_key)
+
+        # Inventory from brewery
+        brand_inv = (brewery_inv or {}).get('brands', {}).get(brand_key, {})
+        kegs_sixth = brand_inv.get('kegs_sixth', 0)
+        kegs_half = brand_inv.get('kegs_half', 0)
+        cases_16oz = brand_inv.get('cases_16oz', 0)
+        cases_12oz = brand_inv.get('cases_12oz', 0)
+
+        # Nappi on-hand
+        nappi = brand_nappi_data.get(brand_key, {})
+        nappi_cases = nappi.get('cases', 0)
+        nappi_kegs = nappi.get('kegs', 0)
+
+        # Convert everything to barrels
+        inv_bbl = (
+            kegs_sixth / SIXTEL_PER_BBL +
+            kegs_half / HALF_PER_BBL +
+            cases_16oz / CASES_16OZ_PER_BBL +
+            cases_12oz / CASES_12OZ_PER_BBL +
+            nappi_kegs / SIXTEL_PER_BBL +
+            nappi_cases / CASES_16OZ_PER_BBL
+        )
+
+        # Velocity from each channel (convert to bbl/day)
+        mc_brand = mc.get(brand_key, {})
+        toast_daily_kegs = mc_brand.get('toast_daily_kegs', 0)
+        sd_daily_kegs = mc_brand.get('sd_daily_kegs', 0)
+
+        # Nappi daily rate: convert from units/day to bbl/day
+        nappi_daily_cases = nappi.get('nappi_daily_cases', 0)
+        nappi_daily_kegs_rate = nappi.get('nappi_daily_kegs', 0)
+        nappi_daily_bbl = nappi_daily_cases / CASES_16OZ_PER_BBL + nappi_daily_kegs_rate / SIXTEL_PER_BBL
+
+        # Toast + SelfDist are already in kegs/day, convert to bbl/day
+        toast_daily_bbl = toast_daily_kegs / SIXTEL_PER_BBL
+        sd_daily_bbl = sd_daily_kegs / SIXTEL_PER_BBL
+
+        # MMM velocity (seasonal, only Jun-Sep of current-ish year)
+        mmm_daily_bbl = 0.0
+        now_month = int(latest_dt.strftime('%m'))
+        if 6 <= now_month <= 9 and toast_data:
+            mmm_v = get_mmm_velocity_for_brand(toast_data, brand_key, current_month)
+            mmm_daily_bbl = mmm_v.get('daily_kegs', 0) / SIXTEL_PER_BBL
+
+        total_daily_bbl = nappi_daily_bbl + toast_daily_bbl + sd_daily_bbl + mmm_daily_bbl
+
+        # Channel percentages
+        channel_pcts = {'nappi': 0, 'toast': 0, 'selfdist': 0, 'mmm': 0}
+        if total_daily_bbl > 0:
+            channel_pcts = {
+                'nappi': round(nappi_daily_bbl / total_daily_bbl * 100),
+                'toast': round(toast_daily_bbl / total_daily_bbl * 100),
+                'selfdist': round(sd_daily_bbl / total_daily_bbl * 100),
+                'mmm': round(mmm_daily_bbl / total_daily_bbl * 100),
+            }
+
+        # Days until stockout — per format
+        keg_inv_bbl = kegs_sixth / SIXTEL_PER_BBL + kegs_half / HALF_PER_BBL + nappi_kegs / SIXTEL_PER_BBL
+        case_inv_bbl = cases_16oz / CASES_16OZ_PER_BBL + cases_12oz / CASES_12OZ_PER_BBL + nappi_cases / CASES_16OZ_PER_BBL
+
+        # Estimate keg vs case demand split from channel data
+        # Toast is all draft (kegs), Nappi/SD split by channel_pcts
+        keg_demand_share = (channel_pcts.get('toast', 0) + channel_pcts.get('mmm', 0) * 0.0) / 100.0
+        case_demand_share = 1.0 - keg_demand_share
+        if total_daily_bbl > 0:
+            keg_daily = total_daily_bbl * max(keg_demand_share, 0.3)  # at least 30% draft
+            case_daily = total_daily_bbl * max(case_demand_share, 0.3)
+        else:
+            keg_daily = case_daily = 0
+
+        days_stockout_kegs = int(keg_inv_bbl / keg_daily) if keg_daily > 0 else 999
+        days_stockout_cases = int(case_inv_bbl / case_daily) if case_daily > 0 else 999
+        days_stockout = inv_bbl / total_daily_bbl if total_daily_bbl > 0 else 999
+        days_stockout = min(days_stockout, 999)
+
+        # Lead time and batch sizing
+        lead_time = brand.get('lead_time_days', DEFAULT_LEAD_TIME_DAYS)
+        batch_size = brand.get('batch_size_bbl', DEFAULT_BATCH_SIZE_BBL)
+
+        # Brew status
+        brew_urgency = days_stockout - lead_time
+        brew_status = "BREW_NOW" if brew_urgency <= 0 else "PLAN" if brew_urgency <= 7 else "OK"
+
+        # Brew-by date
+        stockout_dt = latest_dt + timedelta(days=int(days_stockout))
+        brew_by_dt = stockout_dt - timedelta(days=lead_time)
+        brew_by_date = brew_by_dt.strftime('%Y-%m-%d')
+
+        # Recommended batch: single (7) or double (15)
+        # If projected demand over lead_time + 14 days > 7 bbl equivalent → double
+        projected_demand = total_daily_bbl * (lead_time + 14)
+        recommended_batch = "double" if projected_demand > 7 else "single"
+        recommended_bbl = 15 if recommended_batch == "double" else 7
+
+        # Channels list
+        channels = []
+        if nappi_daily_bbl > 0 or brand.get('nappi_skus'):
+            channels.append('nappi')
+        if toast_daily_bbl > 0:
+            channels.append('toast')
+        if sd_daily_bbl > 0 or brand.get('selfdistro'):
+            channels.append('selfdistro')
+        if mmm_daily_bbl > 0 or brand.get('mmm_names'):
+            channels.append('mmm')
+
+        # Seasonality — same month last year
+        same_month_ly_bbl = None
+        if mc_brand.get('toast_same_month_ly') is not None:
+            same_month_ly_bbl = round(mc_brand['toast_same_month_ly'] / SIXTEL_PER_BBL, 3)
+
+        # Trailing 3-month trend
+        monthly_trend = mc_brand.get('monthly_trend', [])
+        trailing_3mo_trend = 'flat'
+        if len(monthly_trend) >= 3:
+            recent_3 = [m['daily_kegs'] for m in monthly_trend[-3:]]
+            if recent_3[-1] > recent_3[0] * 1.15:
+                trailing_3mo_trend = 'up'
+            elif recent_3[-1] < recent_3[0] * 0.85:
+                trailing_3mo_trend = 'down'
+
+        # Channel allocation when batch finishes
+        keg_share = max(channel_pcts.get('toast', 0) + channel_pcts.get('mmm', 0), 30) / 100.0
+        case_share = 1.0 - keg_share
+        kegs_bbl = round(recommended_bbl * keg_share, 1)
+        cases_bbl = round(recommended_bbl * case_share, 1)
+
+        # Output estimates: fill 1-2 half-barrels first, rest to sixtels
+        halves = min(2, int(kegs_bbl / (1 / HALF_PER_BBL)))  # max 2 halves
+        halves = min(halves, int(kegs_bbl * HALF_PER_BBL))
+        remaining_bbl = kegs_bbl - halves / HALF_PER_BBL
+        remaining_sixtels = max(0, int(remaining_bbl * SIXTEL_PER_BBL))
+        parts = []
+        if remaining_sixtels > 0:
+            parts.append(f"≈{remaining_sixtels} sixtels")
+        if halves > 0:
+            parts.append(f"{halves} half-barrel{'s' if halves > 1 else ''}")
+        kegs_output = " + ".join(parts) if parts else "0 kegs"
+
+        case_size = '12oz' if cases_12oz > 0 and cases_16oz == 0 else '16oz'
+        cases_per_bbl = CASES_12OZ_PER_BBL if case_size == '12oz' else CASES_16OZ_PER_BBL
+        est_cases = int(cases_bbl * cases_per_bbl)
+        cases_output = f"≈{est_cases} cases {case_size}"
+
+        # Channel split for allocation (match HTML keys)
+        alloc_split = {
+            'nappi': f"{channel_pcts.get('nappi', 0)}%",
+            'toast': f"{channel_pcts.get('toast', 0)}%",
+            'selfdist': f"{channel_pcts.get('selfdist', 0)}%",
+            'mmm': f"{channel_pcts.get('mmm', 0)}%",
+        }
+
+        entry = {
+            'brand_key': brand_key,
+            'display_name': brand.get('display_name', brand_key),
+            'style': brand.get('style', ''),
+            'channels': channels,
+            'brewery_kegs_sixth': kegs_sixth,
+            'brewery_kegs_half': kegs_half,
+            'brewery_cases_16oz': cases_16oz,
+            'brewery_cases_12oz': cases_12oz,
+            'nappi_cases': nappi_cases,
+            'nappi_kegs': nappi_kegs,
+            'total_inv_bbl': round(inv_bbl, 1),
+            'nappi_daily_bbl': round(nappi_daily_bbl, 3),
+            'toast_daily_bbl': round(toast_daily_bbl, 3),
+            'selfdistro_daily_bbl': round(sd_daily_bbl, 3),
+            'mmm_daily_bbl': round(mmm_daily_bbl, 3),
+            'total_daily_bbl': round(total_daily_bbl, 3),
+            'channel_pcts': channel_pcts,
+            'days_until_stockout_kegs': min(days_stockout_kegs, 999),
+            'days_until_stockout_cases': min(days_stockout_cases, 999),
+            'days_until_stockout': round(min(days_stockout, 999)),
+            'brew_by_date': brew_by_date,
+            'lead_time_days': lead_time,
+            'batch_size_bbl': recommended_bbl,
+            'recommended_batch': recommended_batch,
+            'brew_status': brew_status,
+            'priority_rank': 0,  # set below after sorting
+            'current_month_velocity_bbl': round(total_daily_bbl, 3),
+            'same_month_last_year_bbl': same_month_ly_bbl,
+            'trailing_3mo_trend': trailing_3mo_trend,
+            'allocation': {
+                'total_bbl': recommended_bbl,
+                'packaging': {'kegs_bbl': kegs_bbl, 'cases_bbl': cases_bbl},
+                'kegs_output': kegs_output,
+                'cases_output': cases_output,
+                'channel_split': alloc_split,
+            },
+        }
+        production_plan.append(entry)
+
+    # Sort by urgency and assign priority ranks
+    production_plan.sort(key=lambda x: x.get('days_until_stockout', 999))
+    for i, entry in enumerate(production_plan):
+        entry['priority_rank'] = i + 1
+
+    # ── MMM data ──
+    mmm_2025_actuals = {
+        "2025-06": {"units": 0, "days": 0},
+        "2025-07": {"units": 0, "days": 31},
+        "2025-08": {"units": 0, "days": 31},
+        "2025-09": {"units": 0, "days": 30},
+    }
+    mmm_brands_set = set()
+    if toast_data:
+        mmm_months = toast_data.get('mmm', {}).get('months', {})
+        for month_key, mdata in mmm_months.items():
+            # Map to 2025 slot
+            month_num = month_key[5:7]
+            target_key = f"2025-{month_num}"
+            if target_key in mmm_2025_actuals:
+                total_units = sum(b.get('qty_sold', 0) for b in mdata.get('brands', {}).values())
+                mmm_2025_actuals[target_key]['units'] = total_units
+                mmm_2025_actuals[target_key]['days'] = mdata.get('days_in_period', 30)
+            # Collect MMM brand keys
+            for bk in mdata.get('brands', {}).keys():
+                if bk in brands_cfg:
+                    mmm_brands_set.add(bk)
+
+    # ── Brew Calendar ──
+    brew_calendar = []
+    today = latest_dt
+    for entry in production_plan:
+        if entry['brew_status'] == 'OK' and entry['days_until_stockout'] > 30:
+            continue
+        brew_dt = datetime.strptime(entry['brew_by_date'], '%Y-%m-%d')
+        delta_days = (brew_dt - today).days
+        if delta_days < 0:
+            week = 'this_week'
+        elif delta_days <= 7:
+            week = 'this_week'
+        elif delta_days <= 14:
+            week = 'next_week'
+        elif delta_days <= 21:
+            week = 'week_after'
+        else:
+            continue  # too far out for calendar
+        brew_calendar.append({
+            'brand_key': entry['brand_key'],
+            'display_name': entry['display_name'],
+            'brew_by': entry['brew_by_date'],
+            'batch': entry['recommended_batch'],
+            'status': entry['brew_status'],
+            'week': week,
+        })
+
+    planner = {
+        'generated': latest_date,
+        'data_freshness': data_freshness,
+        'production_plan': production_plan,
+        'mmm_2025_actuals': mmm_2025_actuals,
+        'mmm_brands': sorted(list(mmm_brands_set)),
+        'brew_calendar': brew_calendar,
+    }
+
+    return planner
+
+
 def update_dashboard_html(dashboard_data, html_path):
     """Replace the DATA constant in dashboard.html with new data."""
-    compact = json.dumps(dashboard_data, separators=(',', ':'))
+    compact = json.dumps(dashboard_data, separators=(',', ':'), ensure_ascii=False)
 
     with open(html_path) as f:
         html = f.read()
 
-    html = re.sub(r'const D = \{.*?\};', f'const D = {compact};', html, count=1, flags=re.DOTALL)
+    replacement = f'const D = {compact};'
+    html = re.sub(r'const D = \{.*?\};', lambda m: replacement, html, count=1, flags=re.DOTALL)
+
+    with open(html_path, 'w') as f:
+        f.write(html)
+
+    return len(html)
+
+
+def update_planner_html(planner_data, html_path):
+    """Replace the DATA constant in production-planner.html with new data."""
+    if not os.path.exists(html_path):
+        return 0
+    compact = json.dumps(planner_data, separators=(',', ':'), ensure_ascii=False)
+
+    with open(html_path) as f:
+        html = f.read()
+
+    replacement = f'const D = {compact};'
+    html = re.sub(r'const D = \{.*?\};', lambda m: replacement, html, count=1, flags=re.DOTALL)
 
     with open(html_path, 'w') as f:
         f.write(html)
@@ -412,16 +1163,81 @@ if __name__ == '__main__':
 
     sku_config = load_sku_config(base)
     if sku_config:
-        print(f"Loaded SKU config: {len(sku_config)} SKUs")
+        brands = sku_config.get('brands', {})
+        nappi_count = sum(1 for b in brands.values() if b.get('nappi_skus'))
+        active_count = sum(1 for b in brands.values() if b.get('active', True))
+        print(f"Loaded SKU config: {len(brands)} brands ({nappi_count} Nappi, {active_count} active)")
     else:
         print("No sku_config.json found, using defaults")
 
-    dashboard = build_dashboard_data(data, sku_config)
+    brewery_inv = load_brewery_inventory(base)
+    if brewery_inv:
+        inv_brands = brewery_inv.get('brands', {})
+        print(f"Loaded brewery inventory: {len(inv_brands)} brands (as of {brewery_inv.get('last_updated', '?')})")
+    else:
+        print("No brewery_inventory.json found, skipping brewery on-hand")
+        brewery_inv = {}
+
+    toast_data = load_toast_data(base)
+    if toast_data:
+        t30 = toast_data.get('brunswick', {}).get('trailing_30d', {})
+        n_months = len(toast_data.get('brunswick', {}).get('months', {}))
+        mmm_months = len(toast_data.get('mmm', {}).get('months', {}))
+        print(f"Loaded Toast data: {n_months} Brunswick months, {mmm_months} MMM months (latest: {t30.get('month', '?')})")
+    else:
+        print("No toast_data.json found, skipping tasting room velocity")
+
+    sd_data = load_selfdistro_data(base)
+    if sd_data:
+        sd_months = sorted(sd_data.get('months', {}).keys())
+        print(f"Loaded self-distro data: {len(sd_months)} months (latest: {sd_months[-1] if sd_months else '?'})")
+    else:
+        print("No selfdistro_data.json found, skipping self-distro velocity")
+
+    dashboard = build_dashboard_data(data, sku_config, brewery_inv, toast_data, sd_data)
 
     compact = json.dumps(dashboard, separators=(',', ':'))
     with open(os.path.join(base, 'data', 'dashboard_data.json'), 'w') as f:
         f.write(compact)
     print(f"Dashboard data: {len(compact)/1024:.1f} KB")
 
+    # Print multi-channel summary
+    mc = dashboard.get('multichannel', {})
+    if mc:
+        print(f"\n=== MULTI-CHANNEL VELOCITY (kegs/day) ===")
+        active_brands = [(k, v) for k, v in mc.items() if v.get('total_daily_kegs', 0) > 0]
+        active_brands.sort(key=lambda x: x[1]['total_daily_kegs'], reverse=True)
+        print(f"{'Brand':30s} {'Toast':>8s} {'SelfDist':>8s} {'Total':>8s}")
+        print("-" * 58)
+        for bk, v in active_brands:
+            print(f"  {v.get('display_name', bk):28s} {v['toast_daily_kegs']:8.3f} {v['sd_daily_kegs']:8.3f} {v['total_daily_kegs']:8.3f}")
+
     size = update_dashboard_html(dashboard, os.path.join(base, 'dashboard.html'))
-    print(f"Dashboard HTML updated: {size/1024:.1f} KB")
+    print(f"\nDashboard HTML updated: {size/1024:.1f} KB")
+
+    # Build and update Production Planner
+    planner = build_production_planner_data(dashboard, sku_config, brewery_inv, toast_data, sd_data)
+
+    planner_compact = json.dumps(planner, separators=(',', ':'))
+    with open(os.path.join(base, 'data', 'planner_data.json'), 'w') as f:
+        f.write(planner_compact)
+    print(f"Planner data: {len(planner_compact)/1024:.1f} KB ({len(planner['production_plan'])} brands)")
+
+    planner_html = os.path.join(base, 'production-planner.html')
+    if os.path.exists(planner_html):
+        psize = update_planner_html(planner, planner_html)
+        print(f"Production Planner HTML updated: {psize/1024:.1f} KB")
+
+        # Print production plan summary
+        plan = planner['production_plan']
+        brew_now = [p for p in plan if p['brew_status'] == 'BREW_NOW']
+        plan_soon = [p for p in plan if p['brew_status'] == 'PLAN']
+        print(f"\n=== PRODUCTION PLAN ===")
+        print(f"  BREW NOW: {len(brew_now)} brands")
+        for p in brew_now:
+            print(f"    {p['display_name']:30s}  {p['total_inv_bbl']:5.1f} bbl inv | {p['total_daily_bbl']:.3f} bbl/d | {p['days_until_stockout']}d left | brew by {p['brew_by_date']}")
+        print(f"  PLAN: {len(plan_soon)} brands")
+        for p in plan_soon:
+            print(f"    {p['display_name']:30s}  {p['total_inv_bbl']:5.1f} bbl inv | {p['total_daily_bbl']:.3f} bbl/d | {p['days_until_stockout']}d left | brew by {p['brew_by_date']}")
+    else:
+        print("production-planner.html not found, skipping planner update")
