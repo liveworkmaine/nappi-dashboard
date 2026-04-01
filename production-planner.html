@@ -854,27 +854,41 @@
 
     // STATE
     let currentTab = 'brew-plan';
-    let activeMMMScenario = JSON.parse(sessionStorage.getItem('activeMMMScenario')) || null;
+    let activeMMMScenario = null;
+    try { activeMMMScenario = JSON.parse(sessionStorage.getItem('activeMMMScenario')) || null; } catch(e) {}
 
     // AUTH
     function handleLogin() {
       const pwd = document.getElementById('passwordInput').value;
       if (pwd === 'flightdeck') {
-        sessionStorage.setItem('authenticated', 'true');
+        try { sessionStorage.setItem('authenticated', 'true'); } catch(e) {}
         document.getElementById('authGate').style.display = 'none';
         document.getElementById('mainApp').style.display = 'block';
         init();
       } else {
         document.getElementById('errorMsg').innerText = 'Invalid password';
+        document.getElementById('passwordInput').value = '';
+        document.getElementById('passwordInput').focus();
       }
     }
 
     function checkAuth() {
-      if (sessionStorage.getItem('authenticated') === 'true') {
-        document.getElementById('authGate').style.display = 'none';
-        document.getElementById('mainApp').style.display = 'block';
-      }
+      try {
+        if (sessionStorage.getItem('authenticated') === 'true') {
+          document.getElementById('authGate').style.display = 'none';
+          document.getElementById('mainApp').style.display = 'block';
+          init();
+        }
+      } catch(e) {}
     }
+
+    // Enter key on password field
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('passwordInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') handleLogin();
+      });
+      checkAuth();
+    });
 
     // INIT
     function init() {
