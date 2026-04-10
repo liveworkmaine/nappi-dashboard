@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Deck Brewing — Dashboards</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117; --surface: #1a1d27; --border: #2a2d3a;
+    --text: #e8e9ed; --text2: #8b8fa3;
+    --amber: #f59e0b; --blue: #3b82f6;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Source Sans 3', sans-serif;
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .container {
+    text-align: center; padding: 40px;
+    max-width: 480px;
+  }
+  h1 {
+    font-family: 'Oswald', sans-serif; font-size: 28px;
+    text-transform: uppercase; letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  h1 span { color: var(--amber); }
+  .subtitle {
+    color: var(--text2); font-size: 14px;
+    margin-bottom: 40px;
+  }
+  .links { display: flex; flex-direction: column; gap: 14px; }
+  a.btn {
+    display: block; padding: 14px 24px;
+    border-radius: 8px; text-decoration: none;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 15px; font-weight: 600;
+    transition: all 0.15s;
+  }
+  a.btn.primary {
+    background: var(--amber); color: #000;
+  }
+  a.btn.primary:hover { background: #d97706; }
+  a.btn.secondary {
+    background: var(--surface); color: var(--text);
+    border: 1px solid var(--border);
+  }
+  a.btn.secondary:hover { border-color: var(--blue); color: var(--blue); }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Flight Deck <span>Brewing</span></h1>
+  <p class="subtitle">Dashboard Hub</p>
+  <div class="links">
+    <a class="btn primary" href="dashboard.html">Mission Control Dashboard</a>
+    <a class="btn secondary" href="production-planner.html">Production Planner</a>
+  </div>
+</div>
+</body>
+</html>
