@@ -25,6 +25,9 @@ data/inventory_raw.json
 *.json.key
 service-account*.json
 
+# GitHub Pages deploy clone
+.deploy/
+
 # Editor
 *.swp
 *.swo

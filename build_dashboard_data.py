@@ -983,6 +983,19 @@ def build_production_planner_data(dashboard, sku_config, brewery_inv, toast_data
             elif recent_3[-1] < recent_3[0] * 0.85:
                 trailing_3mo_trend = 'down'
 
+        # Full monthly velocity history (all available months) for seasonality display
+        full_monthly_velocity = []
+        if toast_data:
+            all_months = sorted(toast_data.get('brunswick', {}).get('months', {}).keys())
+            for m in all_months:
+                m_data = toast_data['brunswick']['months'][m].get('brands', {}).get(brand_key)
+                if m_data:
+                    full_monthly_velocity.append({
+                        'month': m,
+                        'daily_kegs': m_data.get('daily_kegs_equiv', 0),
+                        'qty_sold': m_data.get('qty_sold', 0),
+                    })
+
         # Channel allocation when batch finishes
         keg_share = max(channel_pcts.get('toast', 0) + channel_pcts.get('mmm', 0), 30) / 100.0
         case_share = 1.0 - keg_share
@@ -1044,6 +1057,7 @@ def build_production_planner_data(dashboard, sku_config, brewery_inv, toast_data
             'current_month_velocity_bbl': round(total_daily_bbl, 3),
             'same_month_last_year_bbl': same_month_ly_bbl,
             'trailing_3mo_trend': trailing_3mo_trend,
+            'monthly_velocity': full_monthly_velocity,
             'allocation': {
                 'total_bbl': recommended_bbl,
                 'packaging': {'kegs_bbl': kegs_bbl, 'cases_bbl': cases_bbl},
@@ -1109,12 +1123,44 @@ def build_production_planner_data(dashboard, sku_config, brewery_inv, toast_data
             'week': week,
         })
 
+    # Per-brand MMM monthly data for scenario tool
+    mmm_brand_monthly = {}
+    if toast_data:
+        mmm_months_data = toast_data.get('mmm', {}).get('months', {})
+        for month_key, mdata in mmm_months_data.items():
+            for bk, bdata in mdata.get('brands', {}).items():
+                if bk not in mmm_brand_monthly:
+                    mmm_brand_monthly[bk] = {}
+                mmm_brand_monthly[bk][month_key] = {
+                    'qty_sold': bdata.get('qty_sold', 0),
+                    'daily_kegs': bdata.get('daily_kegs_equiv', 0),
+                }
+
+    # Seasonal index: month → velocity multiplier relative to annual average
+    seasonal_index = {}
+    if toast_data:
+        all_months = toast_data.get('brunswick', {}).get('months', {})
+        monthly_totals = {}
+        for m_key, m_data in all_months.items():
+            month_num = m_key[5:7]  # '01', '02', etc.
+            total_kegs = sum(b.get('daily_kegs_equiv', 0) for b in m_data.get('brands', {}).values())
+            if month_num not in monthly_totals:
+                monthly_totals[month_num] = []
+            monthly_totals[month_num].append(total_kegs)
+        if monthly_totals:
+            avg_all = sum(sum(v) / len(v) for v in monthly_totals.values()) / len(monthly_totals)
+            if avg_all > 0:
+                for month_num, vals in monthly_totals.items():
+                    seasonal_index[month_num] = round(sum(vals) / len(vals) / avg_all, 2)
+
     planner = {
         'generated': latest_date,
         'data_freshness': data_freshness,
         'production_plan': production_plan,
         'mmm_2025_actuals': mmm_2025_actuals,
         'mmm_brands': sorted(list(mmm_brands_set)),
+        'mmm_brand_monthly': mmm_brand_monthly,
+        'seasonal_index': seasonal_index,
         'brew_calendar': brew_calendar,
     }
 

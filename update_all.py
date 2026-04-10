@@ -10,22 +10,29 @@ Runs the full data pipeline:
   5. Rebuild dashboard data (via build_dashboard_data.py)
   6. Update dashboard.html and production-planner.html
   7. Log forecast snapshot to data/forecast_log.json
+  8. Deploy to GitHub Pages (liveworkmaine/fd-dashboard)
 
 Usage:
-  python3 update_all.py           # Full refresh
-  python3 update_all.py --skip-fetch  # Skip data fetching, just rebuild
-  python3 update_all.py --dry-run     # Show what would happen without doing it
+  python3 update_all.py               # Full refresh + deploy
+  python3 update_all.py --skip-fetch   # Skip data fetching, just rebuild + deploy
+  python3 update_all.py --no-deploy    # Refresh without deploying
+  python3 update_all.py --deploy-only  # Skip refresh, just deploy current HTML
+  python3 update_all.py --dry-run      # Show what would happen without doing it
 """
 
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
 from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, 'data')
+DEPLOY_DIR = os.path.join(BASE_DIR, '.deploy')
+GITHUB_REPO = 'liveworkmaine/fd-dashboard'
+DEPLOY_FILES = ['dashboard.html', 'production-planner.html', 'index.html']
 
 def log(msg, level='info'):
     """Print timestamped log message."""
@@ -174,9 +181,103 @@ def log_forecast_snapshot():
 
     log(f"Forecast snapshot saved ({len(brands_needing_brew)} brands need brewing)", 'ok')
 
+def find_gh():
+    """Find the gh CLI binary."""
+    for path in ['/opt/homebrew/bin/gh', '/usr/local/bin/gh']:
+        if os.path.exists(path):
+            return path
+    # Fall back to PATH
+    result = subprocess.run(['which', 'gh'], capture_output=True, text=True)
+    if result.returncode == 0:
+        return result.stdout.strip()
+    return None
+
+def deploy_to_github(dry_run=False):
+    """Copy dashboard HTML files to local git repo clone and push to GitHub Pages."""
+    log("Deploying to GitHub Pages...")
+
+    gh = find_gh()
+    if not gh:
+        log("gh CLI not found — install with: brew install gh", 'err')
+        return False
+
+    # Ensure deploy directory exists with a clone
+    if not os.path.exists(os.path.join(DEPLOY_DIR, '.git')):
+        log(f"Cloning {GITHUB_REPO} into .deploy/...")
+        if dry_run:
+            log(f"  Would clone https://github.com/{GITHUB_REPO}.git", 'skip')
+        else:
+            if os.path.exists(DEPLOY_DIR):
+                shutil.rmtree(DEPLOY_DIR)
+            result = subprocess.run(
+                [gh, 'repo', 'clone', GITHUB_REPO, DEPLOY_DIR],
+                capture_output=True, text=True, timeout=60
+            )
+            if result.returncode != 0:
+                log(f"Clone failed: {result.stderr.strip()}", 'err')
+                return False
+            log("Repo cloned", 'ok')
+    else:
+        # Pull latest to avoid conflicts
+        if not dry_run:
+            subprocess.run(['git', 'pull', '--ff-only'], capture_output=True, text=True,
+                          cwd=DEPLOY_DIR, timeout=30)
+
+    # Copy HTML files
+    copied = []
+    for fname in DEPLOY_FILES:
+        src = os.path.join(BASE_DIR, fname)
+        dst = os.path.join(DEPLOY_DIR, fname)
+        if os.path.exists(src):
+            if dry_run:
+                log(f"  Would copy {fname}", 'skip')
+            else:
+                shutil.copy2(src, dst)
+            copied.append(fname)
+        else:
+            log(f"  {fname} not found in project — skipping", 'warn')
+
+    if not copied:
+        log("No files to deploy", 'warn')
+        return False
+
+    if dry_run:
+        log(f"  Would commit and push {len(copied)} files", 'skip')
+        return True
+
+    # Check if there are actual changes
+    status = subprocess.run(['git', 'status', '--porcelain'], capture_output=True, text=True,
+                           cwd=DEPLOY_DIR)
+    if not status.stdout.strip():
+        log("No changes to deploy — dashboards already up to date", 'ok')
+        return True
+
+    # Stage, commit, push
+    subprocess.run(['git', 'add'] + DEPLOY_FILES, capture_output=True, text=True, cwd=DEPLOY_DIR)
+
+    ts = datetime.now().strftime('%Y-%m-%d %H:%M')
+    commit_msg = f"Dashboard update {ts}"
+    result = subprocess.run(['git', 'commit', '-m', commit_msg],
+                           capture_output=True, text=True, cwd=DEPLOY_DIR, timeout=30)
+    if result.returncode != 0:
+        log(f"Commit failed: {result.stderr.strip()}", 'err')
+        return False
+
+    result = subprocess.run(['git', 'push'], capture_output=True, text=True,
+                           cwd=DEPLOY_DIR, timeout=60)
+    if result.returncode != 0:
+        log(f"Push failed: {result.stderr.strip()}", 'err')
+        return False
+
+    log(f"Deployed {len(copied)} files → https://liveworkmaine.github.io/fd-dashboard/", 'ok')
+    return True
+
+
 def main():
     parser = argparse.ArgumentParser(description='Flight Deck Brewing — Full Dashboard Refresh')
     parser.add_argument('--skip-fetch', action='store_true', help='Skip data fetching, just rebuild')
+    parser.add_argument('--no-deploy', action='store_true', help='Skip GitHub Pages deploy')
+    parser.add_argument('--deploy-only', action='store_true', help='Skip refresh, just deploy current HTML')
     parser.add_argument('--dry-run', action='store_true', help='Show what would happen')
     args = parser.parse_args()
 
@@ -185,6 +286,18 @@ def main():
     print("  ║  FLIGHT DECK BREWING — Dashboard Refresh   ║")
     print("  ╚════════════════════════════════════════════╝")
     print()
+
+    # Deploy-only mode: skip the entire pipeline
+    if args.deploy_only:
+        log("Deploy-only mode — skipping data pipeline")
+        ok = deploy_to_github(args.dry_run)
+        if ok:
+            print("\n  ✓ Deploy complete")
+        else:
+            print("\n  ✗ Deploy failed")
+            sys.exit(1)
+        print()
+        return
 
     # Check data freshness before
     freshness = check_data_freshness()
@@ -281,6 +394,15 @@ def main():
         sys.exit(1)
     else:
         print("  ✓ All dashboards updated — open dashboard.html or production-planner.html")
+
+    # Step 8: Deploy to GitHub Pages
+    if not args.no_deploy:
+        print()
+        deploy_ok = deploy_to_github(args.dry_run)
+        if deploy_ok:
+            log("Live at https://liveworkmaine.github.io/fd-dashboard/", 'ok')
+        else:
+            log("Deploy failed — dashboards updated locally but not pushed", 'warn')
     print()
 
 if __name__ == '__main__':

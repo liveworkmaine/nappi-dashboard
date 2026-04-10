@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Deck Brewing - Find Our Beer</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #1c1a17;
+            --gold: #b8860b;
+            --off-white: #f5f3ef;
+            --light-gray: #e8e6e1;
+            --dark-gray: #4a4844;
+            --text: #2c2a27;
+            --border: #d4d1cb;
+            --on-premise: #b8860b;
+            --off-premise: #5a7a8a;
+            --fresh: #2ecc71;
+            --recent: #f39c12;
+            --stale: #e74c3c;
+            --shadow: 0 2px 8px rgba(28, 26, 23, 0.12);
+            --shadow-lg: 0 8px 16px rgba(28, 26, 23, 0.15);
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            color: var(--text);
+            background: var(--off-white);
+            line-height: 1.5;
+        }
+
+        .widget-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid var(--light-gray);
+        }
+
+        .header-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+        }
+
+        .header-tagline {
+            font-size: 15px;
+            color: var(--dark-gray);
+            font-weight: 500;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 28px;
+            padding: 20px;
+            background: var(--off-white);
+            border-radius: 8px;
+            border: 1px solid var(--light-gray);
+        }
+
+        @media (min-width: 600px) {
+            .filter-bar {
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--navy);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 14px;
+            color: var(--text);
+            background: white;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
+        }
+
+        .toggle-filters {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .toggle-btn {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: white;
+            color: var(--text);
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .toggle-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .toggle-btn.active {
+            background: var(--gold);
+            color: white;
+            border-color: var(--gold);
+        }
+
+        /* Map */
+        .map-section {
+            margin-bottom: 32px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        #map {
+            height: 250px;
+            width: 100%;
+            background: var(--light-gray);
+        }
+
+        @media (min-width: 600px) {
+            #map {
+                height: 400px;
+            }
+        }
+
+        .map-footer {
+            padding: 12px 16px;
+            background: var(--off-white);
+            border-top: 1px solid var(--light-gray);
+            font-size: 12px;
+            color: var(--dark-gray);
+            text-align: center;
+        }
+
+        /* Leaflet Overrides */
+        .leaflet-popup-content-wrapper {
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
+            background: white;
+        }
+
+        .leaflet-popup-content {
+            font-family: 'Source Sans 3', sans-serif;
+            color: var(--text);
+            margin: 0;
+        }
+
+        .leaflet-popup-tip {
+            background: white;
+            border: none;
+        }
+
+        /* Location Cards */
+        .locations-container {
+            margin-top: 32px;
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section-header {
+            font-family: 'Oswald', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--light-gray);
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+        }
+
+        .empty-state {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--dark-gray);
+            font-size: 15px;
+        }
+
+        .location-cards {
+            display: grid;
+            gap: 12px;
+        }
+
+        .location-card {
+            padding: 18px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .location-card:hover {
+            border-color: var(--gold);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .location-card.stale {
+            opacity: 0.75;
+            background: var(--off-white);
+        }
+
+        .location-card.highlight {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.2), var(--shadow-lg);
+            animation: pulse 0.6s ease;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.2), var(--shadow-lg);
+            }
+            50% {
+                box-shadow: 0 0 0 6px rgba(184, 134, 11, 0.15), var(--shadow-lg);
+            }
+            100% {
+                box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.2), var(--shadow-lg);
+            }
+        }
+
+        .card-header {
+            margin-bottom: 12px;
+        }
+
+        .card-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+        }
+
+        .card-address {
+            font-size: 14px;
+            color: var(--dark-gray);
+            line-height: 1.4;
+        }
+
+        .card-beers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .beer-badge {
+            display: inline-block;
+            padding: 6px 10px;
+            background: var(--off-white);
+            border: 1px solid var(--light-gray);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .card-freshness {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 12px 0;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .freshness-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .freshness-dot.fresh {
+            background: var(--fresh);
+            box-shadow: 0 0 8px rgba(46, 204, 113, 0.3);
+        }
+
+        .freshness-dot.recent {
+            background: var(--recent);
+            box-shadow: 0 0 8px rgba(243, 156, 18, 0.3);
+        }
+
+        .freshness-dot.stale {
+            background: var(--stale);
+            box-shadow: 0 0 8px rgba(231, 76, 60, 0.3);
+        }
+
+        .card-contact {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid var(--light-gray);
+            gap: 10px;
+        }
+
+        .card-phone {
+            font-size: 13px;
+        }
+
+        .card-phone a {
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .card-phone a:hover {
+            color: var(--navy);
+        }
+
+        .directions-btn {
+            flex-shrink: 0;
+            padding: 8px 14px;
+            background: var(--gold);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Source Sans 3', sans-serif;
+        }
+
+        .directions-btn:hover {
+            background: var(--navy);
+            transform: scale(1.05);
+        }
+
+        /* No results message */
+        .no-results {
+            grid-column: 1 / -1;
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--dark-gray);
+            font-size: 15px;
+        }
+
+        /* Responsive */
+        @media (max-width: 599px) {
+            .widget-container {
+                padding: 16px;
+            }
+
+            .header-title {
+                font-size: 28px;
+            }
+
+            .header-tagline {
+                font-size: 14px;
+            }
+
+            .section-header {
+                font-size: 18px;
+            }
+
+            .card-name {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="widget-container">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="header-title">Find Our Beer</h1>
+            <p class="header-tagline">Find Flight Deck Brewing on tap or in cans near you</p>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label for="cityFilter">City</label>
+                <input
+                    type="text"
+                    id="cityFilter"
+                    placeholder="e.g., Portland, Maine"
+                    autocomplete="off"
+                >
+            </div>
+            <div class="filter-group">
+                <label for="beerFilter">Beer</label>
+                <select id="beerFilter">
+                    <option value="">All Beers</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Location Type</label>
+                <div class="toggle-filters">
+                    <button class="toggle-btn active" data-type="all">All</button>
+                    <button class="toggle-btn" data-type="on_draft">On Draft</button>
+                    <button class="toggle-btn" data-type="in_stores">In Stores</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Section -->
+        <div class="map-section">
+            <div id="map"></div>
+            <div class="map-footer">
+                Data as of <span id="dataDate">March 27, 2026</span>
+            </div>
+        </div>
+
+        <!-- Location Cards -->
+        <div class="locations-container">
+            <div class="section" id="onDraftSection" style="display: none;">
+                <h2 class="section-header">On Draft</h2>
+                <div class="location-cards" id="onDraftCards"></div>
+            </div>
+
+            <div class="section" id="inStoresSection" style="display: none;">
+                <h2 class="section-header">In Stores</h2>
+                <div class="location-cards" id="inStoresCards"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+    <script>
+        // Fallback data structure
+        let WIDGET_DATA = {"report_date":"2026-03-27","generated_at":"2026-03-29 22:21","freshness_threshold_days":21,"on_draft":[{"id":"19596","name":"Bramhall Pub","address":"769 Congress Street","city":"Portland","state":"ME","phone":"207-671-6716","phone_raw":"2076716716","type":"on_premise","products":[{"name":"Real Maine Italian Pilsner","type":"On Draft"}],"last_order":"2026-03-25","days_since_order":2,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"769 CONGRESS STREET, PORTLAND, ME","lat":43.6537888,"lng":-70.2713631},{"id":"20422","name":"Brunswick Diner","address":"101 1/2 Pleasant Street","city":"Brunswick","state":"ME","phone":"207-721-1134","phone_raw":"2077211134","type":"on_premise","products":[{"name":"Wings Hazy IPA","type":"Cans"}],"last_order":"2026-03-26","days_since_order":1,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"101 1/2 PLEASANT STREET, BRUNSWICK, ME","lat":43.9125327,"lng":-69.9839182},{"id":"35035","name":"Freeport Oyster Bar","address":"43 Main Street","city":"Freeport","state":"ME","phone":"609-217-0664","phone_raw":"6092170664","type":"on_premise","products":[{"name":"Plane Beer Pilsner","type":"On Draft"}],"last_order":"2026-03-20","days_since_order":7,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"43 MAIN STREET, FREEPORT, ME","lat":43.8220019,"lng":-70.1086175},{"id":"37560","name":"Great Lost Bear","address":"540 Forest Avenue","city":"Portland","state":"ME","phone":"207-772-0300","phone_raw":"2077720300","type":"on_premise","products":[{"name":"Plane Beer Pilsner","type":"On Draft"},{"name":"Wings Hazy IPA","type":"On Draft"},{"name":"Remove Before Flight","type":"On Draft"},{"name":"Real Maine Italian Pilsner","type":"On Draft"}],"last_order":"2026-03-27","days_since_order":0,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"540 FOREST AVENUE, PORTLAND, ME","lat":43.6679822,"lng":-70.2803084},{"id":"40494","name":"Hobbs Harborside","address":"352 Harbor Road","city":"Wells","state":"ME","phone":"207-646-2200","phone_raw":"2076462200","type":"on_premise","products":[{"name":"Subhunter IPA","type":"On Draft"}],"last_order":"2026-03-26","days_since_order":1,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"352 HARBOR ROAD, WELLS, ME","lat":43.3206127,"lng":-70.5646721},{"id":"78072","name":"Locally Sauced / Yarmouth","address":"30 Forest Falls Drive","city":"Yarmouth","state":"ME","phone":"207-730-0662","phone_raw":"2077300662","type":"on_premise","products":[{"name":"P3 Pale Ale","type":"On Draft"}],"last_order":"2026-03-27","days_since_order":0,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"30 FOREST FALLS DRIVE, YARMOUTH, ME","lat":43.8044043,"lng":-70.1843735},{"id":"57436","name":"Pepper's Landing","address":"147 Bath Road","city":"Brunswick","state":"ME","phone":"207-641-5054","phone_raw":"2076415054","type":"on_premise","products":[{"name":"P3 Pale Ale","type":"On Draft"},{"name":"Remove Before Flight","type":"Cans"}],"last_order":"2026-03-26","days_since_order":1,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"147 BATH ROAD, BRUNSWICK, ME","lat":43.9080425,"lng":-69.9246649},{"id":"60360","name":"Rachel's on the Green","address":"60 Val Halla Road","city":"Cumberland","state":"ME","phone":"207-829-2225","phone_raw":"2078292225","type":"on_premise","products":[{"name":"P3 Pale Ale","type":"On Draft"}],"last_order":"2026-03-20","days_since_order":7,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"60 VAL HALLA ROAD, CUMBERLAND, ME","lat":43.7974229,"lng":-70.2390611},{"id":"63083","name":"Royal River Grill House","address":"106 Lafayette Street","city":"Yarmouth","state":"ME","phone":"207-846-1226","phone_raw":"2078461226","type":"on_premise","products":[{"name":"Real Maine Italian Pilsner","type":"On Draft"}],"last_order":"2026-03-20","days_since_order":7,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"106 LAFAYETTE STREET, YARMOUTH, ME","lat":43.7954645,"lng":-70.1757621},{"id":"74074","name":"Tuscan Bistro","address":"140 Main Street","city":"Freeport","state":"ME","phone":"207-712-2373","phone_raw":"2077122373","type":"on_premise","products":[{"name":"Plane Beer Pilsner","type":"On Draft"}],"last_order":"2026-03-24","days_since_order":3,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"140 MAIN STREET, FREEPORT, ME","lat":43.8588807,"lng":-70.1016033},{"id":"11514","name":"Alisson's Restaurant","address":"11 Dock Square","city":"Kennebunkport","state":"ME","phone":"207-967-4841","phone_raw":"2079674841","type":"on_premise","products":[{"name":"P3 Pale Ale","type":"On Draft"}],"last_order":"2026-03-18","days_since_order":9,"freshness":"recent","freshness_label":"Ordered 9 days ago","directions_query":"11 DOCK SQUARE, KENNEBUNKPORT, ME","lat":43.3617093,"lng":-70.4773145},{"id":"19411","name":"Bolos","address":"7 Dunlap Street","city":"Brunswick","state":"ME","phone":"207-252-4755","phone_raw":"2072524755","type":"on_premise","products":[{"name":"Wings Hazy IPA","type":"On Draft"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"7 DUNLAP STREET, BRUNSWICK, ME","lat":43.9172469,"lng":-69.9654823},{"id":"20433","name":"Brunswick Elks Lodge","address":"2043 179 Park Row","city":"Brunswick","state":"ME","phone":"207-729-9572","phone_raw":"2077299572","type":"on_premise","products":[{"name":"Remove Before Flight","type":"On Draft"}],"last_order":"2026-03-19","days_since_order":8,"freshness":"recent","freshness_label":"Ordered 8 days ago","directions_query":"2043 179 PARK ROW, BRUNSWICK, ME","lat":43.91739,"lng":-69.96493},{"id":"20464","name":"Brunswick Golf Club","address":"165 River Road","city":"Brunswick","state":"ME","phone":"207-725-8224","phone_raw":"2077258224","type":"on_premise","products":[{"name":"Plane Beer Pilsner","type":"On Draft"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"165 RIVER ROAD, BRUNSWICK, ME","lat":43.9165709,"lng":-69.9971152},{"id":"20495","name":"Brunswick Hotel & Tavern","address":"4 Noble Street","city":"Brunswick","state":"ME","phone":"207-837-6566","phone_raw":"2078376566","type":"on_premise","products":[{"name":"Plane Beer Pilsner","type":"On Draft"}],"last_order":"2026-03-19","days_since_order":8,"freshness":"recent","freshness_label":"Ordered 8 days ago","directions_query":"4 NOBLE STREET, BRUNSWICK, ME","lat":43.9110158,"lng":-69.9636552},{"id":"32422","name":"Enoteca Athena","address":"97 Maine Street","city":"Brunswick","state":"ME","phone":"207-729-5260","phone_raw":"2077295260","type":"on_premise","products":[{"name":"Wings Hazy IPA","type":"On Draft"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"97 MAINE STREET, BRUNSWICK, ME","lat":43.9164035,"lng":-69.9654309},{"id":"37498","name":"Great Impasta, the","address":"11 Pleasant Street","city":"Brunswick","state":"ME","phone":"207-841-2543","phone_raw":"2078412543","type":"on_premise","products":[{"name":"P3 Pale Ale","type":"Cans"}],"last_order":"2026-03-18","days_since_order":9,"freshness":"recent","freshness_label":"Ordered 9 days ago","directions_query":"11 PLEASANT STREET, BRUNSWICK, ME","lat":43.9139706,"lng":-69.9663257},{"id":"38250","name":"Gutter Bar,the","address":"129 Main Street","city":"Biddeford","state":"ME","phone":"207-776-0527","phone_raw":"2077760527","type":"on_premise","products":[{"name":"Wings Hazy IPA","type":"On Draft"},{"name":"Remove Before Flight","type":"On Draft"}],"last_order":"2026-03-17","days_since_order":10,"freshness":"recent","freshness_label":"Ordered 10 days ago","directions_query":"129 MAIN STREET, BIDDEFORD, ME","lat":43.492682,"lng":-70.4540246},{"id":"40649","name":"Holiday Inn By the Bay","address":"88 Spring Street","city":"Portland","state":"ME","phone":"207-775-2311","phone_raw":"2077752311","type":"on_premise","products":[{"name":"Plane Beer Pilsner","type":"On Draft"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"88 SPRING STREET, PORTLAND, ME","lat":43.6536035,"lng":-70.2604112},{"id":"50813","name":"Lazzari","address":"618 Congress Street","city":"Portland","state":"ME","phone":"207-415-3039","phone_raw":"2074153039","type":"on_premise","products":[{"name":"Remove Before Flight","type":"On Draft"}],"last_order":"2026-03-12","days_since_order":15,"freshness":"recent","freshness_label":"Ordered 15 days ago","directions_query":"618 CONGRESS STREET, PORTLAND, ME","lat":43.65952,"lng":-70.25632},{"id":"46113","name":"Links @ Outlook Golf","address":"310 Portland Street Rte 4","city":"South Berwick","state":"ME","phone":"207-384-4653","phone_raw":"2073844653","type":"on_premise","products":[{"name":"Remove Before Flight","type":"On Draft"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"310 PORTLAND STREET RTE 4, SOUTH BERWICK, ME","lat":43.23007,"lng":-70.81062},{"id":"49297","name":"Margarita's / Brunswick","address":"147 Bath Road Ste A220","city":"Brunswick","state":"ME","phone":"207-215-7400","phone_raw":"2072157400","type":"on_premise","products":[{"name":"Wings Hazy IPA","type":"On Draft"}],"last_order":"2026-03-12","days_since_order":15,"freshness":"recent","freshness_label":"Ordered 15 days ago","directions_query":"147 BATH ROAD STE A220, BRUNSWICK, ME","lat":43.91356,"lng":-69.96744},{"id":"50871","name":"Mick's Sports Bar","address":"420 Elm Street","city":"Biddeford","state":"ME","phone":"207-252-4770","phone_raw":"2072524770","type":"on_premise","products":[{"name":"Wings Hazy IPA","type":"Cans"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"420 ELM STREET, BIDDEFORD, ME","lat":43.48989,"lng":-70.45177},{"id":"56950","name":"Pat's Pizza / Brunswick","address":"112 Pleasant Street","city":"Brunswick","state":"ME","phone":"207-837-9942","phone_raw":"2078379942","type":"on_premise","products":[{"name":"P3 Pale Ale","type":"Cans"}],"last_order":"2026-03-18","days_since_order":9,"freshness":"recent","freshness_label":"Ordered 9 days ago","directions_query":"112 PLEASANT STREET, BRUNSWICK, ME","lat":43.91547,"lng":-69.96328},{"id":"65366","name":"Pomelia","address":"16 Station Avenue Ste 1","city":"Brunswick","state":"ME","phone":"207-721-0403","phone_raw":"2077210403","type":"on_premise","products":[{"name":"P3 Pale Ale","type":"On Draft"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"16 STATION AVENUE STE 1, BRUNSWICK, ME","lat":43.91458,"lng":-69.96443},{"id":"59095","name":"Portland Beer Hub","address":"320 Fore Street","city":"Portland","state":"ME","phone":"207-536-4070","phone_raw":"2075364070","type":"on_premise","products":[{"name":"Plane Beer Pilsner","type":"On Draft"}],"last_order":"2026-03-13","days_since_order":14,"freshness":"recent","freshness_label":"Ordered 14 days ago","directions_query":"320 FORE STREET, PORTLAND, ME","lat":43.65632,"lng":-70.25542},{"id":"67504","name":"Smitty's / Sanford","address":"1327 Main Street","city":"Sanford","state":"ME","phone":"207-490-2148","phone_raw":"2074902148","type":"on_premise","products":[{"name":"P3 Pale Ale","type":"On Draft"}],"last_order":"2026-03-18","days_since_order":9,"freshness":"recent","freshness_label":"Ordered 9 days ago","directions_query":"1327 MAIN STREET, SANFORD, ME","lat":43.44119,"lng":-70.77725},{"id":"67555","name":"Smoked Bbq / Portland","address":"949 Forest Avenue","city":"Portland","state":"ME","phone":"207-310-3859","phone_raw":"2073103859","type":"on_premise","products":[{"name":"Subhunter IPA","type":"On Draft"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"949 FOREST AVENUE, PORTLAND, ME","lat":43.65826,"lng":-70.25851},{"id":"68065","name":"Sopo Seafood / Sp 171b Ocean Street","address":"","city":"South Portland","state":"ME","phone":"876-282-7676","phone_raw":"8762827676","type":"on_premise","products":[{"name":"Wings Hazy IPA","type":"On Draft"}],"last_order":"2026-03-18","days_since_order":9,"freshness":"recent","freshness_label":"Ordered 9 days ago","directions_query":"SOUTH PORTLAND, ME","lat":43.63894,"lng":-70.2408}],"in_stores":[{"id":"22571","name":"Carl's Meat Market","address":"25 State Road","city":"Kittery","state":"ME","phone":"207-332-7916","phone_raw":"2073327916","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"}],"last_order":"2026-03-27","days_since_order":0,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"25 STATE ROAD, KITTERY, ME","lat":43.08589,"lng":-70.7342},{"id":"25067","name":"City Tobacco & Beverage C","address":"44 River Street","city":"Sanford","state":"ME","phone":"603-817-4628","phone_raw":"6038174628","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"},{"name":"Subhunter IPA","type":"Cans"},{"name":"Wings Hazy IPA","type":"Cans"},{"name":"Remove Before Flight","type":"Cans"}],"last_order":"2026-03-25","days_since_order":2,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"44 RIVER STREET, SANFORD, ME","lat":43.43823,"lng":-70.77306},{"id":"25639","name":"Coastal Dis. Bev. & Red.","address":"559 Elm Street","city":"Biddeford","state":"ME","phone":"207-284-2241","phone_raw":"2072842241","type":"off_premise","products":[{"name":"Wings Hazy IPA","type":"Cans"}],"last_order":"2026-03-25","days_since_order":2,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"559 ELM STREET, BIDDEFORD, ME","lat":43.49336,"lng":-70.45415},{"id":"29446","name":"Depot, the","address":"146 Pleasant Street","city":"Springvale","state":"ME","phone":"000-000-0000","phone_raw":"0000000000","type":"off_premise","products":[{"name":"Wings Hazy IPA","type":"Cans"}],"last_order":"2026-03-25","days_since_order":2,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"146 PLEASANT STREET, SPRINGVALE, ME","lat":43.46754,"lng":-70.79271},{"id":"37374","name":"Gray Mobil","address":"1 Portland Road","city":"Gray","state":"ME","phone":"207-657-5090","phone_raw":"2076575090","type":"off_premise","products":[{"name":"Subhunter IPA","type":"Cans"}],"last_order":"2026-03-23","days_since_order":4,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"1 PORTLAND ROAD, GRAY, ME","lat":43.88573,"lng":-70.33187},{"id":"37343","name":"Gray Shop N Save","address":"35 Portland Road","city":"Gray","state":"ME","phone":"207-657-3346","phone_raw":"2076573346","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"},{"name":"Subhunter IPA","type":"Cans"},{"name":"Wings Hazy IPA","type":"Cans"},{"name":"Plane Beer Pilsner","type":"Cans"},{"name":"Remove Before Flight","type":"Cans"}],"last_order":"2026-03-24","days_since_order":3,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"35 PORTLAND ROAD, GRAY, ME","lat":43.88657,"lng":-70.33344},{"id":"38609","name":"Hannaford / Cooks Bruns","address":"8 Gurnet Road Suite 1","city":"Brunswick","state":"ME","phone":"207-725-8701","phone_raw":"2077258701","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"},{"name":"Subhunter IPA","type":"Cans"},{"name":"Wings Hazy IPA","type":"Cans"}],"last_order":"2026-03-26","days_since_order":1,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"8 GURNET ROAD SUITE 1, BRUNSWICK, ME","lat":43.91457,"lng":-69.96575},{"id":"38610","name":"Hannaford / Elm Bruns","address":"35 Elm St","city":"Brunswick","state":"ME","phone":"207-725-8701","phone_raw":"2077258701","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"},{"name":"Subhunter IPA","type":"Cans"},{"name":"Wings Hazy IPA","type":"Cans"}],"last_order":"2026-03-26","days_since_order":1,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"35 ELM ST, BRUNSWICK, ME","lat":43.91703,"lng":-69.96597},{"id":"39060","name":"Hannaford / So Portland","address":"50 Cottage Rd","city":"South Portland","state":"ME","phone":"207-799-7359","phone_raw":"2077997359","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"},{"name":"Wings Hazy IPA","type":"Cans"}],"last_order":"2026-03-20","days_since_order":7,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"50 COTTAGE RD, SOUTH PORTLAND, ME","lat":43.63952,"lng":-70.24302},{"id":"39225","name":"Hannaford / Yarmouth","address":"756 Us Route 1","city":"Yarmouth","state":"ME","phone":"207-846-5941","phone_raw":"2078465941","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"},{"name":"Subhunter IPA","type":"Cans"},{"name":"Wings Hazy IPA","type":"Cans"}],"last_order":"2026-03-27","days_since_order":0,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"756 US ROUTE 1, YARMOUTH, ME","lat":43.80217,"lng":-70.18958},{"id":"44152","name":"Kittery Food Mart","address":"2 Shapleigh Road","city":"Kittery","state":"ME","phone":"617-620-3307","phone_raw":"6176203307","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"}],"last_order":"2026-03-20","days_since_order":7,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"2 SHAPLEIGH ROAD, KITTERY, ME","lat":43.08978,"lng":-70.73322},{"id":"54081","name":"Oak Hill Beverage","address":"29 Gorham Road, St E","city":"Scarborough","state":"ME","phone":"207-383-5328","phone_raw":"2073835328","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"},{"name":"Subhunter IPA","type":"Cans"},{"name":"Wings Hazy IPA","type":"Cans"}],"last_order":"2026-03-24","days_since_order":3,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"29 GORHAM ROAD, ST E, SCARBOROUGH, ME","lat":43.57719,"lng":-70.32364},{"id":"55042","name":"Old Port Spirit & Cigars","address":"79 Commercial Street","city":"Portland","state":"ME","phone":"207-828-2337","phone_raw":"2078282337","type":"off_premise","products":[{"name":"Wings Hazy IPA","type":"Cans"},{"name":"Plane Beer Pilsner","type":"Cans"}],"last_order":"2026-03-23","days_since_order":4,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"79 COMMERCIAL STREET, PORTLAND, ME","lat":43.66047,"lng":-70.25608},{"id":"41393","name":"Pond Cove Iga","address":"339 Ocean House Road","city":"Cape Elizabeth","state":"ME","phone":"207-799-3541","phone_raw":"2077993541","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"},{"name":"Subhunter IPA","type":"Cans"},{"name":"Wings Hazy IPA","type":"Cans"},{"name":"Plane Beer Pilsner","type":"Cans"},{"name":"Remove Before Flight","type":"Cans"}],"last_order":"2026-03-25","days_since_order":2,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"339 OCEAN HOUSE ROAD, CAPE ELIZABETH, ME","lat":43.56437,"lng":-70.20041},{"id":"63145","name":"Rsvp","address":"887 Forest Ave","city":"Portland","state":"ME","phone":"207-773-8808","phone_raw":"2077738808","type":"off_premise","products":[{"name":"Remove Before Flight","type":"Cans"}],"last_order":"2026-03-27","days_since_order":0,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"887 FOREST AVE, PORTLAND, ME","lat":43.65766,"lng":-70.25809},{"id":"67999","name":"Sonny's Convenience Store","address":"301 Middle Rd","city":"Lyman","state":"ME","phone":"207-229-1423","phone_raw":"2072291423","type":"off_premise","products":[{"name":"Remove Before Flight","type":"Cans"}],"last_order":"2026-03-25","days_since_order":2,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"301 MIDDLE RD, LYMAN, ME","lat":43.46978,"lng":-70.646},{"id":"74229","name":"Ufo","address":"639 Roosevelt Trail","city":"Naples","state":"ME","phone":"207-693-3988","phone_raw":"2076933988","type":"off_premise","products":[{"name":"Subhunter IPA","type":"Cans"},{"name":"Wings Hazy IPA","type":"Cans"},{"name":"Remove Before Flight","type":"Cans"}],"last_order":"2026-03-20","days_since_order":7,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"639 ROOSEVELT TRAIL, NAPLES, ME","lat":43.97162,"lng":-70.59028},{"id":"78859","name":"Zach's Country Store","address":"641 Gurnet Road","city":"Brunswick","state":"ME","phone":"207-725-2821","phone_raw":"2077252821","type":"off_premise","products":[{"name":"Subhunter IPA","type":"Cans"},{"name":"Plane Beer Pilsner","type":"Cans"},{"name":"Remove Before Flight","type":"Cans"},{"name":"P3 Pale Ale","type":"Cans"}],"last_order":"2026-03-26","days_since_order":1,"freshness":"fresh","freshness_label":"Ordered this week","directions_query":"641 GURNET ROAD, BRUNSWICK, ME","lat":43.91656,"lng":-69.96755},{"id":"10665","name":"7-eleven / Kittery","address":"169 State Road","city":"Kittery","state":"ME","phone":"708-370-1232","phone_raw":"7083701232","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"},{"name":"Subhunter IPA","type":"Cans"},{"name":"Wings Hazy IPA","type":"Cans"},{"name":"Plane Beer Pilsner","type":"Cans"},{"name":"Remove Before Flight","type":"Cans"}],"last_order":"2026-03-18","days_since_order":9,"freshness":"recent","freshness_label":"Ordered 9 days ago","directions_query":"169 STATE ROAD, KITTERY, ME","lat":43.09098,"lng":-70.73342},{"id":"12371","name":"Anania's / Wash Ave","address":"606 Washington Avenue","city":"Portland","state":"ME","phone":"207-774-8512","phone_raw":"2077748512","type":"off_premise","products":[{"name":"Plane Beer Pilsner","type":"Cans"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"606 WASHINGTON AVENUE, PORTLAND, ME","lat":43.66166,"lng":-70.25467},{"id":"12773","name":"Anthony's Food Shop","address":"679 Route 1","city":"York","state":"ME","phone":"207-337-1439","phone_raw":"2073371439","type":"off_premise","products":[{"name":"Wings Hazy IPA","type":"Cans"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"679 ROUTE 1, YORK, ME","lat":43.16056,"lng":-70.64808},{"id":"13978","name":"Bailey Isl Gen Store","address":"2124 Harpswell Road","city":"Bailey Island","state":"ME","phone":"207-833-2400","phone_raw":"2078332400","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"}],"last_order":"2026-03-18","days_since_order":9,"freshness":"recent","freshness_label":"Ordered 9 days ago","directions_query":"2124 HARPSWELL ROAD, BAILEY ISLAND, ME","lat":43.74197,"lng":-69.99422},{"id":"19350","name":"Bow Street / Freeport","address":"79 Bow Street","city":"Freeport","state":"ME","phone":"207-865-6631","phone_raw":"2078656631","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"}],"last_order":"2026-03-13","days_since_order":14,"freshness":"recent","freshness_label":"Ordered 14 days ago","directions_query":"79 BOW STREET, FREEPORT, ME","lat":43.8601,"lng":-70.10367},{"id":"19319","name":"Bow Street / Portland","address":"495 Forest Avenue","city":"Portland","state":"ME","phone":"207-228-2024","phone_raw":"2072282024","type":"off_premise","products":[{"name":"Wings Hazy IPA","type":"Cans"}],"last_order":"2026-03-17","days_since_order":10,"freshness":"recent","freshness_label":"Ordered 10 days ago","directions_query":"495 FOREST AVENUE, PORTLAND, ME","lat":43.65779,"lng":-70.25514},{"id":"27162","name":"Cousins Beverage & Redemp","address":"109 Bath Road","city":"Brunswick","state":"ME","phone":"207-576-3839","phone_raw":"2075763839","type":"off_premise","products":[{"name":"Subhunter IPA","type":"Cans"}],"last_order":"2026-03-19","days_since_order":8,"freshness":"recent","freshness_label":"Ordered 8 days ago","directions_query":"109 BATH ROAD, BRUNSWICK, ME","lat":43.91676,"lng":-69.96638},{"id":"29694","name":"Dipietro's Market/so.port","address":"385 Cottage Rd","city":"South Portland","state":"ME","phone":"207-252-8699","phone_raw":"2072528699","type":"off_premise","products":[{"name":"Subhunter IPA","type":"Cans"},{"name":"P3 Pale Ale","type":"Cans"}],"last_order":"2026-03-18","days_since_order":9,"freshness":"recent","freshness_label":"Ordered 9 days ago","directions_query":"385 COTTAGE RD, SOUTH PORTLAND, ME","lat":43.63965,"lng":-70.24051},{"id":"30035","name":"Doherty No.freeport Store","address":"130 Wardtown Road","city":"Freeport","state":"ME","phone":"207-865-4429","phone_raw":"2078654429","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"}],"last_order":"2026-03-17","days_since_order":10,"freshness":"recent","freshness_label":"Ordered 10 days ago","directions_query":"130 WARDTOWN ROAD, FREEPORT, ME","lat":43.85844,"lng":-70.10196},{"id":"34247","name":"Food Stop","address":"318 Main Street","city":"Cumberland","state":"ME","phone":"207-829-3250","phone_raw":"2078293250","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"},{"name":"Plane Beer Pilsner","type":"Cans"},{"name":"Remove Before Flight","type":"Cans"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"318 MAIN STREET, CUMBERLAND, ME","lat":43.79383,"lng":-70.25788},{"id":"35208","name":"Fresh Approach Ii","address":"155 Brackett Street","city":"Portland","state":"ME","phone":"207-749-4371","phone_raw":"2077494371","type":"off_premise","products":[{"name":"Plane Beer Pilsner","type":"Cans"}],"last_order":"2026-03-19","days_since_order":8,"freshness":"recent","freshness_label":"Ordered 8 days ago","directions_query":"155 BRACKETT STREET, PORTLAND, ME","lat":43.66138,"lng":-70.25903},{"id":"35269","name":"Friendly Discount/westbrk","address":"922 Main Street","city":"Westbrook","state":"ME","phone":"207-856-2779","phone_raw":"2078562779","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"},{"name":"Subhunter IPA","type":"Cans"},{"name":"Wings Hazy IPA","type":"Cans"},{"name":"Plane Beer Pilsner","type":"Cans"},{"name":"Remove Before Flight","type":"Cans"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"922 MAIN STREET, WESTBROOK, ME","lat":43.67799,"lng":-70.37203},{"id":"36909","name":"Goodwins Mills Gen Store","address":"480 Goodwins Mills Road","city":"Lyman","state":"ME","phone":"714-681-8011","phone_raw":"7146818011","type":"off_premise","products":[{"name":"Wings Hazy IPA","type":"Cans"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"480 GOODWINS MILLS ROAD, LYMAN, ME","lat":43.46878,"lng":-70.64377},{"id":"40943","name":"Hops & Vine Craft Beer","address":"102 Main Street","city":"Gorham","state":"ME","phone":"207-222-0122","phone_raw":"2072220122","type":"off_premise","products":[{"name":"Wings Hazy IPA","type":"Cans"},{"name":"Remove Before Flight","type":"Cans"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"102 MAIN STREET, GORHAM, ME","lat":43.68026,"lng":-70.4465},{"id":"42199","name":"J.d.'s Package Store, Inc","address":"13 Sokokis Trail","city":"East Waterboro","state":"ME","phone":"207-247-3991","phone_raw":"2072473991","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"},{"name":"Subhunter IPA","type":"Cans"},{"name":"Remove Before Flight","type":"Cans"}],"last_order":"2026-03-18","days_since_order":9,"freshness":"recent","freshness_label":"Ordered 9 days ago","directions_query":"13 SOKOKIS TRAIL, EAST WATERBORO, ME","lat":43.56356,"lng":-70.73004},{"id":"42416","name":"Jaky's","address":"328 South Street","city":"Biddeford","state":"ME","phone":"207-283-9456","phone_raw":"2072839456","type":"off_premise","products":[{"name":"Wings Hazy IPA","type":"Cans"}],"last_order":"2026-03-17","days_since_order":10,"freshness":"recent","freshness_label":"Ordered 10 days ago","directions_query":"328 SOUTH STREET, BIDDEFORD, ME","lat":43.49002,"lng":-70.45352},{"id":"42664","name":"Jetport Gas & Convenience","address":"446 Western Avenue","city":"South Portland","state":"ME","phone":"207-774-2433","phone_raw":"2077742433","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"}],"last_order":"2026-03-19","days_since_order":8,"freshness":"recent","freshness_label":"Ordered 8 days ago","directions_query":"446 WESTERN AVENUE, SOUTH PORTLAND, ME","lat":43.64182,"lng":-70.2396},{"id":"43005","name":"Joe's Super Variety","address":"665 Congress Street","city":"Portland","state":"ME","phone":"207-272-2479","phone_raw":"2072722479","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"665 CONGRESS STREET, PORTLAND, ME","lat":43.66,"lng":-70.257},{"id":"45578","name":"Lil' General Store","address":"8 Country Club Road","city":"Sanford","state":"ME","phone":"617-861-7154","phone_raw":"6178617154","type":"off_premise","products":[{"name":"Wings Hazy IPA","type":"Cans"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"8 COUNTRY CLUB ROAD, SANFORD, ME","lat":43.44074,"lng":-70.77189},{"id":"46144","name":"Link's Variety","address":"1046 Lewiston Road","city":"New Gloucester","state":"ME","phone":"334-401-8718","phone_raw":"3344018718","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"},{"name":"Subhunter IPA","type":"Cans"},{"name":"Remove Before Flight","type":"Cans"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"1046 LEWISTON ROAD, NEW GLOUCESTER, ME","lat":43.96404,"lng":-70.3061},{"id":"48108","name":"Madden Beverage","address":"335 North Street","city":"Saco","state":"ME","phone":"207-282-8720","phone_raw":"2072828720","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"},{"name":"Wings Hazy IPA","type":"Cans"},{"name":"Remove Before Flight","type":"Cans"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"335 NORTH STREET, SACO, ME","lat":43.50239,"lng":-70.4449},{"id":"38180","name":"Main St Convenience","address":"624 Main Street","city":"Springvale","state":"ME","phone":"207-850-1077","phone_raw":"2078501077","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"}],"last_order":"2026-03-18","days_since_order":9,"freshness":"recent","freshness_label":"Ordered 9 days ago","directions_query":"624 MAIN STREET, SPRINGVALE, ME","lat":43.46598,"lng":-70.79157},{"id":"51204","name":"Milly's Market","address":"201 Federal Street Ste a","city":"Portland","state":"ME","phone":"207-740-4332","phone_raw":"2077404332","type":"off_premise","products":[{"name":"Wings Hazy IPA","type":"Cans"},{"name":"Plane Beer Pilsner","type":"Cans"}],"last_order":"2026-03-19","days_since_order":8,"freshness":"recent","freshness_label":"Ordered 8 days ago","directions_query":"201 FEDERAL STREET STE A, PORTLAND, ME","lat":43.66145,"lng":-70.25917},{"id":"56928","name":"Pat's Meat Market","address":"484 Stevens Avenue","city":"Portland","state":"ME","phone":"207-831-7532","phone_raw":"2078317532","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"},{"name":"Wings Hazy IPA","type":"Cans"},{"name":"Plane Beer Pilsner","type":"Cans"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"484 STEVENS AVENUE, PORTLAND, ME","lat":43.66069,"lng":-70.25847},{"id":"56897","name":"Patman's","address":"95 Tandberg Trail","city":"North Windham","state":"ME","phone":"207-699-6871","phone_raw":"2076996871","type":"off_premise","products":[{"name":"Wings Hazy IPA","type":"Cans"},{"name":"Plane Beer Pilsner","type":"Cans"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"95 TANDBERG TRAIL, NORTH WINDHAM, ME","lat":43.83887,"lng":-70.42984},{"id":"58518","name":"Plummer's Shop 'n Save","address":"235 Parker Farm Road","city":"Buxton","state":"ME","phone":"207-727-3126","phone_raw":"2077273126","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"235 PARKER FARM ROAD, BUXTON, ME","lat":43.63702,"lng":-70.52582},{"id":"59096","name":"Portland Beer Hub /off","address":"320 Fore Street","city":"Portland","state":"ME","phone":"207-536-4070","phone_raw":"2075364070","type":"off_premise","products":[{"name":"Plane Beer Pilsner","type":"Cans"}],"last_order":"2026-03-13","days_since_order":14,"freshness":"recent","freshness_label":"Ordered 14 days ago","directions_query":"320 FORE STREET, PORTLAND, ME","lat":43.66082,"lng":-70.25934},{"id":"60639","name":"Ray's Market","address":"110 West St","city":"Biddeford","state":"ME","phone":"207-284-7664","phone_raw":"2072847664","type":"off_premise","products":[{"name":"Wings Hazy IPA","type":"Cans"}],"last_order":"2026-03-17","days_since_order":10,"freshness":"recent","freshness_label":"Ordered 10 days ago","directions_query":"110 WEST ST, BIDDEFORD, ME","lat":43.49256,"lng":-70.45216},{"id":"62004","name":"Riverton Gas & Store","address":"1585 Forest Ave","city":"Portland","state":"ME","phone":"207-409-6615","phone_raw":"2074096615","type":"off_premise","products":[{"name":"Wings Hazy IPA","type":"Cans"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"1585 FOREST AVE, PORTLAND, ME","lat":43.65741,"lng":-70.25548},{"id":"63698","name":"Rusty Lantern / Bath Rd","address":"142 Bath Road","city":"Brunswick","state":"ME","phone":"207-835-5870","phone_raw":"2078355870","type":"off_premise","products":[{"name":"Plane Beer Pilsner","type":"Cans"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"142 BATH ROAD, BRUNSWICK, ME","lat":43.91372,"lng":-69.96679},{"id":"63703","name":"Rusty Lantern / Cumber","address":"181 Gray Road","city":"Cumberland","state":"ME","phone":"207-835-5776","phone_raw":"2078355776","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"},{"name":"Subhunter IPA","type":"Cans"},{"name":"Wings Hazy IPA","type":"Cans"},{"name":"Remove Before Flight","type":"Cans"}],"last_order":"2026-03-16","days_since_order":11,"freshness":"recent","freshness_label":"Ordered 11 days ago","directions_query":"181 GRAY ROAD, CUMBERLAND, ME","lat":43.79765,"lng":-70.25443},{"id":"28136","name":"Rusty Lantern / Kennebunk","address":"3 Alfred Road","city":"Kennebunk","state":"ME","phone":"207-985-7787","phone_raw":"2079857787","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"},{"name":"Wings Hazy IPA","type":"Cans"}],"last_order":"2026-03-13","days_since_order":14,"freshness":"recent","freshness_label":"Ordered 14 days ago","directions_query":"3 ALFRED ROAD, KENNEBUNK, ME","lat":43.38419,"lng":-70.5419},{"id":"65705","name":"Sea Star Market","address":"584 Pool Street","city":"Biddeford","state":"ME","phone":"207-286-3022","phone_raw":"2072863022","type":"off_premise","products":[{"name":"Wings Hazy IPA","type":"Cans"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"584 POOL STREET, BIDDEFORD, ME","lat":43.49396,"lng":-70.45053},{"id":"63052","name":"Stop N Go / Eliot","address":"806 Harold Dow Highway","city":"Eliot","state":"ME","phone":"508-733-5849","phone_raw":"5087335849","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"},{"name":"Subhunter IPA","type":"Cans"},{"name":"Wings Hazy IPA","type":"Cans"},{"name":"Remove Before Flight","type":"Cans"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"806 HAROLD DOW HIGHWAY, ELIOT, ME","lat":43.15444,"lng":-70.79949},{"id":"72958","name":"Tnt Quickstop Llc","address":"601 Main Street","city":"Gorham","state":"ME","phone":"207-329-5967","phone_raw":"2073295967","type":"off_premise","products":[{"name":"P3 Pale Ale","type":"Cans"},{"name":"Wings Hazy IPA","type":"Cans"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"601 MAIN STREET, GORHAM, ME","lat":43.67752,"lng":-70.44281},{"id":"76926","name":"Westbrook Market","address":"28 Stroudwater Street","city":"Westbrook","state":"ME","phone":"207-854-2111","phone_raw":"2078542111","type":"off_premise","products":[{"name":"Subhunter IPA","type":"Cans"},{"name":"Wings Hazy IPA","type":"Cans"},{"name":"Remove Before Flight","type":"Cans"}],"last_order":"2026-03-11","days_since_order":16,"freshness":"recent","freshness_label":"Ordered 16 days ago","directions_query":"28 STROUDWATER STREET, WESTBROOK, ME","lat":43.67626,"lng":-70.3709}],"beers":["P3 Pale Ale","Plane Beer Pilsner","Real Maine Italian Pilsner","Remove Before Flight","Subhunter IPA","Wings Hazy IPA"],"total_locations":83};
+
+        // State
+        let allLocations = [];
+        let allBeers = [];
+        let map = null;
+        let markers = {};
+        let currentFilter = {
+            city: '',
+            beer: '',
+            type: 'all'
+        };
+
+        // Initialize
+        async function init() {
+            try {
+                // Try to fetch data from widget_data.json
+                const response = await fetch('data/widget_data.json');
+                if (response.ok) {
+                    WIDGET_DATA = await response.json();
+                } else {
+                    console.warn('widget_data.json not found, using embedded data');
+                }
+            } catch (e) {
+                console.warn('Could not fetch widget_data.json:', e);
+            }
+
+            if (!WIDGET_DATA) {
+                console.error('No widget data available');
+                return;
+            }
+
+            // Populate data
+            allLocations = [...(WIDGET_DATA.on_draft || []), ...(WIDGET_DATA.in_stores || [])];
+            allBeers = WIDGET_DATA.beers || [];
+
+            // Set data date
+            if (WIDGET_DATA.report_date) {
+                // Parse date parts to avoid timezone offset issues
+                const [year, month, day] = WIDGET_DATA.report_date.split('-').map(Number);
+                const date = new Date(year, month - 1, day);
+                const formatter = new Intl.DateTimeFormat('en-US', {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+                document.getElementById('dataDate').textContent = formatter.format(date);
+            }
+
+            // Setup UI
+            setupBeerFilter();
+            setupToggleButtons();
+            setupMapAndCards();
+            setupEventListeners();
+
+            // Initial render
+            filterAndRender();
+        }
+
+        function setupBeerFilter() {
+            const select = document.getElementById('beerFilter');
+            allBeers.forEach(beer => {
+                const option = document.createElement('option');
+                option.value = beer;
+                option.textContent = beer;
+                select.appendChild(option);
+            });
+        }
+
+        function setupToggleButtons() {
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter.type = btn.dataset.type;
+                    filterAndRender();
+                });
+            });
+        }
+
+        function setupMapAndCards() {
+            // Initialize map
+            map = L.map('map').setView([43.65, -70.25], 9);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(map);
+        }
+
+        function setupEventListeners() {
+            document.getElementById('cityFilter').addEventListener('input', (e) => {
+                currentFilter.city = e.target.value.toLowerCase();
+                filterAndRender();
+            });
+
+            document.getElementById('beerFilter').addEventListener('change', (e) => {
+                currentFilter.beer = e.target.value;
+                filterAndRender();
+            });
+        }
+
+        function getLocationsByType(locations, type) {
+            if (type === 'on_draft') {
+                return locations.filter(l => WIDGET_DATA.on_draft.some(d => d.name === l.name && d.city === l.city));
+            }
+            if (type === 'in_stores') {
+                return locations.filter(l => WIDGET_DATA.in_stores.some(d => d.name === l.name && d.city === d.city));
+            }
+            return locations;
+        }
+
+        function filterAndRender() {
+            let filtered = allLocations;
+
+            // Filter by type
+            if (currentFilter.type !== 'all') {
+                filtered = getLocationsByType(filtered, currentFilter.type);
+            }
+
+            // Filter by city
+            if (currentFilter.city) {
+                filtered = filtered.filter(loc =>
+                    loc.city.toLowerCase().includes(currentFilter.city) ||
+                    loc.state.toLowerCase().includes(currentFilter.city)
+                );
+            }
+
+            // Filter by beer
+            if (currentFilter.beer) {
+                filtered = filtered.filter(loc =>
+                    loc.products.some(p => p.name === currentFilter.beer)
+                );
+            }
+
+            // Sort: fresh/recent first, then stale
+            filtered.sort((a, b) => {
+                const freshnessOrder = { fresh: 0, recent: 1, stale: 2 };
+                const aOrder = freshnessOrder[a.freshness] || 3;
+                const bOrder = freshnessOrder[b.freshness] || 3;
+                if (aOrder !== bOrder) return aOrder - bOrder;
+                return a.name.localeCompare(b.name);
+            });
+
+            renderMap(filtered);
+            renderCards(filtered);
+        }
+
+        function renderMap(locations) {
+            // Clear existing markers
+            Object.values(markers).forEach(marker => map.removeLayer(marker));
+            markers = {};
+
+            if (locations.length === 0) {
+                return;
+            }
+
+            // Add markers
+            locations.forEach(loc => {
+                const color = WIDGET_DATA.on_draft.some(d => d.name === loc.name && d.city === loc.city)
+                    ? '#b8860b'
+                    : '#5a7a8a';
+
+                const marker = L.circleMarker([loc.lat, loc.lng], {
+                    radius: 8,
+                    fillColor: color,
+                    color: color,
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                }).addTo(map);
+
+                markers[`${loc.name}|${loc.city}`] = marker;
+
+                marker.bindPopup(createPopupContent(loc));
+                marker.on('click', () => {
+                    highlightCard(`${loc.name}|${loc.city}`);
+                    marker.openPopup();
+                });
+            });
+
+            // Fit bounds
+            if (locations.length > 0) {
+                const bounds = L.latLngBounds(locations.map(l => [l.lat, l.lng]));
+                map.fitBounds(bounds, { padding: [50, 50] });
+            }
+        }
+
+        function createPopupContent(loc) {
+            const beers = loc.products.map(p => `<strong>${p.name}</strong> (${p.type})`).join('<br>');
+            const freshness = createFreshnessHTML(loc);
+            const directionsLink = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(loc.directions_query)}`;
+
+            return `
+                <div style="font-size: 14px; color: #2c2a27;">
+                    <strong style="font-size: 16px; display: block; margin-bottom: 8px;">${loc.name}</strong>
+                    ${beers}<br><br>
+                    ${freshness}<br><br>
+                    <a href="${directionsLink}" target="_blank" style="color: #b8860b; text-decoration: none; font-weight: 600;">Get Directions →</a>
+                </div>
+            `;
+        }
+
+        function createFreshnessHTML(loc) {
+            const dotColor = {
+                fresh: '#2ecc71',
+                recent: '#f39c12',
+                stale: '#e74c3c'
+            }[loc.freshness] || '#999';
+
+            return `<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: ${dotColor}; margin-right: 6px;"></span>${loc.freshness_label}`;
+        }
+
+        function renderCards(locations) {
+            const onDraftLocations = locations.filter(l => WIDGET_DATA.on_draft.some(d => d.name === l.name && d.city === l.city));
+            const inStoresLocations = locations.filter(l => WIDGET_DATA.in_stores.some(d => d.name === l.name && d.city === l.city));
+
+            // Render On Draft
+            const onDraftSection = document.getElementById('onDraftSection');
+            const onDraftCards = document.getElementById('onDraftCards');
+            if (onDraftLocations.length > 0) {
+                onDraftSection.style.display = 'block';
+                onDraftCards.innerHTML = onDraftLocations.map(loc => createCardHTML(loc)).join('');
+                attachCardListeners(onDraftCards);
+            } else {
+                onDraftSection.style.display = 'none';
+            }
+
+            // Render In Stores
+            const inStoresSection = document.getElementById('inStoresSection');
+            const inStoresCards = document.getElementById('inStoresCards');
+            if (inStoresLocations.length > 0) {
+                inStoresSection.style.display = 'block';
+                inStoresCards.innerHTML = inStoresLocations.map(loc => createCardHTML(loc)).join('');
+                attachCardListeners(inStoresCards);
+            } else {
+                inStoresSection.style.display = 'none';
+            }
+
+            // Show no results if both are empty
+            if (onDraftLocations.length === 0 && inStoresLocations.length === 0) {
+                document.querySelector('.locations-container').innerHTML = '<div class="empty-state">No locations found. Try adjusting your filters.</div>';
+            }
+        }
+
+        function createCardHTML(loc) {
+            const staleClass = loc.freshness === 'stale' ? 'stale' : '';
+            const beersHtml = loc.products.map(p => `<span class="beer-badge">${p.name}</span>`).join('');
+
+            const dotClass = {
+                fresh: 'fresh',
+                recent: 'recent',
+                stale: 'stale'
+            }[loc.freshness] || 'recent';
+
+            return `
+                <div class="location-card ${staleClass}" data-location-key="${loc.name}|${loc.city}">
+                    <div class="card-header">
+                        <div class="card-name">${loc.name}</div>
+                        <div class="card-address">${loc.address}<br>${loc.city}, ${loc.state}</div>
+                    </div>
+                    <div class="card-beers">${beersHtml}</div>
+                    <div class="card-freshness">
+                        <span class="freshness-dot ${dotClass}"></span>
+                        <span>${loc.freshness_label}</span>
+                    </div>
+                    <div class="card-contact">
+                        <div class="card-phone"><a href="tel:${loc.phone_raw}">${loc.phone}</a></div>
+                        <a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(loc.directions_query)}" target="_blank" class="directions-btn">Directions</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function attachCardListeners(container) {
+            container.querySelectorAll('.location-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const key = card.dataset.locationKey;
+                    highlightCard(key);
+                    const marker = markers[key];
+                    if (marker) {
+                        map.setView(marker.getLatLng(), map.getZoom(), { animate: true });
+                        setTimeout(() => marker.openPopup(), 300);
+                    }
+                });
+            });
+        }
+
+        function highlightCard(key) {
+            document.querySelectorAll('.location-card').forEach(card => {
+                card.classList.remove('highlight');
+            });
+            const card = document.querySelector(`[data-location-key="${key}"]`);
+            if (card) {
+                card.classList.add('highlight');
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // Start
+        init();
+    </script>
+</body>
+</html>

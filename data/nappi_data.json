@@ -58595,7 +58595,7 @@
       }
     },
     "accounts": {
-      "total_accounts": 100,
+      "total_accounts": 99,
       "accounts_ordering_today": 10,
       "on_premise_count": 58,
       "off_premise_count": 211,
@@ -58625,9 +58625,9 @@
           "mtd_cases": 5
         },
         "SIMON GABAREE": {
-          "account_count": 15,
+          "account_count": 14,
           "daily_cases": 1,
-          "mtd_cases": 26
+          "mtd_cases": 25
         },
         "DANIEL EVERETT": {
           "account_count": 13,
@@ -58695,7 +58695,7 @@
         "45003": 8,
         "45005": 23,
         "45008": 2,
-        "45010": 44,
+        "45010": 43,
         "45013": 6,
         "45018": 8,
         "45020": 22,
@@ -61381,25 +61381,6 @@
           "actual_mtd": 1,
           "salesman": "DANIEL EVERETT",
           "sm_num": "26",
-          "premise_type": "off_premise"
-        },
-        {
-          "acct_num": "10665",
-          "name": "7-ELEVEN / KITTERY",
-          "address": "169 STATE ROAD",
-          "city": "KITTERY",
-          "phone": "708 370-1232",
-          "nappi_code": "45010",
-          "product_raw": "FLIGHT DECK WINGS 4PK CAN",
-          "product_name": "Wings Hazy IPA",
-          "product_format": "4PK CAN",
-          "daily_qty": 0,
-          "mtd_qty": 1,
-          "ytd_qty": 0,
-          "actual_daily": 0,
-          "actual_mtd": 1,
-          "salesman": "SIMON GABAREE",
-          "sm_num": "24",
           "premise_type": "off_premise"
         },
         {

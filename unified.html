@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Deck Brewing — Brew Queue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f0e8;
+  --surface: #fffdf8;
+  --surface2: #f0ebe0;
+  --border: #d9d0c0;
+  --text1: #1a1612;
+  --text2: #6b5f50;
+  --text3: #9b8e7d;
+  --accent: #2c5530;
+  --accent2: #4a7c4f;
+  --red: #c93c37;
+  --red-bg: #fef0ef;
+  --red-border: #f5c6c4;
+  --orange: #c67a1a;
+  --orange-bg: #fef6ec;
+  --orange-border: #f0d8a8;
+  --green: #2c7a3a;
+  --green-bg: #eef8ef;
+  --blue: #2a5a9b;
+  --blue-bg: #edf3fc;
+  --purple: #6b4fa0;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'DM Sans', -apple-system, sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text1);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Header ── */
+.header {
+  background: var(--text1);
+  color: var(--bg);
+  padding: 20px 24px;
+}
+.header h1 {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.header .sub {
+  font-size: 12px;
+  color: #a09585;
+  margin-top: 2px;
+  font-family: var(--mono);
+}
+
+/* ── KPI strip ── */
+.kpi-strip {
+  display: flex;
+  gap: 1px;
+  background: var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.kpi-card {
+  flex: 1;
+  background: var(--surface);
+  padding: 14px 16px;
+  text-align: center;
+}
+.kpi-card .val {
+  font-size: 26px;
+  font-weight: 700;
+  font-family: var(--mono);
+  line-height: 1.1;
+}
+.kpi-card .lbl {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text2);
+  margin-top: 2px;
+}
+.kpi-card.urgent .val { color: var(--red); }
+.kpi-card.warn .val { color: var(--orange); }
+.kpi-card.ok .val { color: var(--green); }
+
+/* ── Season bar ── */
+.season-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text2);
+  overflow-x: auto;
+}
+.season-bar .mo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 36px;
+}
+.season-bar .mo .bar {
+  width: 24px;
+  background: var(--accent2);
+  border-radius: 2px;
+  opacity: 0.4;
+  transition: opacity 0.2s;
+}
+.season-bar .mo.now .bar { opacity: 1; background: var(--accent); }
+.season-bar .mo .mlbl {
+  font-size: 9px;
+  font-family: var(--mono);
+  margin-top: 2px;
+  text-transform: uppercase;
+}
+.season-lbl {
+  font-weight: 600;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  margin-right: 4px;
+}
+
+/* ── Table ── */
+.table-wrap {
+  padding: 0;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+thead th {
+  position: sticky;
+  top: 0;
+  background: var(--surface2);
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text2);
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+  z-index: 2;
+}
+thead th.r { text-align: right; }
+tbody tr {
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+tbody tr:hover { background: var(--surface2); }
+tbody tr.expanded { background: var(--surface); border-bottom: none; }
+td {
+  padding: 10px 12px;
+  vertical-align: middle;
+}
+td.r { text-align: right; font-family: var(--mono); font-size: 12px; }
+td.name-cell {
+  font-weight: 600;
+}
+td .pkg {
+  font-size: 11px;
+  color: var(--text3);
+  font-weight: 400;
+}
+td .style-tag {
+  font-size: 10px;
+  color: var(--text3);
+  font-style: italic;
+}
+
+/* Status chips */
+.chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.chip.brew-now { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+.chip.plan { background: var(--orange-bg); color: var(--orange); border: 1px solid var(--orange-border); }
+.chip.ok { background: var(--green-bg); color: var(--green); border: 1px solid #c4e0c6; }
+
+/* Trend arrow */
+.trend-up { color: var(--red); }
+.trend-down { color: var(--green); }
+.trend-flat { color: var(--text3); }
+
+/* ── Expand row ── */
+.detail-row { display: none; }
+.detail-row.show { display: table-row; }
+.detail-row td {
+  padding: 0;
+  border-bottom: 1px solid var(--border);
+}
+.detail-panel {
+  padding: 16px 20px 20px;
+  background: var(--surface);
+  border-top: 1px dashed var(--border);
+}
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+.detail-section h4 {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text3);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.detail-section .row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 3px 0;
+  border-bottom: 1px solid var(--surface2);
+}
+.detail-section .row .rlbl { color: var(--text2); }
+.detail-section .row .rval { font-family: var(--mono); font-weight: 500; }
+
+/* Channel bar */
+.ch-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 6px 0;
+}
+.ch-bar .seg { transition: width 0.3s; }
+.ch-bar .nappi { background: var(--accent); }
+.ch-bar .toast { background: var(--orange); }
+.ch-bar .sd { background: var(--blue); }
+.ch-bar .mmm { background: var(--purple); }
+.ch-legend {
+  display: flex;
+  gap: 12px;
+  font-size: 10px;
+  color: var(--text2);
+}
+.ch-legend .dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 2px;
+  margin-right: 3px;
+  vertical-align: middle;
+}
+
+/* Mini velocity sparkline */
+.spark {
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+  height: 28px;
+}
+.spark .bar {
+  flex: 1;
+  background: var(--accent2);
+  border-radius: 1px 1px 0 0;
+  opacity: 0.5;
+  min-width: 3px;
+}
+.spark .bar.recent { opacity: 1; background: var(--accent); }
+
+/* Allocation box */
+.alloc-box {
+  background: var(--surface2);
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 12px;
+  margin-top: 8px;
+}
+.alloc-box .ab-title {
+  font-weight: 600;
+  font-size: 11px;
+  margin-bottom: 6px;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Auth gate */
+.auth-gate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: var(--bg);
+}
+.auth-box {
+  text-align: center;
+}
+.auth-box h2 {
+  font-size: 16px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.auth-box input {
+  font-family: var(--mono);
+  padding: 10px 16px;
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  font-size: 14px;
+  background: var(--surface);
+  outline: none;
+  width: 200px;
+}
+.auth-box input:focus { border-color: var(--accent); }
+.auth-box .err { color: var(--red); font-size: 12px; margin-top: 8px; display: none; }
+.main-app { display: none; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .kpi-strip { flex-wrap: wrap; }
+  .kpi-card { min-width: 33%; }
+  .detail-grid { grid-template-columns: 1fr; }
+  td, th { padding: 8px 8px; font-size: 12px; }
+  .header { padding: 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Auth Gate -->
+<div class="auth-gate" id="authGate">
+  <div class="auth-box">
+    <h2>Flight Deck Brewing</h2>
+    <div><input type="password" id="passwordInput" placeholder="Enter PIN" autofocus></div>
+    <div class="err" id="errorMsg">Incorrect PIN</div>
+  </div>
+</div>
+
+<!-- Main App -->
+<div class="main-app" id="mainApp">
+  <div class="header">
+    <h1>Brew Queue</h1>
+    <div class="sub" id="freshness"></div>
+  </div>
+
+  <div class="kpi-strip" id="kpiStrip"></div>
+  <div class="season-bar" id="seasonBar"></div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:28px">#</th>
+          <th>Beer</th>
+          <th>Status</th>
+          <th class="r">Days Left</th>
+          <th class="r">Brew By</th>
+          <th class="r">Velocity</th>
+          <th>Trend</th>
+        </tr>
+      </thead>
+      <tbody id="queueBody"></tbody>
+    </table>
+  </div>
+  <div class="footer">Flight Deck Brewing &middot; Mission Control</div>
+</div>
+
+<script>
+// ── Data ──
+const BRANDS = [{"brand_key": "after_dark", "display_name": "After Dark", "style": "Coffee Stout", "channels": ["toast", "selfdistro"], "brewery_kegs_sixth": 0.0, "brewery_kegs_half": 0.0, "brewery_cases_16oz": 3.66, "brewery_cases_12oz": 0.0, "nappi_cases": 0, "nappi_kegs": 0, "total_inv_bbl": 0.1, "nappi_daily_bbl": 0.0, "toast_daily_bbl": 0.017, "selfdistro_daily_bbl": 0.002, "mmm_daily_bbl": 0.0, "total_daily_bbl": 0.019, "channel_pcts": {"nappi": 0, "toast": 89, "selfdist": 11, "mmm": 0}, "days_until_stockout_kegs": 0, "days_until_stockout_cases": 22, "days_until_stockout": 7, "brew_by_date": "2026-03-17", "lead_time_days": 21, "batch_size_bbl": 7, "recommended_batch": "single", "brew_status": "BREW_NOW", "priority_rank": 1, "current_month_velocity_bbl": 0.019, "same_month_last_year_bbl": null, "trailing_3mo_trend": "flat", "monthly_velocity": [{"month": "2025-12", "daily_kegs": 0.024, "qty_sold": 40}, {"month": "2026-01", "daily_kegs": 0.121, "qty_sold": 204}, {"month": "2026-02", "daily_kegs": 0.118, "qty_sold": 179}, {"month": "2026-03", "daily_kegs": 0.104, "qty_sold": 168}], "allocation": {"total_bbl": 7, "packaging": {"kegs_bbl": 6.2, "cases_bbl": 0.8}, "kegs_output": "\u224831 sixtels + 2 half-barrels", "cases_output": "\u224822 cases 16oz", "channel_split": {"nappi": "0%", "toast": "89%", "selfdist": "11%", "mmm": "0%"}}}, {"brand_key": "zeppelin_rules", "display_name": "Zeppelin Rules", "style": null, "channels": ["toast", "selfdistro"], "brewery_kegs_sixth": 0.0, "brewery_kegs_half": 0.0, "brewery_cases_16oz": 2.5, "brewery_cases_12oz": 0.0, "nappi_cases": 0, "nappi_kegs": 0, "total_inv_bbl": 0.1, "nappi_daily_bbl": 0.0, "toast_daily_bbl": 0.006, "selfdistro_daily_bbl": 0.0, "mmm_daily_bbl": 0.0, "total_daily_bbl": 0.006, "channel_pcts": {"nappi": 0, "toast": 100, "selfdist": 0, "mmm": 0}, "days_until_stockout_kegs": 0, "days_until_stockout_cases": 49, "days_until_stockout": 15, "brew_by_date": "2026-03-25", "lead_time_days": 21, "batch_size_bbl": 7, "recommended_batch": "single", "brew_status": "BREW_NOW", "priority_rank": 2, "current_month_velocity_bbl": 0.006, "same_month_last_year_bbl": null, "trailing_3mo_trend": "down", "monthly_velocity": [{"month": "2024-12", "daily_kegs": 0.148, "qty_sold": 262}, {"month": "2025-01", "daily_kegs": 0.107, "qty_sold": 216}, {"month": "2025-02", "daily_kegs": 0.019, "qty_sold": 31}, {"month": "2025-11", "daily_kegs": 0.067, "qty_sold": 97}, {"month": "2025-12", "daily_kegs": 0.103, "qty_sold": 157}, {"month": "2026-01", "daily_kegs": 0.096, "qty_sold": 150}, {"month": "2026-02", "daily_kegs": 0.097, "qty_sold": 137}, {"month": "2026-03", "daily_kegs": 0.037, "qty_sold": 48}], "allocation": {"total_bbl": 7, "packaging": {"kegs_bbl": 7.0, "cases_bbl": 0.0}, "kegs_output": "\u224836 sixtels + 2 half-barrels", "cases_output": "\u22480 cases 16oz", "channel_split": {"nappi": "0%", "toast": "100%", "selfdist": "0%", "mmm": "0%"}}}, {"brand_key": "remove_before_flight", "display_name": "Remove Before Flight", "style": "Red Ale", "channels": ["nappi", "toast", "selfdistro"], "brewery_kegs_sixth": 14.0, "brewery_kegs_half": 3.0, "brewery_cases_16oz": 64.33, "brewery_cases_12oz": 0.0, "nappi_cases": 22, "nappi_kegs": 2, "total_inv_bbl": 7.3, "nappi_daily_bbl": 0.239, "toast_daily_bbl": 0.025, "selfdistro_daily_bbl": 0.003, "mmm_daily_bbl": 0.0, "total_daily_bbl": 0.267, "channel_pcts": {"nappi": 90, "toast": 9, "selfdist": 1, "mmm": 0}, "days_until_stockout_kegs": 51, "days_until_stockout_cases": 12, "days_until_stockout": 27, "brew_by_date": "2026-04-14", "lead_time_days": 14, "batch_size_bbl": 15, "recommended_batch": "double", "brew_status": "OK", "priority_rank": 3, "current_month_velocity_bbl": 0.267, "same_month_last_year_bbl": 0.04, "trailing_3mo_trend": "flat", "monthly_velocity": [{"month": "2024-10", "daily_kegs": 0.199, "qty_sold": 312}, {"month": "2024-11", "daily_kegs": 0.249, "qty_sold": 378}, {"month": "2024-12", "daily_kegs": 0.219, "qty_sold": 392}, {"month": "2025-01", "daily_kegs": 0.138, "qty_sold": 256}, {"month": "2025-02", "daily_kegs": 0.138, "qty_sold": 230}, {"month": "2025-03", "daily_kegs": 0.237, "qty_sold": 441}, {"month": "2025-04", "daily_kegs": 0.262, "qty_sold": 398}, {"month": "2025-05", "daily_kegs": 0.344, "qty_sold": 520}, {"month": "2025-06", "daily_kegs": 0.392, "qty_sold": 566}, {"month": "2025-07", "daily_kegs": 0.437, "qty_sold": 672}, {"month": "2025-08", "daily_kegs": 0.331, "qty_sold": 504}, {"month": "2025-09", "daily_kegs": 0.238, "qty_sold": 366}, {"month": "2025-10", "daily_kegs": 0.284, "qty_sold": 452}, {"month": "2025-11", "daily_kegs": 0.155, "qty_sold": 241}, {"month": "2025-12", "daily_kegs": 0.146, "qty_sold": 227}, {"month": "2026-01", "daily_kegs": 0.132, "qty_sold": 208}, {"month": "2026-02", "daily_kegs": 0.143, "qty_sold": 205}, {"month": "2026-03", "daily_kegs": 0.149, "qty_sold": 238}], "allocation": {"total_bbl": 15, "packaging": {"kegs_bbl": 4.5, "cases_bbl": 10.5}, "kegs_output": "\u224821 sixtels + 2 half-barrels", "cases_output": "\u2248288 cases 16oz", "channel_split": {"nappi": "90%", "toast": "9%", "selfdist": "1%", "mmm": "0%"}}}, {"brand_key": "space_a", "display_name": "Space-A", "style": "West Coast IPA", "channels": ["toast", "selfdistro"], "brewery_kegs_sixth": 5.0, "brewery_kegs_half": 0.0, "brewery_cases_16oz": 16.16, "brewery_cases_12oz": 0.0, "nappi_cases": 0, "nappi_kegs": 0, "total_inv_bbl": 1.4, "nappi_daily_bbl": 0.0, "toast_daily_bbl": 0.039, "selfdistro_daily_bbl": 0.005, "mmm_daily_bbl": 0.0, "total_daily_bbl": 0.044, "channel_pcts": {"nappi": 0, "toast": 88, "selfdist": 12, "mmm": 0}, "days_until_stockout_kegs": 21, "days_until_stockout_cases": 44, "days_until_stockout": 32, "brew_by_date": "2026-04-02", "lead_time_days": 30, "batch_size_bbl": 7, "recommended_batch": "single", "brew_status": "PLAN", "priority_rank": 4, "current_month_velocity_bbl": 0.044, "same_month_last_year_bbl": 0.04, "trailing_3mo_trend": "flat", "monthly_velocity": [{"month": "2024-10", "daily_kegs": 0.103, "qty_sold": 159}, {"month": "2024-11", "daily_kegs": 0.216, "qty_sold": 326}, {"month": "2024-12", "daily_kegs": 0.188, "qty_sold": 339}, {"month": "2025-01", "daily_kegs": 0.16, "qty_sold": 304}, {"month": "2025-02", "daily_kegs": 0.125, "qty_sold": 219}, {"month": "2025-03", "daily_kegs": 0.237, "qty_sold": 437}, {"month": "2025-04", "daily_kegs": 0.274, "qty_sold": 407}, {"month": "2025-05", "daily_kegs": 0.209, "qty_sold": 318}, {"month": "2025-12", "daily_kegs": 0.07, "qty_sold": 107}, {"month": "2026-01", "daily_kegs": 0.228, "qty_sold": 349}, {"month": "2026-02", "daily_kegs": 0.232, "qty_sold": 316}, {"month": "2026-03", "daily_kegs": 0.236, "qty_sold": 360}], "allocation": {"total_bbl": 7, "packaging": {"kegs_bbl": 6.2, "cases_bbl": 0.8}, "kegs_output": "\u224831 sixtels + 2 half-barrels", "cases_output": "\u224822 cases 16oz", "channel_split": {"nappi": "0%", "toast": "88%", "selfdist": "12%", "mmm": "0%"}}}, {"brand_key": "plane_beer", "display_name": "Plane Beer Pilsner", "style": "American Lager", "channels": ["nappi", "toast", "selfdistro", "mmm"], "brewery_kegs_sixth": 3.0, "brewery_kegs_half": 0.0, "brewery_cases_16oz": 0.0, "brewery_cases_12oz": 41.25, "nappi_cases": 47, "nappi_kegs": 2, "total_inv_bbl": 3.5, "nappi_daily_bbl": 0.0, "toast_daily_bbl": 0.054, "selfdistro_daily_bbl": 0.043, "mmm_daily_bbl": 0.0, "total_daily_bbl": 0.098, "channel_pcts": {"nappi": 0, "toast": 56, "selfdist": 44, "mmm": 0}, "days_until_stockout_kegs": 15, "days_until_stockout_cases": 63, "days_until_stockout": 36, "brew_by_date": "2026-04-16", "lead_time_days": 21, "batch_size_bbl": 7, "recommended_batch": "single", "brew_status": "OK", "priority_rank": 5, "current_month_velocity_bbl": 0.098, "same_month_last_year_bbl": 0.049, "trailing_3mo_trend": "up", "monthly_velocity": [{"month": "2024-10", "daily_kegs": 0.353, "qty_sold": 553}, {"month": "2024-11", "daily_kegs": 0.274, "qty_sold": 407}, {"month": "2024-12", "daily_kegs": 0.239, "qty_sold": 435}, {"month": "2025-01", "daily_kegs": 0.223, "qty_sold": 404}, {"month": "2025-02", "daily_kegs": 0.205, "qty_sold": 321}, {"month": "2025-03", "daily_kegs": 0.293, "qty_sold": 558}, {"month": "2025-04", "daily_kegs": 0.348, "qty_sold": 516}, {"month": "2025-05", "daily_kegs": 0.55, "qty_sold": 836}, {"month": "2025-06", "daily_kegs": 0.807, "qty_sold": 1197}, {"month": "2025-07", "daily_kegs": 0.775, "qty_sold": 1202}, {"month": "2025-08", "daily_kegs": 0.968, "qty_sold": 1492}, {"month": "2025-09", "daily_kegs": 0.576, "qty_sold": 867}, {"month": "2025-10", "daily_kegs": 0.462, "qty_sold": 722}, {"month": "2025-11", "daily_kegs": 0.232, "qty_sold": 357}, {"month": "2025-12", "daily_kegs": 0.193, "qty_sold": 298}, {"month": "2026-01", "daily_kegs": 0.194, "qty_sold": 294}, {"month": "2026-02", "daily_kegs": 0.187, "qty_sold": 261}, {"month": "2026-03", "daily_kegs": 0.326, "qty_sold": 500}], "allocation": {"total_bbl": 7, "packaging": {"kegs_bbl": 3.9, "cases_bbl": 3.1}, "kegs_output": "\u224817 sixtels + 2 half-barrels", "cases_output": "\u2248128 cases 12oz", "channel_split": {"nappi": "0%", "toast": "56%", "selfdist": "44%", "mmm": "0%"}}}, {"brand_key": "pilots_porridge", "display_name": "Pilot's Porridge", "style": "Milk Stout", "channels": ["toast", "selfdistro"], "brewery_kegs_sixth": 6.0, "brewery_kegs_half": 0.0, "brewery_cases_16oz": 5.16, "brewery_cases_12oz": 0.0, "nappi_cases": 0, "nappi_kegs": 0, "total_inv_bbl": 1.2, "nappi_daily_bbl": 0.0, "toast_daily_bbl": 0.025, "selfdistro_daily_bbl": 0.002, "mmm_daily_bbl": 0.0, "total_daily_bbl": 0.027, "channel_pcts": {"nappi": 0, "toast": 92, "selfdist": 8, "mmm": 0}, "days_until_stockout_kegs": 40, "days_until_stockout_cases": 23, "days_until_stockout": 44, "brew_by_date": "2026-04-23", "lead_time_days": 21, "batch_size_bbl": 7, "recommended_batch": "single", "brew_status": "OK", "priority_rank": 6, "current_month_velocity_bbl": 0.027, "same_month_last_year_bbl": null, "trailing_3mo_trend": "flat", "monthly_velocity": [{"month": "2025-10", "daily_kegs": 0.009, "qty_sold": 14}, {"month": "2025-11", "daily_kegs": 0.249, "qty_sold": 388}, {"month": "2025-12", "daily_kegs": 0.161, "qty_sold": 253}, {"month": "2026-01", "daily_kegs": 0.138, "qty_sold": 216}, {"month": "2026-02", "daily_kegs": 0.13, "qty_sold": 186}, {"month": "2026-03", "daily_kegs": 0.15, "qty_sold": 238}], "allocation": {"total_bbl": 7, "packaging": {"kegs_bbl": 6.4, "cases_bbl": 0.6}, "kegs_output": "\u224832 sixtels + 2 half-barrels", "cases_output": "\u224816 cases 16oz", "channel_split": {"nappi": "0%", "toast": "92%", "selfdist": "8%", "mmm": "0%"}}}, {"brand_key": "wings", "display_name": "Wings Hazy IPA", "style": "New England IPA", "channels": ["nappi", "toast", "selfdistro", "mmm"], "brewery_kegs_sixth": 16.0, "brewery_kegs_half": 6.0, "brewery_cases_16oz": 0.0, "brewery_cases_12oz": 0.0, "nappi_cases": 22, "nappi_kegs": 2, "total_inv_bbl": 6.8, "nappi_daily_bbl": 0.0, "toast_daily_bbl": 0.103, "selfdistro_daily_bbl": 0.017, "mmm_daily_bbl": 0.0, "total_daily_bbl": 0.12, "channel_pcts": {"nappi": 0, "toast": 86, "selfdist": 14, "mmm": 0}, "days_until_stockout_kegs": 58, "days_until_stockout_cases": 22, "days_until_stockout": 57, "brew_by_date": "2026-04-27", "lead_time_days": 30, "batch_size_bbl": 7, "recommended_batch": "single", "brew_status": "OK", "priority_rank": 7, "current_month_velocity_bbl": 0.12, "same_month_last_year_bbl": 0.087, "trailing_3mo_trend": "up", "monthly_velocity": [{"month": "2024-10", "daily_kegs": 0.666, "qty_sold": 1038}, {"month": "2024-11", "daily_kegs": 0.448, "qty_sold": 671}, {"month": "2024-12", "daily_kegs": 0.361, "qty_sold": 653}, {"month": "2025-01", "daily_kegs": 0.328, "qty_sold": 646}, {"month": "2025-02", "daily_kegs": 0.322, "qty_sold": 528}, {"month": "2025-03", "daily_kegs": 0.521, "qty_sold": 931}, {"month": "2025-04", "daily_kegs": 0.698, "qty_sold": 1036}, {"month": "2025-05", "daily_kegs": 0.897, "qty_sold": 1373}, {"month": "2025-06", "daily_kegs": 1.038, "qty_sold": 1536}, {"month": "2025-07", "daily_kegs": 1.209, "qty_sold": 1869}, {"month": "2025-08", "daily_kegs": 1.192, "qty_sold": 1821}, {"month": "2025-09", "daily_kegs": 1.013, "qty_sold": 1452}, {"month": "2025-10", "daily_kegs": 1.014, "qty_sold": 1550}, {"month": "2025-11", "daily_kegs": 0.518, "qty_sold": 785}, {"month": "2025-12", "daily_kegs": 0.358, "qty_sold": 559}, {"month": "2026-01", "daily_kegs": 0.427, "qty_sold": 656}, {"month": "2026-02", "daily_kegs": 0.489, "qty_sold": 674}, {"month": "2026-03", "daily_kegs": 0.62, "qty_sold": 943}], "allocation": {"total_bbl": 7, "packaging": {"kegs_bbl": 6.0, "cases_bbl": 1.0}, "kegs_output": "\u224830 sixtels + 2 half-barrels", "cases_output": "\u224827 cases 16oz", "channel_split": {"nappi": "0%", "toast": "86%", "selfdist": "14%", "mmm": "0%"}}}, {"brand_key": "night_witches", "display_name": "Night Witches", "style": "Black IPA", "channels": ["toast", "selfdistro"], "brewery_kegs_sixth": 6.0, "brewery_kegs_half": 0.0, "brewery_cases_16oz": 33.0, "brewery_cases_12oz": 0.0, "nappi_cases": 0, "nappi_kegs": 0, "total_inv_bbl": 2.2, "nappi_daily_bbl": 0.0, "toast_daily_bbl": 0.027, "selfdistro_daily_bbl": 0.004, "mmm_daily_bbl": 0.0, "total_daily_bbl": 0.032, "channel_pcts": {"nappi": 0, "toast": 87, "selfdist": 13, "mmm": 0}, "days_until_stockout_kegs": 36, "days_until_stockout_cases": 126, "days_until_stockout": 70, "brew_by_date": "2026-05-19", "lead_time_days": 21, "batch_size_bbl": 7, "recommended_batch": "single", "brew_status": "OK", "priority_rank": 8, "current_month_velocity_bbl": 0.032, "same_month_last_year_bbl": null, "trailing_3mo_trend": "flat", "monthly_velocity": [{"month": "2024-10", "daily_kegs": 0.299, "qty_sold": 481}, {"month": "2024-11", "daily_kegs": 0.078, "qty_sold": 118}, {"month": "2025-09", "daily_kegs": 0.099, "qty_sold": 151}, {"month": "2025-10", "daily_kegs": 0.229, "qty_sold": 358}, {"month": "2026-03", "daily_kegs": 0.164, "qty_sold": 254}], "allocation": {"total_bbl": 7, "packaging": {"kegs_bbl": 6.1, "cases_bbl": 0.9}, "kegs_output": "\u224830 sixtels + 2 half-barrels", "cases_output": "\u224824 cases 16oz", "channel_split": {"nappi": "0%", "toast": "87%", "selfdist": "13%", "mmm": "0%"}}}, {"brand_key": "light_the_fires", "display_name": "Light the Fires", "style": "Fruited Pale Ale", "channels": ["toast", "selfdistro"], "brewery_kegs_sixth": 3.0, "brewery_kegs_half": 1.0, "brewery_cases_16oz": 33.66, "brewery_cases_12oz": 0.0, "nappi_cases": 0, "nappi_kegs": 0, "total_inv_bbl": 2.2, "nappi_daily_bbl": 0.0, "toast_daily_bbl": 0.023, "selfdistro_daily_bbl": 0.006, "mmm_daily_bbl": 0.0, "total_daily_bbl": 0.029, "channel_pcts": {"nappi": 0, "toast": 78, "selfdist": 22, "mmm": 0}, "days_until_stockout_kegs": 43, "days_until_stockout_cases": 139, "days_until_stockout": 76, "brew_by_date": "2026-05-25", "lead_time_days": 21, "batch_size_bbl": 7, "recommended_batch": "single", "brew_status": "OK", "priority_rank": 9, "current_month_velocity_bbl": 0.029, "same_month_last_year_bbl": 0.012, "trailing_3mo_trend": "flat", "monthly_velocity": [{"month": "2025-03", "daily_kegs": 0.069, "qty_sold": 120}, {"month": "2025-04", "daily_kegs": 0.173, "qty_sold": 260}, {"month": "2025-05", "daily_kegs": 0.2, "qty_sold": 311}, {"month": "2026-03", "daily_kegs": 0.138, "qty_sold": 209}], "allocation": {"total_bbl": 7, "packaging": {"kegs_bbl": 5.5, "cases_bbl": 1.5}, "kegs_output": "\u224827 sixtels + 2 half-barrels", "cases_output": "\u224841 cases 16oz", "channel_split": {"nappi": "0%", "toast": "78%", "selfdist": "22%", "mmm": "0%"}}}, {"brand_key": "vuelo", "display_name": "Vuelo Nocturno", "style": null, "channels": ["toast", "selfdistro", "mmm"], "brewery_kegs_sixth": 1.0, "brewery_kegs_half": 0.0, "brewery_cases_16oz": 0.0, "brewery_cases_12oz": 0.0, "nappi_cases": 0, "nappi_kegs": 0, "total_inv_bbl": 0.2, "nappi_daily_bbl": 0.0, "toast_daily_bbl": 0.002, "selfdistro_daily_bbl": 0.0, "mmm_daily_bbl": 0.0, "total_daily_bbl": 0.002, "channel_pcts": {"nappi": 0, "toast": 100, "selfdist": 0, "mmm": 0}, "days_until_stockout_kegs": 90, "days_until_stockout_cases": 0, "days_until_stockout": 91, "brew_by_date": "2026-06-09", "lead_time_days": 21, "batch_size_bbl": 7, "recommended_batch": "single", "brew_status": "OK", "priority_rank": 10, "current_month_velocity_bbl": 0.002, "same_month_last_year_bbl": 0.021, "trailing_3mo_trend": "down", "monthly_velocity": [{"month": "2025-03", "daily_kegs": 0.127, "qty_sold": 205}, {"month": "2025-04", "daily_kegs": 0.221, "qty_sold": 327}, {"month": "2025-05", "daily_kegs": 0.3, "qty_sold": 464}, {"month": "2025-06", "daily_kegs": 0.455, "qty_sold": 677}, {"month": "2025-07", "daily_kegs": 0.346, "qty_sold": 534}, {"month": "2025-08", "daily_kegs": 0.495, "qty_sold": 751}, {"month": "2025-09", "daily_kegs": 0.274, "qty_sold": 418}, {"month": "2025-10", "daily_kegs": 0.18, "qty_sold": 289}, {"month": "2025-11", "daily_kegs": 0.103, "qty_sold": 158}, {"month": "2025-12", "daily_kegs": 0.079, "qty_sold": 120}, {"month": "2026-01", "daily_kegs": 0.064, "qty_sold": 104}, {"month": "2026-02", "daily_kegs": 0.07, "qty_sold": 96}, {"month": "2026-03", "daily_kegs": 0.011, "qty_sold": 14}], "allocation": {"total_bbl": 7, "packaging": {"kegs_bbl": 7.0, "cases_bbl": 0.0}, "kegs_output": "\u224836 sixtels + 2 half-barrels", "cases_output": "\u22480 cases 16oz", "channel_split": {"nappi": "0%", "toast": "100%", "selfdist": "0%", "mmm": "0%"}}}, {"brand_key": "sour_tower", "display_name": "Sour Tower", "style": "Imperial Cherry Sour Ale", "channels": ["toast", "selfdistro"], "brewery_kegs_sixth": 4.0, "brewery_kegs_half": 2.0, "brewery_cases_16oz": 36.0, "brewery_cases_12oz": 0.0, "nappi_cases": 0, "nappi_kegs": 0, "total_inv_bbl": 3.0, "nappi_daily_bbl": 0.0, "toast_daily_bbl": 0.029, "selfdistro_daily_bbl": 0.001, "mmm_daily_bbl": 0.0, "total_daily_bbl": 0.03, "channel_pcts": {"nappi": 0, "toast": 97, "selfdist": 3, "mmm": 0}, "days_until_stockout_kegs": 56, "days_until_stockout_cases": 143, "days_until_stockout": 98, "brew_by_date": "2026-06-08", "lead_time_days": 30, "batch_size_bbl": 7, "recommended_batch": "single", "brew_status": "OK", "priority_rank": 11, "current_month_velocity_bbl": 0.03, "same_month_last_year_bbl": 0.033, "trailing_3mo_trend": "up", "monthly_velocity": [{"month": "2025-01", "daily_kegs": 0.008, "qty_sold": 13}, {"month": "2025-02", "daily_kegs": 0.152, "qty_sold": 253}, {"month": "2025-03", "daily_kegs": 0.196, "qty_sold": 369}, {"month": "2025-04", "daily_kegs": 0.273, "qty_sold": 423}, {"month": "2025-05", "daily_kegs": 0.082, "qty_sold": 129}, {"month": "2025-09", "daily_kegs": 0.336, "qty_sold": 527}, {"month": "2025-10", "daily_kegs": 0.348, "qty_sold": 549}, {"month": "2025-11", "daily_kegs": 0.14, "qty_sold": 182}, {"month": "2026-02", "daily_kegs": 0.091, "qty_sold": 128}, {"month": "2026-03", "daily_kegs": 0.176, "qty_sold": 286}], "allocation": {"total_bbl": 7, "packaging": {"kegs_bbl": 6.8, "cases_bbl": 0.2}, "kegs_output": "\u224834 sixtels + 2 half-barrels", "cases_output": "\u22485 cases 16oz", "channel_split": {"nappi": "0%", "toast": "97%", "selfdist": "3%", "mmm": "0%"}}}, {"brand_key": "p3", "display_name": "P3 Pale Ale", "style": "American Pale Ale", "channels": ["nappi", "toast", "selfdistro", "mmm"], "brewery_kegs_sixth": 18.0, "brewery_kegs_half": 7.0, "brewery_cases_16oz": 102.0, "brewery_cases_12oz": 0.0, "nappi_cases": 20, "nappi_kegs": 2, "total_inv_bbl": 11.3, "nappi_daily_bbl": 0.0, "toast_daily_bbl": 0.068, "selfdistro_daily_bbl": 0.034, "mmm_daily_bbl": 0.0, "total_daily_bbl": 0.102, "channel_pcts": {"nappi": 0, "toast": 67, "selfdist": 33, "mmm": 0}, "days_until_stockout_kegs": 99, "days_until_stockout_cases": 131, "days_until_stockout": 110, "brew_by_date": "2026-06-29", "lead_time_days": 21, "batch_size_bbl": 7, "recommended_batch": "single", "brew_status": "OK", "priority_rank": 12, "current_month_velocity_bbl": 0.102, "same_month_last_year_bbl": 0.064, "trailing_3mo_trend": "up", "monthly_velocity": [{"month": "2024-10", "daily_kegs": 0.481, "qty_sold": 746}, {"month": "2024-11", "daily_kegs": 0.311, "qty_sold": 461}, {"month": "2024-12", "daily_kegs": 0.282, "qty_sold": 529}, {"month": "2025-01", "daily_kegs": 0.278, "qty_sold": 538}, {"month": "2025-02", "daily_kegs": 0.288, "qty_sold": 477}, {"month": "2025-03", "daily_kegs": 0.385, "qty_sold": 725}, {"month": "2025-04", "daily_kegs": 0.487, "qty_sold": 718}, {"month": "2025-05", "daily_kegs": 0.813, "qty_sold": 1238}, {"month": "2025-06", "daily_kegs": 0.91, "qty_sold": 1337}, {"month": "2025-07", "daily_kegs": 0.94, "qty_sold": 1441}, {"month": "2025-08", "daily_kegs": 1.075, "qty_sold": 1643}, {"month": "2025-09", "daily_kegs": 0.818, "qty_sold": 1202}, {"month": "2025-10", "daily_kegs": 0.693, "qty_sold": 1061}, {"month": "2025-11", "daily_kegs": 0.394, "qty_sold": 582}, {"month": "2025-12", "daily_kegs": 0.288, "qty_sold": 440}, {"month": "2026-01", "daily_kegs": 0.311, "qty_sold": 472}, {"month": "2026-02", "daily_kegs": 0.322, "qty_sold": 439}, {"month": "2026-03", "daily_kegs": 0.41, "qty_sold": 623}], "allocation": {"total_bbl": 7, "packaging": {"kegs_bbl": 4.7, "cases_bbl": 2.3}, "kegs_output": "\u224822 sixtels + 2 half-barrels", "cases_output": "\u224863 cases 16oz", "channel_split": {"nappi": "0%", "toast": "67%", "selfdist": "33%", "mmm": "0%"}}}, {"brand_key": "real_maine_italian", "display_name": "Real Maine Italian Pilsner", "style": "Italian Pilsner", "channels": ["nappi", "toast", "selfdistro"], "brewery_kegs_sixth": 11.0, "brewery_kegs_half": 1.0, "brewery_cases_16oz": 62.33, "brewery_cases_12oz": 0.0, "nappi_cases": 0, "nappi_kegs": 0, "total_inv_bbl": 4.6, "nappi_daily_bbl": 0.0, "toast_daily_bbl": 0.029, "selfdistro_daily_bbl": 0.002, "mmm_daily_bbl": 0.0, "total_daily_bbl": 0.031, "channel_pcts": {"nappi": 0, "toast": 94, "selfdist": 6, "mmm": 0}, "days_until_stockout_kegs": 79, "days_until_stockout_cases": 242, "days_until_stockout": 148, "brew_by_date": "2026-07-27", "lead_time_days": 30, "batch_size_bbl": 7, "recommended_batch": "single", "brew_status": "OK", "priority_rank": 13, "current_month_velocity_bbl": 0.031, "same_month_last_year_bbl": 0.032, "trailing_3mo_trend": "up", "monthly_velocity": [{"month": "2024-10", "daily_kegs": 0.188, "qty_sold": 294}, {"month": "2024-11", "daily_kegs": 0.206, "qty_sold": 310}, {"month": "2024-12", "daily_kegs": 0.135, "qty_sold": 253}, {"month": "2025-01", "daily_kegs": 0.1, "qty_sold": 195}, {"month": "2025-02", "daily_kegs": 0.12, "qty_sold": 202}, {"month": "2025-03", "daily_kegs": 0.19, "qty_sold": 345}, {"month": "2025-04", "daily_kegs": 0.071, "qty_sold": 95}, {"month": "2025-05", "daily_kegs": 0.061, "qty_sold": 80}, {"month": "2025-10", "daily_kegs": 0.117, "qty_sold": 183}, {"month": "2025-11", "daily_kegs": 0.169, "qty_sold": 261}, {"month": "2025-12", "daily_kegs": 0.106, "qty_sold": 170}, {"month": "2026-01", "daily_kegs": 0.1, "qty_sold": 159}, {"month": "2026-02", "daily_kegs": 0.121, "qty_sold": 176}, {"month": "2026-03", "daily_kegs": 0.175, "qty_sold": 272}], "allocation": {"total_bbl": 7, "packaging": {"kegs_bbl": 6.6, "cases_bbl": 0.4}, "kegs_output": "\u224833 sixtels + 2 half-barrels", "cases_output": "\u224811 cases 16oz", "channel_split": {"nappi": "0%", "toast": "94%", "selfdist": "6%", "mmm": "0%"}}}, {"brand_key": "cartwheeler", "display_name": "Cartwheeler", "style": "German-style Altbier", "channels": ["toast", "selfdistro"], "brewery_kegs_sixth": 5.0, "brewery_kegs_half": 2.0, "brewery_cases_16oz": 35.5, "brewery_cases_12oz": 0.0, "nappi_cases": 0, "nappi_kegs": 0, "total_inv_bbl": 3.1, "nappi_daily_bbl": 0.0, "toast_daily_bbl": 0.012, "selfdistro_daily_bbl": 0.008, "mmm_daily_bbl": 0.0, "total_daily_bbl": 0.021, "channel_pcts": {"nappi": 0, "toast": 59, "selfdist": 41, "mmm": 0}, "days_until_stockout_kegs": 150, "days_until_stockout_cases": 152, "days_until_stockout": 151, "brew_by_date": "2026-08-09", "lead_time_days": 21, "batch_size_bbl": 7, "recommended_batch": "single", "brew_status": "OK", "priority_rank": 14, "current_month_velocity_bbl": 0.021, "same_month_last_year_bbl": null, "trailing_3mo_trend": "flat", "monthly_velocity": [{"month": "2026-03", "daily_kegs": 0.073, "qty_sold": 154}], "allocation": {"total_bbl": 7, "packaging": {"kegs_bbl": 4.1, "cases_bbl": 2.9}, "kegs_output": "\u224818 sixtels + 2 half-barrels", "cases_output": "\u224879 cases 16oz", "channel_split": {"nappi": "0%", "toast": "59%", "selfdist": "41%", "mmm": "0%"}}}, {"brand_key": "subhunter", "display_name": "Subhunter IPA", "style": "Imperial IPA", "channels": ["nappi", "toast", "selfdistro"], "brewery_kegs_sixth": 19.0, "brewery_kegs_half": 9.0, "brewery_cases_16oz": 111.49, "brewery_cases_12oz": 0.0, "nappi_cases": 35, "nappi_kegs": 2, "total_inv_bbl": 13.3, "nappi_daily_bbl": 0.036, "toast_daily_bbl": 0.037, "selfdistro_daily_bbl": 0.012, "mmm_daily_bbl": 0.0, "total_daily_bbl": 0.085, "channel_pcts": {"nappi": 43, "toast": 44, "selfdist": 13, "mmm": 0}, "days_until_stockout_kegs": 212, "days_until_stockout_cases": 111, "days_until_stockout": 156, "brew_by_date": "2026-08-05", "lead_time_days": 30, "batch_size_bbl": 7, "recommended_batch": "single", "brew_status": "OK", "priority_rank": 15, "current_month_velocity_bbl": 0.085, "same_month_last_year_bbl": 0.041, "trailing_3mo_trend": "up", "monthly_velocity": [{"month": "2024-10", "daily_kegs": 0.32, "qty_sold": 591}, {"month": "2024-11", "daily_kegs": 0.262, "qty_sold": 408}, {"month": "2024-12", "daily_kegs": 0.203, "qty_sold": 352}, {"month": "2025-01", "daily_kegs": 0.162, "qty_sold": 296}, {"month": "2025-02", "daily_kegs": 0.163, "qty_sold": 260}, {"month": "2025-03", "daily_kegs": 0.243, "qty_sold": 427}, {"month": "2025-04", "daily_kegs": 0.314, "qty_sold": 466}, {"month": "2025-05", "daily_kegs": 0.489, "qty_sold": 745}, {"month": "2025-06", "daily_kegs": 0.55, "qty_sold": 814}, {"month": "2025-07", "daily_kegs": 0.543, "qty_sold": 845}, {"month": "2025-08", "daily_kegs": 0.68, "qty_sold": 1055}, {"month": "2025-09", "daily_kegs": 0.252, "qty_sold": 379}, {"month": "2025-10", "daily_kegs": 0.338, "qty_sold": 522}, {"month": "2025-11", "daily_kegs": 0.245, "qty_sold": 365}, {"month": "2025-12", "daily_kegs": 0.206, "qty_sold": 308}, {"month": "2026-01", "daily_kegs": 0.172, "qty_sold": 264}, {"month": "2026-02", "daily_kegs": 0.203, "qty_sold": 273}, {"month": "2026-03", "daily_kegs": 0.225, "qty_sold": 343}], "allocation": {"total_bbl": 7, "packaging": {"kegs_bbl": 3.1, "cases_bbl": 3.9}, "kegs_output": "\u224812 sixtels + 2 half-barrels", "cases_output": "\u2248107 cases 16oz", "channel_split": {"nappi": "43%", "toast": "44%", "selfdist": "13%", "mmm": "0%"}}}];
+const SEASONAL = {"10": 0.98, "11": 0.67, "12": 0.49, "01": 0.47, "02": 0.5, "03": 0.72, "04": 1.01, "05": 1.38, "06": 1.49, "07": 1.51, "08": 1.65, "09": 1.13};
+const BREW_CAL = [{"brand_key": "after_dark", "display_name": "After Dark", "brew_by": "2026-03-17", "batch": "single", "status": "BREW_NOW", "week": "this_week"}, {"brand_key": "zeppelin_rules", "display_name": "Zeppelin Rules", "brew_by": "2026-03-25", "batch": "single", "status": "BREW_NOW", "week": "this_week"}, {"brand_key": "remove_before_flight", "display_name": "Remove Before Flight", "brew_by": "2026-04-14", "batch": "double", "status": "OK", "week": "next_week"}, {"brand_key": "space_a", "display_name": "Space-A", "brew_by": "2026-04-02", "batch": "single", "status": "PLAN", "week": "this_week"}];
+const DASH_PROD = {"alerts": [{"sku": "45023", "name": "Remove Before Flight", "format": "1/6 BBL", "status": "CRITICAL", "days_inv": 1.6, "on_hand": 4, "a_oh": 2, "brewery_oh": 0, "total_available": 2, "rate": 2.5, "a_rate": 1.0, "a_unit": "kegs", "velocity_pct": 1289, "days_to_zero": 2.0, "is_keg": true, "brew_status": "BREW_NOW", "brew_urgency": -19.0, "brew_by": "2026-03-14", "stockout_date": "2026-04-04", "target_oh": 21, "shortfall": 19, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 1.0, "channel_split": {"nappi_pct": 100, "toast_pct": 0, "sd_pct": 0}, "toast_yoy_pct": null}, {"sku": "45013", "name": "Wings Hazy IPA", "format": "1/6 BBL", "status": "CRITICAL", "days_inv": 10.0, "on_hand": 10, "a_oh": 4, "brewery_oh": 0, "total_available": 4, "rate": 1.0, "a_rate": 0.5, "a_unit": "kegs", "velocity_pct": 56, "days_to_zero": 8.0, "is_keg": true, "brew_status": "BREW_NOW", "brew_urgency": -13.0, "brew_by": "2026-03-20", "stockout_date": "2026-04-10", "target_oh": 10, "shortfall": 6, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.5, "channel_split": {"nappi_pct": 100, "toast_pct": 0, "sd_pct": 0}, "toast_yoy_pct": null}, {"sku": "45020", "name": "Remove Before Flight", "format": "4PK CAN", "status": "CRITICAL", "days_inv": 11.6, "on_hand": 29, "a_oh": 22, "brewery_oh": 0, "total_available": 22, "rate": 2.5, "a_rate": 2.0, "a_unit": "cases", "velocity_pct": 112, "days_to_zero": 11.0, "is_keg": false, "brew_status": "BREW_NOW", "brew_urgency": -10.0, "brew_by": "2026-03-23", "stockout_date": "2026-04-13", "target_oh": 42, "shortfall": 20, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.388, "channel_split": {"nappi_pct": 100, "toast_pct": 0, "sd_pct": 0}, "toast_yoy_pct": null}, {"sku": "45005", "name": "Subhunter IPA", "format": "4PK CAN", "status": "ORDER_NOW", "days_inv": 18.8, "on_hand": 47, "a_oh": 35, "brewery_oh": 0, "total_available": 35, "rate": 2.5, "a_rate": 2.0, "a_unit": "cases", "velocity_pct": 31, "days_to_zero": 17.5, "is_keg": false, "brew_status": "BREW_NOW", "brew_urgency": -3.5, "brew_by": "2026-03-29", "stockout_date": "2026-04-19", "target_oh": 42, "shortfall": 7, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.388, "channel_split": {"nappi_pct": 100, "toast_pct": 0, "sd_pct": 0}, "toast_yoy_pct": null}], "velocity": [{"sku": "45000", "name": "P3 Pale Ale", "format": "4PK CAN", "status": "OK", "days_inv": 32.4, "on_hand": 81, "a_oh": 61, "brewery_oh": 0, "total_available": 61, "rate": 2.5, "a_rate": 2.0, "a_unit": "cases", "velocity_pct": -5, "days_to_zero": 30.5, "is_keg": false, "brew_status": "OK", "brew_urgency": 9.5, "brew_by": "2026-04-11", "stockout_date": "2026-05-02", "target_oh": 42, "shortfall": 0, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.388, "channel_split": {"nappi_pct": 100, "toast_pct": 0, "sd_pct": 0}, "toast_yoy_pct": null}, {"sku": "45003", "name": "P3 Pale Ale", "format": "1/6 BBL", "status": "OK", "days_inv": 999, "on_hand": 10, "a_oh": 4, "brewery_oh": 0, "total_available": 4, "rate": 0.0, "a_rate": 0.0, "a_unit": "kegs", "velocity_pct": -100, "days_to_zero": 999, "is_keg": true, "brew_status": "OK", "brew_urgency": 978, "brew_by": "2028-12-05", "stockout_date": "2028-12-26", "target_oh": 0, "shortfall": 0, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.0, "channel_split": {}, "toast_yoy_pct": null}, {"sku": "45005", "name": "Subhunter IPA", "format": "4PK CAN", "status": "ORDER_NOW", "days_inv": 18.8, "on_hand": 47, "a_oh": 35, "brewery_oh": 0, "total_available": 35, "rate": 2.5, "a_rate": 2.0, "a_unit": "cases", "velocity_pct": 31, "days_to_zero": 17.5, "is_keg": false, "brew_status": "BREW_NOW", "brew_urgency": -3.5, "brew_by": "2026-03-29", "stockout_date": "2026-04-19", "target_oh": 42, "shortfall": 7, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.388, "channel_split": {"nappi_pct": 100, "toast_pct": 0, "sd_pct": 0}, "toast_yoy_pct": null}, {"sku": "45008", "name": "Subhunter IPA", "format": "1/6 BBL", "status": "OK", "days_inv": 999, "on_hand": 4, "a_oh": 2, "brewery_oh": 0, "total_available": 2, "rate": 0.0, "a_rate": 0.0, "a_unit": "kegs", "velocity_pct": -100, "days_to_zero": 999, "is_keg": true, "brew_status": "OK", "brew_urgency": 978, "brew_by": "2028-12-05", "stockout_date": "2028-12-26", "target_oh": 0, "shortfall": 0, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.0, "channel_split": {}, "toast_yoy_pct": null}, {"sku": "45010", "name": "Wings Hazy IPA", "format": "4PK CAN", "status": "OK", "days_inv": 38.0, "on_hand": 57, "a_oh": 43, "brewery_oh": 0, "total_available": 43, "rate": 1.5, "a_rate": 1.0, "a_unit": "cases", "velocity_pct": -55, "days_to_zero": 43.0, "is_keg": false, "brew_status": "OK", "brew_urgency": 22.0, "brew_by": "2026-04-24", "stockout_date": "2026-05-15", "target_oh": 21, "shortfall": 0, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.194, "channel_split": {"nappi_pct": 100, "toast_pct": 0, "sd_pct": 0}, "toast_yoy_pct": null}, {"sku": "45013", "name": "Wings Hazy IPA", "format": "1/6 BBL", "status": "CRITICAL", "days_inv": 10.0, "on_hand": 10, "a_oh": 4, "brewery_oh": 0, "total_available": 4, "rate": 1.0, "a_rate": 0.5, "a_unit": "kegs", "velocity_pct": 56, "days_to_zero": 8.0, "is_keg": true, "brew_status": "BREW_NOW", "brew_urgency": -13.0, "brew_by": "2026-03-20", "stockout_date": "2026-04-10", "target_oh": 10, "shortfall": 6, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.5, "channel_split": {"nappi_pct": 100, "toast_pct": 0, "sd_pct": 0}, "toast_yoy_pct": null}, {"sku": "45015", "name": "Plane Beer Pilsner", "format": "6PK CAN", "status": "OK", "days_inv": 999, "on_hand": 47, "a_oh": 47, "brewery_oh": 0, "total_available": 47, "rate": 0.0, "a_rate": 0.0, "a_unit": "cases", "velocity_pct": -100, "days_to_zero": 999, "is_keg": false, "brew_status": "OK", "brew_urgency": 978, "brew_by": "2028-12-05", "stockout_date": "2028-12-26", "target_oh": 0, "shortfall": 0, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.0, "channel_split": {}, "toast_yoy_pct": null}, {"sku": "45018", "name": "Plane Beer Pilsner", "format": "1/6 BBL", "status": "OK", "days_inv": 999, "on_hand": 11, "a_oh": 5, "brewery_oh": 0, "total_available": 5, "rate": 0.0, "a_rate": 0.0, "a_unit": "kegs", "velocity_pct": -100, "days_to_zero": 999, "is_keg": true, "brew_status": "OK", "brew_urgency": 978, "brew_by": "2028-12-05", "stockout_date": "2028-12-26", "target_oh": 0, "shortfall": 0, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.0, "channel_split": {}, "toast_yoy_pct": null}, {"sku": "45020", "name": "Remove Before Flight", "format": "4PK CAN", "status": "CRITICAL", "days_inv": 11.6, "on_hand": 29, "a_oh": 22, "brewery_oh": 0, "total_available": 22, "rate": 2.5, "a_rate": 2.0, "a_unit": "cases", "velocity_pct": 112, "days_to_zero": 11.0, "is_keg": false, "brew_status": "BREW_NOW", "brew_urgency": -10.0, "brew_by": "2026-03-23", "stockout_date": "2026-04-13", "target_oh": 42, "shortfall": 20, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.388, "channel_split": {"nappi_pct": 100, "toast_pct": 0, "sd_pct": 0}, "toast_yoy_pct": null}, {"sku": "45023", "name": "Remove Before Flight", "format": "1/6 BBL", "status": "CRITICAL", "days_inv": 1.6, "on_hand": 4, "a_oh": 2, "brewery_oh": 0, "total_available": 2, "rate": 2.5, "a_rate": 1.0, "a_unit": "kegs", "velocity_pct": 1289, "days_to_zero": 2.0, "is_keg": true, "brew_status": "BREW_NOW", "brew_urgency": -19.0, "brew_by": "2026-03-14", "stockout_date": "2026-04-04", "target_oh": 21, "shortfall": 19, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 1.0, "channel_split": {"nappi_pct": 100, "toast_pct": 0, "sd_pct": 0}, "toast_yoy_pct": null}, {"sku": "45038", "name": "Real Maine Italian Pilsner", "format": "1/6 BBL", "status": "OK", "days_inv": 999, "on_hand": 5, "a_oh": 2, "brewery_oh": 0, "total_available": 2, "rate": 0.0, "a_rate": 0.0, "a_unit": "kegs", "velocity_pct": -100, "days_to_zero": 999, "is_keg": true, "brew_status": "OK", "brew_urgency": 978, "brew_by": "2028-12-05", "stockout_date": "2028-12-26", "target_oh": 0, "shortfall": 0, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.0, "channel_split": {}, "toast_yoy_pct": null}], "format_mix": {"can_mtd": 18, "keg_mtd": 7, "can_oh": 261, "keg_oh": 44, "a_can_mtd": 14, "a_keg_mtd": 3, "a_can_oh": 208, "a_keg_oh": 19}, "stockout_projections": [{"sku": "45023", "name": "Remove Before Flight", "format": "1/6 BBL", "status": "CRITICAL", "days_inv": 1.6, "on_hand": 4, "a_oh": 2, "brewery_oh": 0, "total_available": 2, "rate": 2.5, "a_rate": 1.0, "a_unit": "kegs", "velocity_pct": 1289, "days_to_zero": 2.0, "is_keg": true, "brew_status": "BREW_NOW", "brew_urgency": -19.0, "brew_by": "2026-03-14", "stockout_date": "2026-04-04", "target_oh": 21, "shortfall": 19, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 1.0, "channel_split": {"nappi_pct": 100, "toast_pct": 0, "sd_pct": 0}, "toast_yoy_pct": null}, {"sku": "45013", "name": "Wings Hazy IPA", "format": "1/6 BBL", "status": "CRITICAL", "days_inv": 10.0, "on_hand": 10, "a_oh": 4, "brewery_oh": 0, "total_available": 4, "rate": 1.0, "a_rate": 0.5, "a_unit": "kegs", "velocity_pct": 56, "days_to_zero": 8.0, "is_keg": true, "brew_status": "BREW_NOW", "brew_urgency": -13.0, "brew_by": "2026-03-20", "stockout_date": "2026-04-10", "target_oh": 10, "shortfall": 6, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.5, "channel_split": {"nappi_pct": 100, "toast_pct": 0, "sd_pct": 0}, "toast_yoy_pct": null}, {"sku": "45020", "name": "Remove Before Flight", "format": "4PK CAN", "status": "CRITICAL", "days_inv": 11.6, "on_hand": 29, "a_oh": 22, "brewery_oh": 0, "total_available": 22, "rate": 2.5, "a_rate": 2.0, "a_unit": "cases", "velocity_pct": 112, "days_to_zero": 11.0, "is_keg": false, "brew_status": "BREW_NOW", "brew_urgency": -10.0, "brew_by": "2026-03-23", "stockout_date": "2026-04-13", "target_oh": 42, "shortfall": 20, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.388, "channel_split": {"nappi_pct": 100, "toast_pct": 0, "sd_pct": 0}, "toast_yoy_pct": null}, {"sku": "45005", "name": "Subhunter IPA", "format": "4PK CAN", "status": "ORDER_NOW", "days_inv": 18.8, "on_hand": 47, "a_oh": 35, "brewery_oh": 0, "total_available": 35, "rate": 2.5, "a_rate": 2.0, "a_unit": "cases", "velocity_pct": 31, "days_to_zero": 17.5, "is_keg": false, "brew_status": "BREW_NOW", "brew_urgency": -3.5, "brew_by": "2026-03-29", "stockout_date": "2026-04-19", "target_oh": 42, "shortfall": 7, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.388, "channel_split": {"nappi_pct": 100, "toast_pct": 0, "sd_pct": 0}, "toast_yoy_pct": null}, {"sku": "45000", "name": "P3 Pale Ale", "format": "4PK CAN", "status": "OK", "days_inv": 32.4, "on_hand": 81, "a_oh": 61, "brewery_oh": 0, "total_available": 61, "rate": 2.5, "a_rate": 2.0, "a_unit": "cases", "velocity_pct": -5, "days_to_zero": 30.5, "is_keg": false, "brew_status": "OK", "brew_urgency": 9.5, "brew_by": "2026-04-11", "stockout_date": "2026-05-02", "target_oh": 42, "shortfall": 0, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.388, "channel_split": {"nappi_pct": 100, "toast_pct": 0, "sd_pct": 0}, "toast_yoy_pct": null}, {"sku": "45010", "name": "Wings Hazy IPA", "format": "4PK CAN", "status": "OK", "days_inv": 38.0, "on_hand": 57, "a_oh": 43, "brewery_oh": 0, "total_available": 43, "rate": 1.5, "a_rate": 1.0, "a_unit": "cases", "velocity_pct": -55, "days_to_zero": 43.0, "is_keg": false, "brew_status": "OK", "brew_urgency": 22.0, "brew_by": "2026-04-24", "stockout_date": "2026-05-15", "target_oh": 21, "shortfall": 0, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.194, "channel_split": {"nappi_pct": 100, "toast_pct": 0, "sd_pct": 0}, "toast_yoy_pct": null}, {"sku": "45003", "name": "P3 Pale Ale", "format": "1/6 BBL", "status": "OK", "days_inv": 999, "on_hand": 10, "a_oh": 4, "brewery_oh": 0, "total_available": 4, "rate": 0.0, "a_rate": 0.0, "a_unit": "kegs", "velocity_pct": -100, "days_to_zero": 999, "is_keg": true, "brew_status": "OK", "brew_urgency": 978, "brew_by": "2028-12-05", "stockout_date": "2028-12-26", "target_oh": 0, "shortfall": 0, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.0, "channel_split": {}, "toast_yoy_pct": null}, {"sku": "45008", "name": "Subhunter IPA", "format": "1/6 BBL", "status": "OK", "days_inv": 999, "on_hand": 4, "a_oh": 2, "brewery_oh": 0, "total_available": 2, "rate": 0.0, "a_rate": 0.0, "a_unit": "kegs", "velocity_pct": -100, "days_to_zero": 999, "is_keg": true, "brew_status": "OK", "brew_urgency": 978, "brew_by": "2028-12-05", "stockout_date": "2028-12-26", "target_oh": 0, "shortfall": 0, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.0, "channel_split": {}, "toast_yoy_pct": null}, {"sku": "45015", "name": "Plane Beer Pilsner", "format": "6PK CAN", "status": "OK", "days_inv": 999, "on_hand": 47, "a_oh": 47, "brewery_oh": 0, "total_available": 47, "rate": 0.0, "a_rate": 0.0, "a_unit": "cases", "velocity_pct": -100, "days_to_zero": 999, "is_keg": false, "brew_status": "OK", "brew_urgency": 978, "brew_by": "2028-12-05", "stockout_date": "2028-12-26", "target_oh": 0, "shortfall": 0, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.0, "channel_split": {}, "toast_yoy_pct": null}, {"sku": "45018", "name": "Plane Beer Pilsner", "format": "1/6 BBL", "status": "OK", "days_inv": 999, "on_hand": 11, "a_oh": 5, "brewery_oh": 0, "total_available": 5, "rate": 0.0, "a_rate": 0.0, "a_unit": "kegs", "velocity_pct": -100, "days_to_zero": 999, "is_keg": true, "brew_status": "OK", "brew_urgency": 978, "brew_by": "2028-12-05", "stockout_date": "2028-12-26", "target_oh": 0, "shortfall": 0, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.0, "channel_split": {}, "toast_yoy_pct": null}, {"sku": "45038", "name": "Real Maine Italian Pilsner", "format": "1/6 BBL", "status": "OK", "days_inv": 999, "on_hand": 5, "a_oh": 2, "brewery_oh": 0, "total_available": 2, "rate": 0.0, "a_rate": 0.0, "a_unit": "kegs", "velocity_pct": -100, "days_to_zero": 999, "is_keg": true, "brew_status": "OK", "brew_urgency": 978, "brew_by": "2028-12-05", "stockout_date": "2028-12-26", "target_oh": 0, "shortfall": 0, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.0, "channel_split": {}, "toast_yoy_pct": null}], "tasting_room_only": [], "brew_queue": [{"sku": "45023", "name": "Remove Before Flight", "format": "1/6 BBL", "status": "CRITICAL", "days_inv": 1.6, "on_hand": 4, "a_oh": 2, "brewery_oh": 0, "total_available": 2, "rate": 2.5, "a_rate": 1.0, "a_unit": "kegs", "velocity_pct": 1289, "days_to_zero": 2.0, "is_keg": true, "brew_status": "BREW_NOW", "brew_urgency": -19.0, "brew_by": "2026-03-14", "stockout_date": "2026-04-04", "target_oh": 21, "shortfall": 19, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 1.0, "channel_split": {"nappi_pct": 100, "toast_pct": 0, "sd_pct": 0}, "toast_yoy_pct": null}, {"sku": "45013", "name": "Wings Hazy IPA", "format": "1/6 BBL", "status": "CRITICAL", "days_inv": 10.0, "on_hand": 10, "a_oh": 4, "brewery_oh": 0, "total_available": 4, "rate": 1.0, "a_rate": 0.5, "a_unit": "kegs", "velocity_pct": 56, "days_to_zero": 8.0, "is_keg": true, "brew_status": "BREW_NOW", "brew_urgency": -13.0, "brew_by": "2026-03-20", "stockout_date": "2026-04-10", "target_oh": 10, "shortfall": 6, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.5, "channel_split": {"nappi_pct": 100, "toast_pct": 0, "sd_pct": 0}, "toast_yoy_pct": null}, {"sku": "45020", "name": "Remove Before Flight", "format": "4PK CAN", "status": "CRITICAL", "days_inv": 11.6, "on_hand": 29, "a_oh": 22, "brewery_oh": 0, "total_available": 22, "rate": 2.5, "a_rate": 2.0, "a_unit": "cases", "velocity_pct": 112, "days_to_zero": 11.0, "is_keg": false, "brew_status": "BREW_NOW", "brew_urgency": -10.0, "brew_by": "2026-03-23", "stockout_date": "2026-04-13", "target_oh": 42, "shortfall": 20, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.388, "channel_split": {"nappi_pct": 100, "toast_pct": 0, "sd_pct": 0}, "toast_yoy_pct": null}, {"sku": "45005", "name": "Subhunter IPA", "format": "4PK CAN", "status": "ORDER_NOW", "days_inv": 18.8, "on_hand": 47, "a_oh": 35, "brewery_oh": 0, "total_available": 35, "rate": 2.5, "a_rate": 2.0, "a_unit": "cases", "velocity_pct": 31, "days_to_zero": 17.5, "is_keg": false, "brew_status": "BREW_NOW", "brew_urgency": -3.5, "brew_by": "2026-03-29", "stockout_date": "2026-04-19", "target_oh": 42, "shortfall": 7, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.388, "channel_split": {"nappi_pct": 100, "toast_pct": 0, "sd_pct": 0}, "toast_yoy_pct": null}, {"sku": "45000", "name": "P3 Pale Ale", "format": "4PK CAN", "status": "OK", "days_inv": 32.4, "on_hand": 81, "a_oh": 61, "brewery_oh": 0, "total_available": 61, "rate": 2.5, "a_rate": 2.0, "a_unit": "cases", "velocity_pct": -5, "days_to_zero": 30.5, "is_keg": false, "brew_status": "OK", "brew_urgency": 9.5, "brew_by": "2026-04-11", "stockout_date": "2026-05-02", "target_oh": 42, "shortfall": 0, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.388, "channel_split": {"nappi_pct": 100, "toast_pct": 0, "sd_pct": 0}, "toast_yoy_pct": null}, {"sku": "45010", "name": "Wings Hazy IPA", "format": "4PK CAN", "status": "OK", "days_inv": 38.0, "on_hand": 57, "a_oh": 43, "brewery_oh": 0, "total_available": 43, "rate": 1.5, "a_rate": 1.0, "a_unit": "cases", "velocity_pct": -55, "days_to_zero": 43.0, "is_keg": false, "brew_status": "OK", "brew_urgency": 22.0, "brew_by": "2026-04-24", "stockout_date": "2026-05-15", "target_oh": 21, "shortfall": 0, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.194, "channel_split": {"nappi_pct": 100, "toast_pct": 0, "sd_pct": 0}, "toast_yoy_pct": null}, {"sku": "45003", "name": "P3 Pale Ale", "format": "1/6 BBL", "status": "OK", "days_inv": 999, "on_hand": 10, "a_oh": 4, "brewery_oh": 0, "total_available": 4, "rate": 0.0, "a_rate": 0.0, "a_unit": "kegs", "velocity_pct": -100, "days_to_zero": 999, "is_keg": true, "brew_status": "OK", "brew_urgency": 978, "brew_by": "2028-12-05", "stockout_date": "2028-12-26", "target_oh": 0, "shortfall": 0, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.0, "channel_split": {}, "toast_yoy_pct": null}, {"sku": "45008", "name": "Subhunter IPA", "format": "1/6 BBL", "status": "OK", "days_inv": 999, "on_hand": 4, "a_oh": 2, "brewery_oh": 0, "total_available": 2, "rate": 0.0, "a_rate": 0.0, "a_unit": "kegs", "velocity_pct": -100, "days_to_zero": 999, "is_keg": true, "brew_status": "OK", "brew_urgency": 978, "brew_by": "2028-12-05", "stockout_date": "2028-12-26", "target_oh": 0, "shortfall": 0, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.0, "channel_split": {}, "toast_yoy_pct": null}, {"sku": "45015", "name": "Plane Beer Pilsner", "format": "6PK CAN", "status": "OK", "days_inv": 999, "on_hand": 47, "a_oh": 47, "brewery_oh": 0, "total_available": 47, "rate": 0.0, "a_rate": 0.0, "a_unit": "cases", "velocity_pct": -100, "days_to_zero": 999, "is_keg": false, "brew_status": "OK", "brew_urgency": 978, "brew_by": "2028-12-05", "stockout_date": "2028-12-26", "target_oh": 0, "shortfall": 0, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.0, "channel_split": {}, "toast_yoy_pct": null}, {"sku": "45018", "name": "Plane Beer Pilsner", "format": "1/6 BBL", "status": "OK", "days_inv": 999, "on_hand": 11, "a_oh": 5, "brewery_oh": 0, "total_available": 5, "rate": 0.0, "a_rate": 0.0, "a_unit": "kegs", "velocity_pct": -100, "days_to_zero": 999, "is_keg": true, "brew_status": "OK", "brew_urgency": 978, "brew_by": "2028-12-05", "stockout_date": "2028-12-26", "target_oh": 0, "shortfall": 0, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.0, "channel_split": {}, "toast_yoy_pct": null}, {"sku": "45038", "name": "Real Maine Italian Pilsner", "format": "1/6 BBL", "status": "OK", "days_inv": 999, "on_hand": 5, "a_oh": 2, "brewery_oh": 0, "total_available": 2, "rate": 0.0, "a_rate": 0.0, "a_unit": "kegs", "velocity_pct": -100, "days_to_zero": 999, "is_keg": true, "brew_status": "OK", "brew_urgency": 978, "brew_by": "2028-12-05", "stockout_date": "2028-12-26", "target_oh": 0, "shortfall": 0, "lead_time": 21, "batch_size": 7, "brand_key": null, "channel": "nappi", "toast_daily_kegs": 0, "sd_daily_kegs": 0, "total_daily_all_channels": 0.0, "channel_split": {}, "toast_yoy_pct": null}], "restocks": [{"d": "2026-04-02", "sku": "45000", "name": "P3 Pale Ale", "format": "4PK CAN", "added": 41, "a_unit": "cases", "prev_oh": 20, "new_oh": 61}, {"d": "2026-04-02", "sku": "45003", "name": "P3 Pale Ale", "format": "1/6 BBL", "added": 2, "a_unit": "kegs", "prev_oh": 2, "new_oh": 4}, {"d": "2026-04-02", "sku": "45010", "name": "Wings Hazy IPA", "format": "4PK CAN", "added": 21, "a_unit": "cases", "prev_oh": 22, "new_oh": 43}, {"d": "2026-04-02", "sku": "45013", "name": "Wings Hazy IPA", "format": "1/6 BBL", "added": 2, "a_unit": "kegs", "prev_oh": 2, "new_oh": 4}, {"d": "2026-04-02", "sku": "45018", "name": "Plane Beer Pilsner", "format": "1/6 BBL", "added": 3, "a_unit": "kegs", "prev_oh": 2, "new_oh": 5}, {"d": "2026-04-02", "sku": "45038", "name": "Real Maine Italian Pilsner", "format": "1/6 BBL", "added": 2, "a_unit": "kegs", "prev_oh": 0, "new_oh": 2}, {"d": "2026-03-24", "sku": "45000", "name": "P3 Pale Ale", "format": "4PK CAN", "added": 1, "a_unit": "cases", "prev_oh": 31, "new_oh": 32}, {"d": "2026-03-20", "sku": "45018", "name": "Plane Beer Pilsner", "format": "1/6 BBL", "added": 1, "a_unit": "kegs", "prev_oh": 2, "new_oh": 3}, {"d": "2026-03-19", "sku": "45013", "name": "Wings Hazy IPA", "format": "1/6 BBL", "added": 3, "a_unit": "kegs", "prev_oh": 0, "new_oh": 3}, {"d": "2026-03-19", "sku": "45018", "name": "Plane Beer Pilsner", "format": "1/6 BBL", "added": 2, "a_unit": "kegs", "prev_oh": 0, "new_oh": 2}, {"d": "2026-03-19", "sku": "45020", "name": "Remove Before Flight", "format": "4PK CAN", "added": 20, "a_unit": "cases", "prev_oh": 10, "new_oh": 30}, {"d": "2026-03-19", "sku": "45023", "name": "Remove Before Flight", "format": "1/6 BBL", "added": 3, "a_unit": "kegs", "prev_oh": 0, "new_oh": 3}, {"d": "2026-03-12", "sku": "45000", "name": "P3 Pale Ale", "format": "4PK CAN", "added": 21, "a_unit": "cases", "prev_oh": 23, "new_oh": 44}, {"d": "2026-03-12", "sku": "45003", "name": "P3 Pale Ale", "format": "1/6 BBL", "added": 3, "a_unit": "kegs", "prev_oh": 1, "new_oh": 4}, {"d": "2026-03-12", "sku": "45005", "name": "Subhunter IPA", "format": "4PK CAN", "added": 21, "a_unit": "cases", "prev_oh": 29, "new_oh": 50}, {"d": "2026-03-12", "sku": "45010", "name": "Wings Hazy IPA", "format": "4PK CAN", "added": 20, "a_unit": "cases", "prev_oh": 20, "new_oh": 40}, {"d": "2026-03-12", "sku": "45038", "name": "Real Maine Italian Pilsner", "format": "1/6 BBL", "added": 2, "a_unit": "kegs", "prev_oh": 0, "new_oh": 2}]};
+const FRESHNESS = {"nappi": "2026-04-02", "inventory": "N/A", "toast": "N/A", "selfdistro": "N/A", "toast_month": "N/A", "selfdistro_month": "N/A"};
+const LATEST = "2026-04-02";
+
+// ── Auth ──
+(function(){
+  var pin = '1903';
+  var inp = document.getElementById('passwordInput');
+  var err = document.getElementById('errorMsg');
+  inp.addEventListener('keydown', function(e){
+    if(e.key==='Enter'){
+      if(inp.value===pin){
+        document.getElementById('authGate').style.display='none';
+        document.getElementById('mainApp').style.display='block';
+        renderAll();
+      } else {
+        err.style.display='block';
+        inp.value='';
+      }
+    }
+  });
+})();
+
+function renderAll(){
+  renderFreshness();
+  renderKPIs();
+  renderSeasonBar();
+  renderQueue();
+}
+
+function renderFreshness(){
+  var d = LATEST;
+  document.getElementById('freshness').textContent = 'Data as of ' + d + '  \u00b7  Nappi: ' + (FRESHNESS.nappi||'?');
+}
+
+// ── KPIs ──
+function renderKPIs(){
+  var brewNow = 0, plan = 0, ok = 0, avgDays = 0, cnt = 0;
+  BRANDS.forEach(function(b){
+    if(b.brew_status === 'BREW_NOW') brewNow++;
+    else if(b.brew_status === 'PLAN' || b.brew_status === 'ORDER_SOON') plan++;
+    else ok++;
+    if(b.days_until_stockout < 900){ avgDays += b.days_until_stockout; cnt++; }
+  });
+  avgDays = cnt ? Math.round(avgDays / cnt) : 0;
+
+  // upcoming seasonal multiplier
+  var now = new Date();
+  var nextMo = String(((now.getMonth()+1) % 12) + 1).padStart(2,'0');
+  var curMo = String(now.getMonth()+1).padStart(2,'0');
+  var sNow = SEASONAL[curMo] || 1;
+  var sNext = SEASONAL[nextMo] || 1;
+  var seasonTrend = sNext > sNow ? '\u2191' : sNext < sNow ? '\u2193' : '\u2192';
+
+  var el = document.getElementById('kpiStrip');
+  el.innerHTML =
+    '<div class="kpi-card urgent"><div class="val">' + brewNow + '</div><div class="lbl">Brew Now</div></div>' +
+    '<div class="kpi-card warn"><div class="val">' + plan + '</div><div class="lbl">Plan Soon</div></div>' +
+    '<div class="kpi-card ok"><div class="val">' + ok + '</div><div class="lbl">On Track</div></div>' +
+    '<div class="kpi-card"><div class="val">' + avgDays + 'd</div><div class="lbl">Avg Days Left</div></div>' +
+    '<div class="kpi-card"><div class="val">' + sNow.toFixed(2) + seasonTrend + '</div><div class="lbl">Season Index</div></div>';
+}
+
+// ── Season bar ──
+function renderSeasonBar(){
+  var months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+  var labels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var maxVal = Math.max.apply(null, months.map(function(m){ return SEASONAL[m]||0; }));
+  var curMo = String(new Date().getMonth()+1).padStart(2,'0');
+
+  var h = '<span class="season-lbl">Seasonal Demand</span>';
+  months.forEach(function(m, idx){
+    var v = SEASONAL[m] || 0;
+    var ht = Math.round((v / maxVal) * 32);
+    var cls = m === curMo ? ' now' : '';
+    h += '<div class="mo' + cls + '"><div class="bar" style="height:' + ht + 'px"></div><div class="mlbl">' + labels[idx] + '</div></div>';
+  });
+  document.getElementById('seasonBar').innerHTML = h;
+}
+
+// ── Queue table ──
+function renderQueue(){
+  // Sort by priority_rank
+  var sorted = BRANDS.slice().sort(function(a,b){ return a.priority_rank - b.priority_rank; });
+  var body = document.getElementById('queueBody');
+  var html = '';
+
+  sorted.forEach(function(b, idx){
+    var rank = idx + 1;
+    var statusCls = b.brew_status === 'BREW_NOW' ? 'brew-now' : (b.brew_status === 'PLAN' || b.brew_status === 'ORDER_SOON') ? 'plan' : 'ok';
+    var statusLabel = b.brew_status === 'BREW_NOW' ? 'Brew Now' : b.brew_status === 'PLAN' ? 'Plan' : b.brew_status === 'ORDER_SOON' ? 'Order Soon' : 'OK';
+    var daysLeft = b.days_until_stockout >= 900 ? '\u221e' : b.days_until_stockout;
+    var daysCls = b.days_until_stockout < 7 ? ' style="color:var(--red);font-weight:700"' :
+                  b.days_until_stockout < 21 ? ' style="color:var(--orange);font-weight:600"' : '';
+    var vel = b.total_daily_bbl.toFixed(3);
+    var trendIcon = b.trailing_3mo_trend === 'up' ? '<span class="trend-up">\u25b2</span>' :
+                    b.trailing_3mo_trend === 'down' ? '<span class="trend-down">\u25bc</span>' :
+                    '<span class="trend-flat">\u25b6</span>';
+
+    // format brew_by nicely
+    var brewBy = b.brew_by_date || '\u2014';
+    if(brewBy !== '\u2014'){
+      var parts = brewBy.split('-');
+      brewBy = parts[1] + '/' + parts[2];
+    }
+
+    html += '<tr onclick="toggleDetail(this,' + idx + ')" id="row' + idx + '">' +
+      '<td style="color:var(--text3);font-family:var(--mono);font-size:11px">' + rank + '</td>' +
+      '<td class="name-cell">' + b.display_name + '<br><span class="pkg">' + b.style + '</span></td>' +
+      '<td><span class="chip ' + statusCls + '">' + statusLabel + '</span></td>' +
+      '<td class="r"' + daysCls + '>' + daysLeft + '</td>' +
+      '<td class="r">' + brewBy + '</td>' +
+      '<td class="r">' + vel + '</td>' +
+      '<td>' + trendIcon + '</td>' +
+      '</tr>';
+
+    // Detail row
+    html += '<tr class="detail-row" id="detail' + idx + '"><td colspan="7">' + buildDetail(b) + '</td></tr>';
+  });
+
+  body.innerHTML = html;
+}
+
+function buildDetail(b){
+  var h = '<div class="detail-panel"><div class="detail-grid">';
+
+  // ── Column 1: Inventory & Timing ──
+  h += '<div class="detail-section">';
+  h += '<h4>Inventory & Timing</h4>';
+  h += drow('Total Inv (bbl)', b.total_inv_bbl.toFixed(1));
+  h += drow('Brewery Kegs (1/6)', b.brewery_kegs_sixth);
+  h += drow('Brewery Kegs (1/2)', b.brewery_kegs_half);
+  h += drow('Brewery Cases (16oz)', b.brewery_cases_16oz.toFixed(0));
+  h += drow('Nappi Cases', b.nappi_cases);
+  h += drow('Nappi Kegs', b.nappi_kegs);
+  h += drow('Days to Stockout', b.days_until_stockout >= 900 ? '\u221e' : b.days_until_stockout);
+  h += drow('Kegs Stockout', b.days_until_stockout_kegs === 0 ? '\u2014' : b.days_until_stockout_kegs + 'd');
+  h += drow('Cases Stockout', b.days_until_stockout_cases === 0 ? '\u2014' : b.days_until_stockout_cases + 'd');
+  h += drow('Lead Time', b.lead_time_days + ' days');
+  h += drow('Brew By', b.brew_by_date || '\u2014');
+  h += '</div>';
+
+  // ── Column 2: Velocity & Channels ──
+  h += '<div class="detail-section">';
+  h += '<h4>Velocity & Channels</h4>';
+  h += drow('Total Daily (bbl)', b.total_daily_bbl.toFixed(3));
+  h += drow('Nappi', b.nappi_daily_bbl.toFixed(3) + ' bbl/d');
+  h += drow('Toast', b.toast_daily_bbl.toFixed(3) + ' bbl/d');
+  h += drow('Self-Distro', b.selfdistro_daily_bbl.toFixed(3) + ' bbl/d');
+  h += drow('Current Mo Vel', b.current_month_velocity_bbl.toFixed(3) + ' bbl/d');
+  if(b.same_month_last_year_bbl !== null){
+    h += drow('Same Mo Last Yr', b.same_month_last_year_bbl.toFixed(3) + ' bbl/d');
+  }
+  h += drow('Trend (3mo)', b.trailing_3mo_trend);
+
+  // Channel bar
+  var cp = b.channel_pcts;
+  h += '<div style="margin-top:8px">';
+  h += '<div class="ch-bar">';
+  if(cp.nappi > 0) h += '<div class="seg nappi" style="width:' + cp.nappi + '%"></div>';
+  if(cp.toast > 0) h += '<div class="seg toast" style="width:' + cp.toast + '%"></div>';
+  if(cp.selfdist > 0) h += '<div class="seg sd" style="width:' + cp.selfdist + '%"></div>';
+  if(cp.mmm > 0) h += '<div class="seg mmm" style="width:' + cp.mmm + '%"></div>';
+  h += '</div>';
+  h += '<div class="ch-legend">';
+  h += '<span><span class="dot" style="background:var(--accent)"></span>Nappi ' + cp.nappi + '%</span>';
+  h += '<span><span class="dot" style="background:var(--orange)"></span>Toast ' + cp.toast + '%</span>';
+  h += '<span><span class="dot" style="background:var(--blue)"></span>SD ' + (cp.selfdist||0) + '%</span>';
+  h += '</div></div>';
+  h += '</div>';
+
+  // ── Column 3: Batch Plan & Sparkline ──
+  h += '<div class="detail-section">';
+  h += '<h4>Batch Plan</h4>';
+  h += drow('Batch Size', b.batch_size_bbl + ' bbl (' + b.recommended_batch + ')');
+  if(b.allocation){
+    var a = b.allocation;
+    h += drow('Kegs Output', a.kegs_output || '\u2014');
+    h += drow('Cases Output', a.cases_output || '\u2014');
+  }
+  h += drow('Channels', (b.channels||[]).join(', '));
+
+  // Sparkline from monthly_velocity
+  if(b.monthly_velocity && b.monthly_velocity.length > 0){
+    h += '<h4 style="margin-top:12px">Monthly Velocity</h4>';
+    h += buildSparkline(b.monthly_velocity);
+  }
+
+  h += '</div>';
+
+  h += '</div></div>'; // close detail-grid, detail-panel
+  return h;
+}
+
+function drow(label, val){
+  return '<div class="row"><span class="rlbl">' + label + '</span><span class="rval">' + val + '</span></div>';
+}
+
+function buildSparkline(mv){
+  var maxV = Math.max.apply(null, mv.map(function(m){ return m.daily_kegs; }));
+  if(maxV === 0) maxV = 1;
+  var h = '<div class="spark">';
+  mv.forEach(function(m, i){
+    var ht = Math.max(2, Math.round((m.daily_kegs / maxV) * 28));
+    var cls = i >= mv.length - 3 ? ' recent' : '';
+    var title = m.month + ': ' + m.daily_kegs.toFixed(3) + ' bbl/d (' + m.qty_sold + ' units)';
+    h += '<div class="bar' + cls + '" style="height:' + ht + 'px" title="' + title + '"></div>';
+  });
+  h += '</div>';
+  // Label the last month
+  var last = mv[mv.length - 1];
+  h += '<div style="font-size:10px;color:var(--text3);margin-top:2px">' + last.month + ': ' + last.qty_sold + ' units</div>';
+  return h;
+}
+
+function toggleDetail(tr, idx){
+  var det = document.getElementById('detail' + idx);
+  var wasOpen = det.classList.contains('show');
+  // close all
+  document.querySelectorAll('.detail-row.show').forEach(function(r){ r.classList.remove('show'); });
+  document.querySelectorAll('tr.expanded').forEach(function(r){ r.classList.remove('expanded'); });
+  if(!wasOpen){
+    det.classList.add('show');
+    tr.classList.add('expanded');
+  }
+}
+</script>
+</body>
+</html>

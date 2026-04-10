@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Deck Brewing - Find Our Beer</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #1c1a17;
+            --gold: #b8860b;
+            --off-white: #f5f3ef;
+            --light-gray: #e8e6e1;
+            --dark-gray: #4a4844;
+            --text: #2c2a27;
+            --border: #d4d1cb;
+            --on-premise: #b8860b;
+            --off-premise: #5a7a8a;
+            --fresh: #2ecc71;
+            --recent: #f39c12;
+            --stale: #e74c3c;
+            --shadow: 0 2px 8px rgba(28, 26, 23, 0.12);
+            --shadow-lg: 0 8px 16px rgba(28, 26, 23, 0.15);
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            color: var(--text);
+            background: var(--off-white);
+            line-height: 1.5;
+        }
+
+        .widget-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid var(--light-gray);
+        }
+
+        .header-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+        }
+
+        .header-tagline {
+            font-size: 15px;
+            color: var(--dark-gray);
+            font-weight: 500;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 28px;
+            padding: 20px;
+            background: var(--off-white);
+            border-radius: 8px;
+            border: 1px solid var(--light-gray);
+        }
+
+        @media (min-width: 600px) {
+            .filter-bar {
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--navy);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 14px;
+            color: var(--text);
+            background: white;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
+        }
+
+        .toggle-filters {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .toggle-btn {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: white;
+            color: var(--text);
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .toggle-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .toggle-btn.active {
+            background: var(--gold);
+            color: white;
+            border-color: var(--gold);
+        }
+
+        /* Map */
+        .map-section {
+            margin-bottom: 32px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        #map {
+            height: 250px;
+            width: 100%;
+            background: var(--light-gray);
+        }
+
+        @media (min-width: 600px) {
+            #map {
+                height: 400px;
+            }
+        }
+
+        .map-footer {
+            padding: 12px 16px;
+            background: var(--off-white);
+            border-top: 1px solid var(--light-gray);
+            font-size: 12px;
+            color: var(--dark-gray);
+            text-align: center;
+        }
+
+        /* Leaflet Overrides */
+        .leaflet-popup-content-wrapper {
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
+            background: white;
+        }
+
+        .leaflet-popup-content {
+            font-family: 'Source Sans 3', sans-serif;
+            color: var(--text);
+            margin: 0;
+        }
+
+        .leaflet-popup-tip {
+            background: white;
+            border: none;
+        }
+
+        /* Location Cards */
+        .locations-container {
+            margin-top: 32px;
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section-header {
+            font-family: 'Oswald', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--light-gray);
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+        }
+
+        .empty-state {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--dark-gray);
+            font-size: 15px;
+        }
+
+        .location-cards {
+            display: grid;
+            gap: 12px;
+        }
+
+        .location-card {
+            padding: 18px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .location-card:hover {
+            border-color: var(--gold);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .location-card.stale {
+            opacity: 0.75;
+            background: var(--off-white);
+        }
+
+        .location-card.highlight {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.2), var(--shadow-lg);
+            animation: pulse 0.6s ease;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.2), var(--shadow-lg);
+            }
+            50% {
+                box-shadow: 0 0 0 6px rgba(184, 134, 11, 0.15), var(--shadow-lg);
+            }
+            100% {
+                box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.2), var(--shadow-lg);
+            }
+        }
+
+        .card-header {
+            margin-bottom: 12px;
+        }
+
+        .card-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+        }
+
+        .card-address {
+            font-size: 14px;
+            color: var(--dark-gray);
+            line-height: 1.4;
+        }
+
+        .card-beers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .beer-badge {
+            display: inline-block;
+            padding: 6px 10px;
+            background: var(--off-white);
+            border: 1px solid var(--light-gray);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .card-freshness {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 12px 0;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .freshness-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .freshness-dot.fresh {
+            background: var(--fresh);
+            box-shadow: 0 0 8px rgba(46, 204, 113, 0.3);
+        }
+
+        .freshness-dot.recent {
+            background: var(--recent);
+            box-shadow: 0 0 8px rgba(243, 156, 18, 0.3);
+        }
+
+        .freshness-dot.stale {
+            background: var(--stale);
+            box-shadow: 0 0 8px rgba(231, 76, 60, 0.3);
+        }
+
+        .card-contact {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid var(--light-gray);
+            gap: 10px;
+        }
+
+        .card-phone {
+            font-size: 13px;
+        }
+
+        .card-phone a {
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .card-phone a:hover {
+            color: var(--navy);
+        }
+
+        .directions-btn {
+            flex-shrink: 0;
+            padding: 8px 14px;
+            background: var(--gold);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Source Sans 3', sans-serif;
+        }
+
+        .directions-btn:hover {
+            background: var(--navy);
+            transform: scale(1.05);
+        }
+
+        /* No results message */
+        .no-results {
+            grid-column: 1 / -1;
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--dark-gray);
+            font-size: 15px;
+        }
+
+        /* Responsive */
+        @media (max-width: 599px) {
+            .widget-container {
+                padding: 16px;
+            }
+
+            .header-title {
+                font-size: 28px;
+            }
+
+            .header-tagline {
+                font-size: 14px;
+            }
+
+            .section-header {
+                font-size: 18px;
+            }
+
+            .card-name {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="widget-container">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="header-title">Find Our Beer</h1>
+            <p class="header-tagline">Find Flight Deck Brewing on tap or in cans near you</p>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label for="cityFilter">City</label>
+                <input
+                    type="text"
+                    id="cityFilter"
+                    placeholder="e.g., Portland, Maine"
+                    autocomplete="off"
+                >
+            </div>
+            <div class="filter-group">
+                <label for="beerFilter">Beer</label>
+                <select id="beerFilter">
+                    <option value="">All Beers</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Location Type</label>
+                <div class="toggle-filters">
+                    <button class="toggle-btn active" data-type="all">All</button>
+                    <button class="toggle-btn" data-type="on_draft">On Draft</button>
+                    <button class="toggle-btn" data-type="in_stores">In Stores</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Section -->
+        <div class="map-section">
+            <div id="map"></div>
+            <div class="map-footer">
+                Data as of <span id="dataDate">March 27, 2026</span>
+            </div>
+        </div>
+
+        <!-- Location Cards -->
+        <div class="locations-container">
+            <div class="section" id="onDraftSection" style="display: none;">
+                <h2 class="section-header">On Draft</h2>
+                <div class="location-cards" id="onDraftCards"></div>
+            </div>
+
+            <div class="section" id="inStoresSection" style="display: none;">
+                <h2 class="section-header">In Stores</h2>
+                <div class="location-cards" id="inStoresCards"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+    <script>
+        // Fallback data structure
+        let WIDGET_DATA = null;
+
+        // State
+        let allLocations = [];
+        let allBeers = [];
+        let map = null;
+        let markers = {};
+        let currentFilter = {
+            city: '',
+            beer: '',
+            type: 'all'
+        };
+
+        // Initialize
+        async function init() {
+            try {
+                // Try to fetch data from widget_data.json
+                const response = await fetch('data/widget_data.json');
+                if (response.ok) {
+                    WIDGET_DATA = await response.json();
+                } else {
+                    console.warn('widget_data.json not found, using embedded data');
+                }
+            } catch (e) {
+                console.warn('Could not fetch widget_data.json:', e);
+            }
+
+            if (!WIDGET_DATA) {
+                console.error('No widget data available');
+                return;
+            }
+
+            // Populate data
+            allLocations = [...(WIDGET_DATA.on_draft || []), ...(WIDGET_DATA.in_stores || [])];
+            allBeers = WIDGET_DATA.beers || [];
+
+            // Set data date
+            if (WIDGET_DATA.report_date) {
+                // Parse date parts to avoid timezone offset issues
+                const [year, month, day] = WIDGET_DATA.report_date.split('-').map(Number);
+                const date = new Date(year, month - 1, day);
+                const formatter = new Intl.DateTimeFormat('en-US', {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+                document.getElementById('dataDate').textContent = formatter.format(date);
+            }
+
+            // Setup UI
+            setupBeerFilter();
+            setupToggleButtons();
+            setupMapAndCards();
+            setupEventListeners();
+
+            // Initial render
+            filterAndRender();
+        }
+
+        function setupBeerFilter() {
+            const select = document.getElementById('beerFilter');
+            allBeers.forEach(beer => {
+                const option = document.createElement('option');
+                option.value = beer;
+                option.textContent = beer;
+                select.appendChild(option);
+            });
+        }
+
+        function setupToggleButtons() {
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter.type = btn.dataset.type;
+                    filterAndRender();
+                });
+            });
+        }
+
+        function setupMapAndCards() {
+            // Initialize map
+            map = L.map('map').setView([43.65, -70.25], 9);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(map);
+        }
+
+        function setupEventListeners() {
+            document.getElementById('cityFilter').addEventListener('input', (e) => {
+                currentFilter.city = e.target.value.toLowerCase();
+                filterAndRender();
+            });
+
+            document.getElementById('beerFilter').addEventListener('change', (e) => {
+                currentFilter.beer = e.target.value;
+                filterAndRender();
+            });
+        }
+
+        function getLocationsByType(locations, type) {
+            if (type === 'on_draft') {
+                return locations.filter(l => WIDGET_DATA.on_draft.some(d => d.name === l.name && d.city === l.city));
+            }
+            if (type === 'in_stores') {
+                return locations.filter(l => WIDGET_DATA.in_stores.some(d => d.name === l.name && d.city === d.city));
+            }
+            return locations;
+        }
+
+        function filterAndRender() {
+            let filtered = allLocations;
+
+            // Filter by type
+            if (currentFilter.type !== 'all') {
+                filtered = getLocationsByType(filtered, currentFilter.type);
+            }
+
+            // Filter by city
+            if (currentFilter.city) {
+                filtered = filtered.filter(loc =>
+                    loc.city.toLowerCase().includes(currentFilter.city) ||
+                    loc.state.toLowerCase().includes(currentFilter.city)
+                );
+            }
+
+            // Filter by beer
+            if (currentFilter.beer) {
+                filtered = filtered.filter(loc =>
+                    loc.products.some(p => p.name === currentFilter.beer)
+                );
+            }
+
+            // Sort: fresh/recent first, then stale
+            filtered.sort((a, b) => {
+                const freshnessOrder = { fresh: 0, recent: 1, stale: 2 };
+                const aOrder = freshnessOrder[a.freshness] || 3;
+                const bOrder = freshnessOrder[b.freshness] || 3;
+                if (aOrder !== bOrder) return aOrder - bOrder;
+                return a.name.localeCompare(b.name);
+            });
+
+            renderMap(filtered);
+            renderCards(filtered);
+        }
+
+        function renderMap(locations) {
+            // Clear existing markers
+            Object.values(markers).forEach(marker => map.removeLayer(marker));
+            markers = {};
+
+            if (locations.length === 0) {
+                return;
+            }
+
+            // Add markers
+            locations.forEach(loc => {
+                const color = WIDGET_DATA.on_draft.some(d => d.name === loc.name && d.city === loc.city)
+                    ? '#b8860b'
+                    : '#5a7a8a';
+
+                const marker = L.circleMarker([loc.lat, loc.lng], {
+                    radius: 8,
+                    fillColor: color,
+                    color: color,
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                }).addTo(map);
+
+                markers[`${loc.name}|${loc.city}`] = marker;
+
+                marker.bindPopup(createPopupContent(loc));
+                marker.on('click', () => {
+                    highlightCard(`${loc.name}|${loc.city}`);
+                    marker.openPopup();
+                });
+            });
+
+            // Fit bounds
+            if (locations.length > 0) {
+                const bounds = L.latLngBounds(locations.map(l => [l.lat, l.lng]));
+                map.fitBounds(bounds, { padding: [50, 50] });
+            }
+        }
+
+        function createPopupContent(loc) {
+            const beers = loc.products.map(p => `<strong>${p.name}</strong> (${p.type})`).join('<br>');
+            const freshness = createFreshnessHTML(loc);
+            const directionsLink = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(loc.directions_query)}`;
+
+            return `
+                <div style="font-size: 14px; color: #2c2a27;">
+                    <strong style="font-size: 16px; display: block; margin-bottom: 8px;">${loc.name}</strong>
+                    ${beers}<br><br>
+                    ${freshness}<br><br>
+                    <a href="${directionsLink}" target="_blank" style="color: #b8860b; text-decoration: none; font-weight: 600;">Get Directions →</a>
+                </div>
+            `;
+        }
+
+        function createFreshnessHTML(loc) {
+            const dotColor = {
+                fresh: '#2ecc71',
+                recent: '#f39c12',
+                stale: '#e74c3c'
+            }[loc.freshness] || '#999';
+
+            return `<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: ${dotColor}; margin-right: 6px;"></span>${loc.freshness_label}`;
+        }
+
+        function renderCards(locations) {
+            const onDraftLocations = locations.filter(l => WIDGET_DATA.on_draft.some(d => d.name === l.name && d.city === l.city));
+            const inStoresLocations = locations.filter(l => WIDGET_DATA.in_stores.some(d => d.name === l.name && d.city === l.city));
+
+            // Render On Draft
+            const onDraftSection = document.getElementById('onDraftSection');
+            const onDraftCards = document.getElementById('onDraftCards');
+            if (onDraftLocations.length > 0) {
+                onDraftSection.style.display = 'block';
+                onDraftCards.innerHTML = onDraftLocations.map(loc => createCardHTML(loc)).join('');
+                attachCardListeners(onDraftCards);
+            } else {
+                onDraftSection.style.display = 'none';
+            }
+
+            // Render In Stores
+            const inStoresSection = document.getElementById('inStoresSection');
+            const inStoresCards = document.getElementById('inStoresCards');
+            if (inStoresLocations.length > 0) {
+                inStoresSection.style.display = 'block';
+                inStoresCards.innerHTML = inStoresLocations.map(loc => createCardHTML(loc)).join('');
+                attachCardListeners(inStoresCards);
+            } else {
+                inStoresSection.style.display = 'none';
+            }
+
+            // Show no results if both are empty
+            if (onDraftLocations.length === 0 && inStoresLocations.length === 0) {
+                document.querySelector('.locations-container').innerHTML = '<div class="empty-state">No locations found. Try adjusting your filters.</div>';
+            }
+        }
+
+        function createCardHTML(loc) {
+            const staleClass = loc.freshness === 'stale' ? 'stale' : '';
+            const beersHtml = loc.products.map(p => `<span class="beer-badge">${p.name}</span>`).join('');
+
+            const dotClass = {
+                fresh: 'fresh',
+                recent: 'recent',
+                stale: 'stale'
+            }[loc.freshness] || 'recent';
+
+            return `
+                <div class="location-card ${staleClass}" data-location-key="${loc.name}|${loc.city}">
+                    <div class="card-header">
+                        <div class="card-name">${loc.name}</div>
+                        <div class="card-address">${loc.address}<br>${loc.city}, ${loc.state}</div>
+                    </div>
+                    <div class="card-beers">${beersHtml}</div>
+                    <div class="card-freshness">
+                        <span class="freshness-dot ${dotClass}"></span>
+                        <span>${loc.freshness_label}</span>
+                    </div>
+                    <div class="card-contact">
+                        <div class="card-phone"><a href="tel:${loc.phone_raw}">${loc.phone}</a></div>
+                        <a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(loc.directions_query)}" target="_blank" class="directions-btn">Directions</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function attachCardListeners(container) {
+            container.querySelectorAll('.location-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const key = card.dataset.locationKey;
+                    highlightCard(key);
+                    const marker = markers[key];
+                    if (marker) {
+                        map.setView(marker.getLatLng(), map.getZoom(), { animate: true });
+                        setTimeout(() => marker.openPopup(), 300);
+                    }
+                });
+            });
+        }
+
+        function highlightCard(key) {
+            document.querySelectorAll('.location-card').forEach(card => {
+                card.classList.remove('highlight');
+            });
+            const card = document.querySelector(`[data-location-key="${key}"]`);
+            if (card) {
+                card.classList.add('highlight');
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // Start
+        init();
+    </script>
+</body>
+</html>

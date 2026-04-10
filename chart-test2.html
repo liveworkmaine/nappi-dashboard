@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<style>
+:root{--bg:#f5f3ef;--surface:#fff;--surface2:#edeae4;--border:#d9d4cb;--text:#1c1a17;--text2:#7a7267;
+--blue:#2c5282;--green:#276749;--red:#9b2c2c;--purple:#6b46c1;--orange:#c05621;--yellow:#b7791f;
+--font-display:Oswald,sans-serif;--font-body:'Source Sans 3',sans-serif;--font-mono:'JetBrains Mono',monospace}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);margin:20px}
+</style>
+</head><body>
+<div id="summaryChart">Loading chart...</div>
+<div id="debug" style="margin-top:20px;font-family:monospace;font-size:12px;white-space:pre-wrap;background:#fff;padding:12px;border-radius:8px"></div>
+<script>
+const DASH = {"dates": ["2026-03-11", "2026-03-12", "2026-03-13", "2026-03-16", "2026-03-17", "2026-03-18", "2026-03-19", "2026-03-20", "2026-03-23", "2026-03-24", "2026-03-25", "2026-03-26", "2026-03-27", "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02"], "latest_date": "2026-04-02", "products": {"45000": {"name": "P3 Pale Ale", "format": "4PK CAN", "ce_factor": 1.333, "trend": [{"d": "2026-03-11", "mtd": 29, "oh": 31, "status": "CRITICAL", "days": 11.8, "rate": 2.64, "a_mtd": 22, "a_oh": 23, "a_unit": "cases"}, {"d": "2026-03-12", "mtd": 29, "oh": 59, "status": "PLAN_PRODUCTION", "days": 24.4, "rate": 2.42, "a_mtd": 22, "a_oh": 44, "a_unit": "cases"}, {"d": "2026-03-13", "mtd": 31, "oh": 58, "status": "PLAN_PRODUCTION", "days": 24.3, "rate": 2.38, "a_mtd": 23, "a_oh": 44, "a_unit": "cases"}, {"d": "2026-03-16", "mtd": 32, "oh": 55, "status": "PLAN_PRODUCTION", "days": 27.5, "rate": 2.0, "a_mtd": 24, "a_oh": 41, "a_unit": "cases"}, {"d": "2026-03-17", "mtd": 36, "oh": 50, "status": "PLAN_PRODUCTION", "days": 23.6, "rate": 2.12, "a_mtd": 27, "a_oh": 38, "a_unit": "cases"}, {"d": "2026-03-18", "mtd": 43, "oh": 49, "status": "ORDER_NOW", "days": 20.5, "rate": 2.39, "a_mtd": 32, "a_oh": 37, "a_unit": "cases"}, {"d": "2026-03-19", "mtd": 44, "oh": 47, "status": "ORDER_NOW", "days": 20.3, "rate": 2.32, "a_mtd": 33, "a_oh": 35, "a_unit": "cases"}, {"d": "2026-03-20", "mtd": 47, "oh": 45, "status": "ORDER_NOW", "days": 19.1, "rate": 2.35, "a_mtd": 35, "a_oh": 34, "a_unit": "cases"}, {"d": "2026-03-23", "mtd": 49, "oh": 41, "status": "ORDER_NOW", "days": 19.2, "rate": 2.13, "a_mtd": 37, "a_oh": 31, "a_unit": "cases"}, {"d": "2026-03-24", "mtd": 55, "oh": 42, "status": "ORDER_NOW", "days": 18.3, "rate": 2.29, "a_mtd": 41, "a_oh": 32, "a_unit": "cases"}, {"d": "2026-03-25", "mtd": 55, "oh": 39, "status": "ORDER_NOW", "days": 17.7, "rate": 2.2, "a_mtd": 41, "a_oh": 29, "a_unit": "cases"}, {"d": "2026-03-26", "mtd": 59, "oh": 37, "status": "ORDER_NOW", "days": 16.3, "rate": 2.27, "a_mtd": 44, "a_oh": 28, "a_unit": "cases"}, {"d": "2026-03-27", "mtd": 61, "oh": 35, "status": "ORDER_NOW", "days": 15.5, "rate": 2.26, "a_mtd": 46, "a_oh": 26, "a_unit": "cases"}, {"d": "2026-03-30", "mtd": 64, "oh": 31, "status": "ORDER_NOW", "days": 14.5, "rate": 2.13, "a_mtd": 48, "a_oh": 23, "a_unit": "cases"}, {"d": "2026-03-31", "mtd": 69, "oh": 31, "status": "CRITICAL", "days": 13.9, "rate": 2.23, "a_mtd": 52, "a_oh": 23, "a_unit": "cases"}, {"d": "2026-04-01", "mtd": 0, "oh": 27, "status": "OK", "days": 999, "rate": 0.0, "a_mtd": 0, "a_oh": 20, "a_unit": "cases"}, {"d": "2026-04-02", "mtd": 5, "oh": 81, "status": "OK", "days": 32.4, "rate": 2.5, "a_mtd": 4, "a_oh": 61, "a_unit": "cases"}]}, "45003": {"name": "P3 Pale Ale", "format": "1/6 BBL", "ce_factor": 2.296, "trend": [{"d": "2026-03-11", "mtd": 7, "oh": 3, "status": "CRITICAL", "days": 4.7, "rate": 0.64, "a_mtd": 3, "a_oh": 1, "a_unit": "kegs"}, {"d": "2026-03-12", "mtd": 7, "oh": 9, "status": "ORDER_NOW", "days": 15.4, "rate": 0.58, "a_mtd": 3, "a_oh": 4, "a_unit": "kegs"}, {"d": "2026-03-13", "mtd": 7, "oh": 9, "status": "ORDER_NOW", "days": 16.7, "rate": 0.54, "a_mtd": 3, "a_oh": 4, "a_unit": "kegs"}, {"d": "2026-03-16", "mtd": 7, "oh": 9, "status": "ORDER_NOW", "days": 20.6, "rate": 0.44, "a_mtd": 3, "a_oh": 4, "a_unit": "kegs"}, {"d": "2026-03-17", "mtd": 7, "oh": 7, "status": "ORDER_NOW", "days": 17.0, "rate": 0.41, "a_mtd": 3, "a_oh": 3, "a_unit": "kegs"}, {"d": "2026-03-18", "mtd": 11, "oh": 7, "status": "CRITICAL", "days": 11.5, "rate": 0.61, "a_mtd": 5, "a_oh": 3, "a_unit": "kegs"}, {"d": "2026-03-19", "mtd": 11, "oh": 6, "status": "CRITICAL", "days": 10.4, "rate": 0.58, "a_mtd": 5, "a_oh": 3, "a_unit": "kegs"}, {"d": "2026-03-20", "mtd": 14, "oh": 6, "status": "CRITICAL", "days": 8.6, "rate": 0.7, "a_mtd": 6, "a_oh": 3, "a_unit": "kegs"}, {"d": "2026-03-23", "mtd": 14, "oh": 6, "status": "CRITICAL", "days": 9.9, "rate": 0.61, "a_mtd": 6, "a_oh": 3, "a_unit": "kegs"}, {"d": "2026-03-24", "mtd": 14, "oh": 6, "status": "CRITICAL", "days": 10.3, "rate": 0.58, "a_mtd": 6, "a_oh": 3, "a_unit": "kegs"}, {"d": "2026-03-25", "mtd": 14, "oh": 5, "status": "CRITICAL", "days": 8.9, "rate": 0.56, "a_mtd": 6, "a_oh": 2, "a_unit": "kegs"}, {"d": "2026-03-26", "mtd": 16, "oh": 4, "status": "CRITICAL", "days": 6.5, "rate": 0.62, "a_mtd": 7, "a_oh": 2, "a_unit": "kegs"}, {"d": "2026-03-27", "mtd": 18, "oh": 4, "status": "CRITICAL", "days": 6.0, "rate": 0.67, "a_mtd": 8, "a_oh": 2, "a_unit": "kegs"}, {"d": "2026-03-30", "mtd": 18, "oh": 4, "status": "CRITICAL", "days": 6.7, "rate": 0.6, "a_mtd": 8, "a_oh": 2, "a_unit": "kegs"}, {"d": "2026-03-31", "mtd": 18, "oh": 4, "status": "CRITICAL", "days": 6.9, "rate": 0.58, "a_mtd": 8, "a_oh": 2, "a_unit": "kegs"}, {"d": "2026-04-01", "mtd": 0, "oh": 4, "status": "OK", "days": 999, "rate": 0.0, "a_mtd": 0, "a_oh": 2, "a_unit": "kegs"}, {"d": "2026-04-02", "mtd": 0, "oh": 10, "status": "OK", "days": 999, "rate": 0.0, "a_mtd": 0, "a_oh": 4, "a_unit": "kegs"}]}, "45005": {"name": "Subhunter IPA", "format": "4PK CAN", "ce_factor": 1.333, "trend": [{"d": "2026-03-11", "mtd": 21, "oh": 38, "status": "ORDER_NOW", "days": 19.9, "rate": 1.91, "a_mtd": 16, "a_oh": 29, "a_unit": "cases"}, {"d": "2026-03-12", "mtd": 23, "oh": 66, "status": "OK", "days": 34.4, "rate": 1.92, "a_mtd": 17, "a_oh": 50, "a_unit": "cases"}, {"d": "2026-03-13", "mtd": 23, "oh": 65, "status": "OK", "days": 36.7, "rate": 1.77, "a_mtd": 17, "a_oh": 49, "a_unit": "cases"}, {"d": "2026-03-16", "mtd": 24, "oh": 64, "status": "OK", "days": 42.7, "rate": 1.5, "a_mtd": 18, "a_oh": 48, "a_unit": "cases"}, {"d": "2026-03-17", "mtd": 25, "oh": 64, "status": "OK", "days": 43.5, "rate": 1.47, "a_mtd": 19, "a_oh": 48, "a_unit": "cases"}, {"d": "2026-03-18", "mtd": 25, "oh": 62, "status": "OK", "days": 44.6, "rate": 1.39, "a_mtd": 19, "a_oh": 47, "a_unit": "cases"}, {"d": "2026-03-19", "mtd": 28, "oh": 61, "status": "OK", "days": 41.4, "rate": 1.47, "a_mtd": 21, "a_oh": 46, "a_unit": "cases"}, {"d": "2026-03-20", "mtd": 29, "oh": 60, "status": "OK", "days": 41.4, "rate": 1.45, "a_mtd": 22, "a_oh": 45, "a_unit": "cases"}, {"d": "2026-03-23", "mtd": 31, "oh": 57, "status": "OK", "days": 42.3, "rate": 1.35, "a_mtd": 23, "a_oh": 43, "a_unit": "cases"}, {"d": "2026-03-24", "mtd": 35, "oh": 57, "status": "OK", "days": 39.1, "rate": 1.46, "a_mtd": 26, "a_oh": 43, "a_unit": "cases"}, {"d": "2026-03-25", "mtd": 35, "oh": 56, "status": "OK", "days": 40.0, "rate": 1.4, "a_mtd": 26, "a_oh": 42, "a_unit": "cases"}, {"d": "2026-03-26", "mtd": 36, "oh": 55, "status": "OK", "days": 39.7, "rate": 1.38, "a_mtd": 27, "a_oh": 41, "a_unit": "cases"}, {"d": "2026-03-27", "mtd": 37, "oh": 55, "status": "OK", "days": 40.1, "rate": 1.37, "a_mtd": 28, "a_oh": 41, "a_unit": "cases"}, {"d": "2026-03-30", "mtd": 37, "oh": 51, "status": "OK", "days": 41.4, "rate": 1.23, "a_mtd": 28, "a_oh": 38, "a_unit": "cases"}, {"d": "2026-03-31", "mtd": 43, "oh": 50, "status": "OK", "days": 36.0, "rate": 1.39, "a_mtd": 32, "a_oh": 38, "a_unit": "cases"}, {"d": "2026-04-01", "mtd": 1, "oh": 47, "status": "OK", "days": 47.0, "rate": 1.0, "a_mtd": 1, "a_oh": 35, "a_unit": "cases"}, {"d": "2026-04-02", "mtd": 5, "oh": 47, "status": "ORDER_NOW", "days": 18.8, "rate": 2.5, "a_mtd": 4, "a_oh": 35, "a_unit": "cases"}]}, "45008": {"name": "Subhunter IPA", "format": "1/6 BBL", "ce_factor": 2.296, "trend": [{"d": "2026-03-11", "mtd": 2, "oh": 5, "status": "PLAN_PRODUCTION", "days": 27.5, "rate": 0.18, "a_mtd": 1, "a_oh": 2, "a_unit": "kegs"}, {"d": "2026-03-12", "mtd": 2, "oh": 5, "status": "OK", "days": 30.0, "rate": 0.17, "a_mtd": 1, "a_oh": 2, "a_unit": "kegs"}, {"d": "2026-03-13", "mtd": 2, "oh": 5, "status": "OK", "days": 32.5, "rate": 0.15, "a_mtd": 1, "a_oh": 2, "a_unit": "kegs"}, {"d": "2026-03-16", "mtd": 2, "oh": 5, "status": "OK", "days": 40.0, "rate": 0.12, "a_mtd": 1, "a_oh": 2, "a_unit": "kegs"}, {"d": "2026-03-17", "mtd": 2, "oh": 5, "status": "OK", "days": 42.5, "rate": 0.12, "a_mtd": 1, "a_oh": 2, "a_unit": "kegs"}, {"d": "2026-03-18", "mtd": 2, "oh": 5, "status": "OK", "days": 45.0, "rate": 0.11, "a_mtd": 1, "a_oh": 2, "a_unit": "kegs"}, {"d": "2026-03-19", "mtd": 2, "oh": 5, "status": "OK", "days": 47.5, "rate": 0.11, "a_mtd": 1, "a_oh": 2, "a_unit": "kegs"}, {"d": "2026-03-20", "mtd": 2, "oh": 5, "status": "OK", "days": 50.0, "rate": 0.1, "a_mtd": 1, "a_oh": 2, "a_unit": "kegs"}, {"d": "2026-03-23", "mtd": 2, "oh": 5, "status": "OK", "days": 57.5, "rate": 0.09, "a_mtd": 1, "a_oh": 2, "a_unit": "kegs"}, {"d": "2026-03-24", "mtd": 2, "oh": 5, "status": "OK", "days": 60.0, "rate": 0.08, "a_mtd": 1, "a_oh": 2, "a_unit": "kegs"}, {"d": "2026-03-25", "mtd": 2, "oh": 4, "status": "OK", "days": 50.0, "rate": 0.08, "a_mtd": 1, "a_oh": 2, "a_unit": "kegs"}, {"d": "2026-03-26", "mtd": 5, "oh": 4, "status": "ORDER_NOW", "days": 20.8, "rate": 0.19, "a_mtd": 2, "a_oh": 2, "a_unit": "kegs"}, {"d": "2026-03-27", "mtd": 5, "oh": 4, "status": "PLAN_PRODUCTION", "days": 21.6, "rate": 0.19, "a_mtd": 2, "a_oh": 2, "a_unit": "kegs"}, {"d": "2026-03-30", "mtd": 5, "oh": 4, "status": "PLAN_PRODUCTION", "days": 24.0, "rate": 0.17, "a_mtd": 2, "a_oh": 2, "a_unit": "kegs"}, {"d": "2026-03-31", "mtd": 5, "oh": 4, "status": "PLAN_PRODUCTION", "days": 24.8, "rate": 0.16, "a_mtd": 2, "a_oh": 2, "a_unit": "kegs"}, {"d": "2026-04-01", "mtd": 0, "oh": 4, "status": "OK", "days": 999, "rate": 0.0, "a_mtd": 0, "a_oh": 2, "a_unit": "kegs"}, {"d": "2026-04-02", "mtd": 0, "oh": 4, "status": "OK", "days": 999, "rate": 0.0, "a_mtd": 0, "a_oh": 2, "a_unit": "kegs"}]}, "45010": {"name": "Wings Hazy IPA", "format": "4PK CAN", "ce_factor": 1.333, "trend": [{"d": "2026-03-11", "mtd": 37, "oh": 26, "status": "CRITICAL", "days": 7.7, "rate": 3.36, "a_mtd": 28, "a_oh": 20, "a_unit": "cases"}, {"d": "2026-03-12", "mtd": 37, "oh": 53, "status": "ORDER_NOW", "days": 17.2, "rate": 3.08, "a_mtd": 28, "a_oh": 40, "a_unit": "cases"}, {"d": "2026-03-13", "mtd": 39, "oh": 52, "status": "ORDER_NOW", "days": 17.3, "rate": 3.0, "a_mtd": 29, "a_oh": 39, "a_unit": "cases"}, {"d": "2026-03-16", "mtd": 40, "oh": 48, "status": "ORDER_NOW", "days": 19.2, "rate": 2.5, "a_mtd": 30, "a_oh": 36, "a_unit": "cases"}, {"d": "2026-03-17", "mtd": 45, "oh": 47, "status": "ORDER_NOW", "days": 17.8, "rate": 2.65, "a_mtd": 34, "a_oh": 35, "a_unit": "cases"}, {"d": "2026-03-18", "mtd": 47, "oh": 47, "status": "ORDER_NOW", "days": 18.0, "rate": 2.61, "a_mtd": 35, "a_oh": 35, "a_unit": "cases"}, {"d": "2026-03-19", "mtd": 47, "oh": 45, "status": "ORDER_NOW", "days": 18.2, "rate": 2.47, "a_mtd": 35, "a_oh": 34, "a_unit": "cases"}, {"d": "2026-03-20", "mtd": 49, "oh": 44, "status": "ORDER_NOW", "days": 18.0, "rate": 2.45, "a_mtd": 37, "a_oh": 33, "a_unit": "cases"}, {"d": "2026-03-23", "mtd": 51, "oh": 41, "status": "ORDER_NOW", "days": 18.5, "rate": 2.22, "a_mtd": 38, "a_oh": 31, "a_unit": "cases"}, {"d": "2026-03-24", "mtd": 55, "oh": 39, "status": "ORDER_NOW", "days": 17.0, "rate": 2.29, "a_mtd": 41, "a_oh": 29, "a_unit": "cases"}, {"d": "2026-03-25", "mtd": 57, "oh": 38, "status": "ORDER_NOW", "days": 16.7, "rate": 2.28, "a_mtd": 43, "a_oh": 29, "a_unit": "cases"}, {"d": "2026-03-26", "mtd": 59, "oh": 38, "status": "ORDER_NOW", "days": 16.7, "rate": 2.27, "a_mtd": 44, "a_oh": 29, "a_unit": "cases"}, {"d": "2026-03-27", "mtd": 59, "oh": 35, "status": "ORDER_NOW", "days": 16.0, "rate": 2.19, "a_mtd": 44, "a_oh": 26, "a_unit": "cases"}, {"d": "2026-03-30", "mtd": 63, "oh": 31, "status": "ORDER_NOW", "days": 14.8, "rate": 2.1, "a_mtd": 47, "a_oh": 23, "a_unit": "cases"}, {"d": "2026-03-31", "mtd": 68, "oh": 31, "status": "ORDER_NOW", "days": 14.1, "rate": 2.19, "a_mtd": 51, "a_oh": 23, "a_unit": "cases"}, {"d": "2026-04-01", "mtd": 0, "oh": 29, "status": "OK", "days": 999, "rate": 0.0, "a_mtd": 0, "a_oh": 22, "a_unit": "cases"}, {"d": "2026-04-02", "mtd": 3, "oh": 57, "status": "OK", "days": 38.0, "rate": 1.5, "a_mtd": 2, "a_oh": 43, "a_unit": "cases"}]}}};
+
+var dbg = document.getElementById('debug');
+dbg.textContent = 'DASH loaded. Dates: ' + DASH.dates.length + ', Products: ' + Object.keys(DASH.products).length + '\n';
+Object.entries(DASH.products).forEach(function(e){
+  dbg.textContent += '  ' + e[0] + ': ' + e[1].name + ' ' + e[1].format + ' (trend: ' + (e[1].trend||[]).length + ' pts, ce: ' + e[1].ce_factor + ')\n';
+});
+
+// ═══════ DAILY MOVEMENT CHART (replaces original) ═══════
+var dmState = {from:'', to:'', preset:'30d'};
+
+  function getAllDates(){
+    return (typeof DASH!=='undefined' && DASH.dates) ? DASH.dates.slice() : [];
+  }
+
+  function getFilteredDates(){
+    var all = getAllDates();
+    if(!all.length) return all;
+    if(dmState.preset==='all') return all;
+    if(dmState.preset==='custom' && dmState.from && dmState.to){
+      return all.filter(function(d){return d>=dmState.from && d<=dmState.to;});
+    }
+    // Numeric presets: 7d, 14d, 30d
+    var days = parseInt(dmState.preset)||30;
+    var last = all[all.length-1];
+    var cutoff = new Date(last+'T12:00:00');
+    cutoff.setDate(cutoff.getDate()-days+1);
+    var cutStr = cutoff.toISOString().slice(0,10);
+    return all.filter(function(d){return d>=cutStr;});
+  }
+
+  function computeDaily(dates){
+    // For each date, compute total daily movement in CE across all products
+    // a_mtd is cumulative within a month; daily = delta from prev same-month date
+    var result = [];
+    var products = (typeof DASH!=='undefined') ? DASH.products : {};
+    dates.forEach(function(date, di){
+      var totalCaseCE=0, totalKegCE=0, byProduct=[];
+      Object.keys(products).forEach(function(sku){
+        var p = products[sku];
+        var tr = p.trend||[];
+        var cur = null, prev = null;
+        for(var i=0;i<tr.length;i++){
+          if(tr[i].d===date){cur=tr[i]; if(i>0) prev=tr[i-1]; break;}
+        }
+        if(!cur) return;
+        var mtdNow = cur.a_mtd||0;
+        var mtdPrev = 0;
+        if(prev){
+          // If same month, delta from previous; if month changed, full mtd is the daily
+          if(prev.d.slice(0,7)===date.slice(0,7)){
+            mtdPrev = prev.a_mtd||0;
+          }
+        }
+        var daily = mtdNow - mtdPrev;
+        if(daily<0) daily = mtdNow; // month reset safety
+        var ce = daily * (p.ce_factor||1);
+        if(cur.a_unit==='kegs'){totalKegCE+=ce;} else {totalCaseCE+=ce;}
+        if(daily>0) byProduct.push({name:p.name,format:p.format,daily:daily,ce:ce,unit:cur.a_unit});
+      });
+      result.push({d:date, caseCE:totalCaseCE, kegCE:totalKegCE, total:totalCaseCE+totalKegCE, byProduct:byProduct});
+    });
+    return result;
+  }
+
+  function fmtDate(d){
+    var dt=new Date(d+'T12:00:00');
+    var mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return mn[dt.getMonth()]+' '+dt.getDate();
+  }
+  function fmtDay(d){
+    var dt=new Date(d+'T12:00:00');
+    return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][dt.getDay()];
+  }
+
+  function renderSummaryChart(){
+    var el = document.getElementById('summaryChart');
+    if(!el) return;
+    var dates = getFilteredDates();
+    if(dates.length<1){el.innerHTML='<div style="padding:16px;color:var(--text2);font-size:13px">No data for selected range.</div>';return;}
+    var daily = computeDaily(dates);
+
+    // Totals for the period
+    var sumCaseCE=0, sumKegCE=0;
+    daily.forEach(function(r){sumCaseCE+=r.caseCE; sumKegCE+=r.kegCE;});
+    var sumTotal = sumCaseCE+sumKegCE;
+    var avgDaily = dates.length>0 ? sumTotal/dates.length : 0;
+
+    // Build HTML
+    var h = '<div style="margin-bottom:12px">';
+    // Preset buttons + custom date inputs
+    h+='<div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:10px">';
+    h+='<span style="font-family:var(--font-display);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-right:4px">Range:</span>';
+    ['7d','14d','30d','all'].forEach(function(p){
+      var active = dmState.preset===p;
+      h+='<button onclick="dmSetPreset(&apos;'+p+'&apos;)" style="padding:4px 10px;border:1px solid '+(active?'var(--blue)':'var(--border)')+';border-radius:4px;background:'+(active?'var(--blue)':'var(--surface)')+';color:'+(active?'#fff':'var(--text2)')+';font-size:11px;font-family:var(--font-body);font-weight:'+(active?'600':'400')+';cursor:pointer">'+p.toUpperCase()+'</button>';
+    });
+    var customActive = dmState.preset==='custom';
+    h+='<button onclick="dmSetPreset(&apos;custom&apos;)" style="padding:4px 10px;border:1px solid '+(customActive?'var(--blue)':'var(--border)')+';border-radius:4px;background:'+(customActive?'var(--blue)':'var(--surface)')+';color:'+(customActive?'#fff':'var(--text2)')+';font-size:11px;font-family:var(--font-body);font-weight:'+(customActive?'600':'400')+';cursor:pointer">Custom</button>';
+    h+='</div>';
+    if(customActive){
+      var allDates = getAllDates();
+      var minD = allDates[0]||'';
+      var maxD = allDates[allDates.length-1]||'';
+      h+='<div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">';
+      h+='<label style="font-size:11px;color:var(--text2)">From</label>';
+      h+='<input type="date" id="dmFrom" value="'+(dmState.from||minD)+'" min="'+minD+'" max="'+maxD+'" onchange="dmCustomChange()" style="padding:4px 8px;border:1px solid var(--border);border-radius:4px;font-size:12px;font-family:var(--font-mono)">';
+      h+='<label style="font-size:11px;color:var(--text2)">To</label>';
+      h+='<input type="date" id="dmTo" value="'+(dmState.to||maxD)+'" min="'+minD+'" max="'+maxD+'" onchange="dmCustomChange()" style="padding:4px 8px;border:1px solid var(--border);border-radius:4px;font-size:12px;font-family:var(--font-mono)">';
+      h+='</div>';
+    }
+
+    // KPI row
+    h+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px;margin-bottom:14px">';
+    var kpis = [
+      {v:sumTotal.toFixed(1), l:'Total CE', c:'var(--blue)'},
+      {v:sumCaseCE.toFixed(1), l:'Cases (CE)', c:'var(--blue)'},
+      {v:sumKegCE.toFixed(1), l:'Kegs (CE)', c:'#6b46c1'},
+      {v:avgDaily.toFixed(1), l:'Avg/Day', c:'var(--green)'},
+      {v:dates.length, l:'Days', c:'var(--text2)'}
+    ];
+    kpis.forEach(function(k){
+      h+='<div style="background:var(--surface2,#edeae4);border-radius:6px;padding:8px 10px;text-align:center">';
+      h+='<div style="font-family:var(--font-mono);font-size:18px;font-weight:700;color:'+k.c+'">'+k.v+'</div>';
+      h+='<div style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px">'+k.l+'</div>';
+      h+='</div>';
+    });
+    h+='</div>';
+
+    // SVG bar chart
+    var maxCE = Math.max(1, Math.max.apply(null, daily.map(function(r){return r.total;})));
+    var W=920, barArea=200, pad={l:44,r:16,t:8,b:30};
+    var pw = W-pad.l-pad.r;
+    var bw = Math.max(6, Math.min(28, (pw/(daily.length))*0.7));
+    var gap = (pw - bw*daily.length) / Math.max(1, daily.length);
+    var H = barArea+pad.t+pad.b;
+
+    h+='<div style="overflow-x:auto"><svg viewBox="0 0 '+W+' '+H+'" style="width:100%;max-height:260px;min-height:180px">';
+    // Grid lines
+    for(var gi=0;gi<=4;gi++){
+      var gy = pad.t + barArea*(1-gi/4);
+      var gv = (maxCE*gi/4).toFixed(1);
+      h+='<line x1="'+pad.l+'" y1="'+gy+'" x2="'+(W-pad.r)+'" y2="'+gy+'" stroke="var(--border)" stroke-width="0.5"/>';
+      h+='<text x="'+(pad.l-4)+'" y="'+(gy+3)+'" fill="var(--text2)" font-size="8" text-anchor="end" font-family="var(--font-mono)">'+gv+'</text>';
+    }
+    // Avg line
+    var avgY = pad.t + barArea*(1-avgDaily/maxCE);
+    h+='<line x1="'+pad.l+'" y1="'+avgY+'" x2="'+(W-pad.r)+'" y2="'+avgY+'" stroke="var(--green)" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>';
+    h+='<text x="'+(W-pad.r+2)+'" y="'+(avgY+3)+'" fill="var(--green)" font-size="8" font-family="var(--font-mono)">avg</text>';
+
+    // Bars
+    daily.forEach(function(r, i){
+      var cx = pad.l + i*(bw+gap) + gap/2 + bw/2;
+      var totalH = (r.total/maxCE)*barArea;
+      var caseH = (r.caseCE/maxCE)*barArea;
+      var kegH = (r.kegCE/maxCE)*barArea;
+      var baseY = pad.t + barArea;
+      // Cases portion (bottom)
+      if(caseH>0.5){
+        h+='<rect x="'+(cx-bw/2)+'" y="'+(baseY-caseH)+'" width="'+bw+'" height="'+caseH+'" fill="#2c5282" rx="1" opacity="0.85">';
+        h+='<title>'+fmtDay(r.d)+' '+fmtDate(r.d)+'  Cases: '+r.caseCE.toFixed(1)+' CE</title></rect>';
+      }
+      // Kegs portion (stacked on top)
+      if(kegH>0.5){
+        h+='<rect x="'+(cx-bw/2)+'" y="'+(baseY-caseH-kegH)+'" width="'+bw+'" height="'+kegH+'" fill="#6b46c1" rx="1" opacity="0.85">';
+        h+='<title>'+fmtDay(r.d)+' '+fmtDate(r.d)+'  Kegs: '+r.kegCE.toFixed(1)+' CE</title></rect>';
+      }
+      // Date label (show every N)
+      var showLabel = daily.length<=14 || i%Math.ceil(daily.length/12)===0 || i===daily.length-1;
+      if(showLabel){
+        h+='<text x="'+cx+'" y="'+(H-4)+'" fill="var(--text2)" font-size="7.5" text-anchor="middle" font-family="var(--font-body)">'+fmtDate(r.d)+'</text>';
+      }
+      // Touch/click target
+      h+='<rect x="'+(cx-bw/2-gap/2)+'" y="'+pad.t+'" width="'+(bw+gap)+'" height="'+barArea+'" fill="transparent" style="cursor:pointer" onclick="dmShowDay('+i+')"/>';
+    });
+    h+='</svg></div>';
+
+    // Legend
+    h+='<div style="display:flex;gap:16px;font-size:10px;color:var(--text2);margin-top:4px">';
+    h+='<span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#2c5282;border-radius:2px"></span>Cases (CE)</span>';
+    h+='<span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:#6b46c1;border-radius:2px"></span>Kegs (CE)</span>';
+    h+='<span style="display:inline-flex;align-items:center;gap:4px"><span style="width:10px;height:3px;background:var(--green);border-radius:1px"></span>Daily Avg</span>';
+    h+='</div>';
+
+    // Day detail panel (populated on click)
+    h+='<div id="dmDayDetail" style="margin-top:10px"></div>';
+
+    // Product sparklines (top movers)
+    var productTotals = {};
+    daily.forEach(function(r){
+      r.byProduct.forEach(function(bp){
+        var key = bp.name+' '+bp.format;
+        if(!productTotals[key]) productTotals[key]={name:bp.name,format:bp.format,ce:0,unit:bp.unit};
+        productTotals[key].ce += bp.ce;
+      });
+    });
+    var sorted = Object.values(productTotals).sort(function(a,b){return b.ce-a.ce;});
+    if(sorted.length>0){
+      h+='<div style="margin-top:14px;border-top:1px solid var(--border);padding-top:10px">';
+      h+='<div style="font-family:var(--font-display);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:8px">Top Movers (Period Total CE)</div>';
+      h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px">';
+      sorted.slice(0,10).forEach(function(p){
+        var pct = sumTotal>0 ? (p.ce/sumTotal*100).toFixed(0) : 0;
+        var barW = sumTotal>0 ? Math.max(2, p.ce/sorted[0].ce*100) : 0;
+        var color = p.unit==='kegs'?'#6b46c1':'#2c5282';
+        h+='<div style="font-size:11px;padding:4px 0">';
+        h+='<div style="display:flex;justify-content:space-between;margin-bottom:2px"><span style="font-weight:600">'+p.name+'</span><span style="font-family:var(--font-mono);color:'+color+'">'+p.ce.toFixed(1)+' CE</span></div>';
+        h+='<div style="height:4px;background:var(--surface2);border-radius:2px"><div style="height:4px;width:'+barW+'%;background:'+color+';border-radius:2px"></div></div>';
+        h+='<div style="font-size:9px;color:var(--text2)">'+p.format+' &middot; '+pct+'%</div>';
+        h+='</div>';
+      });
+      h+='</div></div>';
+    }
+
+    h+='</div>';
+    el.innerHTML = h;
+
+    // Store daily data for click handler
+    window._dmDaily = daily;
+  };
+
+  // Click handler for day detail
+  function dmShowDay(idx){
+    var daily = window._dmDaily;
+    if(!daily||!daily[idx]) return;
+    var r = daily[idx];
+    var el = document.getElementById('dmDayDetail');
+    if(!el) return;
+    var h = '<div style="background:var(--surface2);border-radius:6px;padding:10px 12px;font-size:12px">';
+    h+='<div style="font-family:var(--font-display);font-size:12px;font-weight:600;margin-bottom:6px">'+fmtDay(r.d)+', '+fmtDate(r.d)+' &mdash; '+r.total.toFixed(1)+' CE</div>';
+    if(r.byProduct.length===0){h+='<div style="color:var(--text2)">No movement recorded</div>';}
+    else{
+      r.byProduct.sort(function(a,b){return b.ce-a.ce;});
+      h+='<div style="display:grid;grid-template-columns:1fr auto auto;gap:2px 12px">';
+      h+='<div style="font-weight:600;color:var(--text2);font-size:10px">Product</div><div style="font-weight:600;color:var(--text2);font-size:10px;text-align:right">Units</div><div style="font-weight:600;color:var(--text2);font-size:10px;text-align:right">CE</div>';
+      r.byProduct.forEach(function(bp){
+        h+='<div>'+bp.name+' <span style="color:var(--text2)">'+bp.format+'</span></div>';
+        h+='<div style="text-align:right;font-family:var(--font-mono)">'+bp.daily+'</div>';
+        h+='<div style="text-align:right;font-family:var(--font-mono);color:'+(bp.unit==='kegs'?'#6b46c1':'#2c5282')+'">'+bp.ce.toFixed(1)+'</div>';
+      });
+      h+='</div>';
+    }
+    h+='</div>';
+    el.innerHTML = h;
+  }
+
+  // Preset & custom date handlers
+  function dmSetPreset(p){
+    dmState.preset = p;
+    if(p!=='custom'){dmState.from='';dmState.to='';}
+    else{
+      var all=getAllDates();
+      if(all.length){dmState.from=all[0];dmState.to=all[all.length-1];}
+    }
+    renderSummaryChart();
+  }
+  function dmCustomChange(){
+    var f=document.getElementById('dmFrom'), t=document.getElementById('dmTo');
+    if(f)dmState.from=f.value;
+    if(t)dmState.to=t.value;
+    renderSummaryChart();
+  }
+
+
+
+try {
+  renderSummaryChart();
+  dbg.textContent += '\nChart rendered OK!';
+} catch(e) {
+  dbg.textContent += '\nERROR: ' + e.message + '\n' + e.stack;
+  document.getElementById('summaryChart').innerHTML = '<div style="color:red;padding:16px">Error: ' + e.message + '</div>';
+}
+</script></body></html>
