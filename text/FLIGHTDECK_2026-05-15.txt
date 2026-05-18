@@ -1,0 +1,30 @@
+﻿MID-MONTH BEER DEPLETION REPORT 
+PAGE 63 
+==================================================================================================================================== FB FLIGHT DECK BREWING 
+==================================================================================================================================== 
+NAPPI BEGINNING ENDING PRODUCT TRANS TRANS RETURN CODE FAMILY INVENTORY INVENTORY SALES RECEIPTS IN OUT TO ADJUST SUPPLIER 
+45000 FLIGHT DECK P3 PALE 4PK CN 54 57 25 28 
+45003 FLIGHT DECK P3 PALE 1/6BBL 7 12 7 12 
+45005 FLIGHT DECK SUBHUNTER 4PK 46 34 12 
+45008 FLIGHT DECK SUBHUNTER 1/6B 4 4 
+45010 FLIGHT DECK WINGS 4PK CAN 31 42 17 28 
+45013 FLIGHT DECK WINGS 1/6BBL 10 14 2 6 
+45015 FLIGHT DECK PLANE BEER 6PK 29 16 13 
+45018 FLIGHT DECK PLANE BEER 1/6 9 10 5 6 
+45020 FLIGHT DECK REMOVE BF 4PK 20 18 2 
+45023 FLIGHT DECK REMOVE BF 1/6B 6 5 1 
+45025 FLIGHT DECK MUNICH LAY 4PK 
+45028 FLIGHT DECK MUNICH LAY 1/6 
+45030 FLIGHT DECK PUDDLE JMP 4PK 
+45033 FLIGHT DECK PUDDLE JMP 1/6 
+45038 FLIGHT DECK MAINE PILS 1/6 2 1 1- 45040 FLIGHT DECK CZECHLIST 4PK 
+45043 FLIGHT DECK CZECHLIST 1/6B 
+45045 FLIGHT DECK VUELO NOCT 6PK 
+45048 FLIGHT DECK VUELO NOCT 1/6 2 2 
+------------------------------------------------------------------------------------------------------------------------------------ 
+ **** TOTAL FDB FLIGHT DECK BREWING 
+220 215 84 80 1- 
+------------------------------------------------------------------------------------------------------------------------------------ ==================================================================================================================================== 
+***** TOTAL FB FLIGHT DECK BREWING 
+220 215 84 80 1- 
+====================================================================================================================================
